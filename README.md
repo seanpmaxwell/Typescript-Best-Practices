@@ -55,5 +55,8 @@ Patterns and Best Practices for procedural Typescript development follow the rul
 - Prepend with an 'I' (i.e. `interface IUser { name: string; email: string; }`)
 
 
+## Comments
+- Use /** Comment */ above each function declaration ALWAYS. Use 
+
 ## Testing
 Anything that changes based on user interaction should be unit-tested. All phases of development should include unit-tests. Developers should write their own unit-tests.- Integration tests should test any user interaction that involves talking to the back-end. Overkill for startups, should be done by a dedicated integration tester who's fluent with the framework in a separate repository. Makes code more readable. Errors in integration tests should be rare as unit-tests should weed out most of them.
