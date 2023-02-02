@@ -56,7 +56,19 @@ Patterns and Best Practices for procedural Typescript development follow the rul
 
 
 ## Comments
-- Use /** Comment */ above each function declaration ALWAYS. Use 
+- Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through comments. Use `//` for comments inside of functions.
+
+```typescript
+/**
+ * Method comments
+ */
+function foo() {
+  const bar = (arg: string) => arg.trim(),
+    blah = 'etc';
+  // Return
+  return (bar(arg) + bar(arg) + bar(arg));
+}
+```
 
 ## Testing
 Anything that changes based on user interaction should be unit-tested. All phases of development should include unit-tests. Developers should write their own unit-tests.- Integration tests should test any user interaction that involves talking to the back-end. Overkill for startups, should be done by a dedicated integration tester who's fluent with the framework in a separate repository. Makes code more readable. Errors in integration tests should be rare as unit-tests should weed out most of them.
