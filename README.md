@@ -35,12 +35,13 @@ Patterns and Best Practices for procedural Typescript development follow the rul
 ### Variables
 - Static primitives should be declared at the top of files at the beginning of the "Variables" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
 - Variables declared inside functions should be camelCase
-- boolean values should start with an 'is' (i.e. session.isLoggedIn)
+- Boolean values should generally start with an 'is' (i.e. session.isLoggedIn)
 
 ### Functions
 - camelCase in almost all situations but for special exceptions like jsx elements can be PascalCase.
-- use function declarations `function fnName()` for standalone functions so they can be hoisted and arrow functions `() => {}` for smaller functions declared inside of other functions.
-- prepend helper functions (function declarations not meant to be used outside of their file) with an underscore (i.e. `function _helperFn() {}`)
+- Always name functions in a verb format: (i.e. don't say `name()` say `fetchName()`).
+- Use function declarations `function fnName()` for standalone functions so they can be hoisted and arrow functions `() => {}` for smaller functions declared inside of other functions.
+- Prepend helper functions (function declarations not meant to be used outside of their file) with an underscore (i.e. `function _helperFn() {}`)
 
 ### Objects
 - Generally, objects created outside of functions should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. Immutable objects and their keys and child keys should be PascalCase. This is useful for distinguishing dynamic and static data inside of functions.
