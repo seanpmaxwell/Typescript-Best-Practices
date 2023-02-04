@@ -53,7 +53,8 @@ const Errors = {
 - Prepend helper functions (function declarations not meant to be used outside of their file) with an underscore (i.e. `function _helperFn() {}`)
 
 ### Objects
-- Generally, objects created outside of functions should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. Immutable objects and their keys and child keys should be PascalCase. This is useful for distinguishing dynamic and static data inside of functions.
+- Generally, objects initialized outside of functions and directly inside of files should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. Immutable objects and their keys and child keys should be PascalCase. This is useful for distinguishing dynamic and static data inside of functions.
+- Objects which represent dynamic values, (i.e. a user object returned from a database query) should use pascalCase: both the object variable itself a its keys.
 
 ### Enums
 - Use PascalCase for the enum name and keys. (i.e. `enum NodeEnvs { Dev = 'development'}`)
@@ -84,8 +85,8 @@ function foo() {
 - Separate the major sections of scripts (variables/types/setup/functions) by a `// **** "Section Name" **** //`. 
 
 
-## Style
-- Also wrap boolean statements in parenthesis to make them more readable (i.e `(((isFoo && isBar) || isBar) ? retThis : retThat)`
+## Misc Style
+- Wrap boolean statements in parenthesis to make them more readable (i.e `(((isFoo && isBar) || isBar) ? retThis : retThat)`
 - Use optional chaining whenever possible. Don't do `foo && foo.bar` do `foo?.bar`.
 - Use null coalescing `??` whenever possible. Don't do `(str || '') do `(str ?? '')`.
 
