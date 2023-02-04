@@ -38,7 +38,17 @@ Patterns and Best Practices for procedural Typescript development follow the rul
 - Boolean values should generally start with an 'is' (i.e. session.isLoggedIn)
 
 ### Functions
-- camelCase in almost all situations but for special exceptions like jsx elements can be PascalCase.
+- camelCase in most situtations but for special exceptions like jsx elements can be PascalCase.
+- Functions as part of objects just meant to return constants (but we use a function to insert a value) can also be PascalCase. 
+- Function to return constant example: 
+```
+const Errors = {
+   SomeError: 'foo',
+   EmailNotFound(email: string) {
+      return `We're sorry, but a user with the email "${email}" was not found.`;
+   },
+}
+```
 - Always name functions in a verb format: (i.e. don't say `name()` say `fetchName()`).
 - Use function declarations `function fnName()` for standalone functions so they can be hoisted and arrow functions `() => {}` for smaller functions declared inside of other functions.
 - Prepend helper functions (function declarations not meant to be used outside of their file) with an underscore (i.e. `function _helperFn() {}`)
