@@ -39,17 +39,16 @@ Patterns and Best Practices for procedural Typescript development follow the rul
 
 ### Functions
 - camelCase in most situtations but for special exceptions like jsx elements can be PascalCase.
-- Functions as part of objects just meant to return constants (but we use a function to insert a value) can also be PascalCase. 
-- Function to return constant example: 
+- Name functions in a verb format: (i.e. don't say `name()` say `fetchName()`).
+- Functions as part of objects just meant to return constants (but we use a function to insert a value) can also be PascalCase and don't necessarily need to be in a verb format. Example:
 ```
 const Errors = {
    SomeError: 'foo',
    EmailNotFound(email: string) {
       return `We're sorry, but a user with the email "${email}" was not found.`;
    },
-}
+} as const;
 ```
-- Always name functions in a verb format: (i.e. don't say `name()` say `fetchName()`).
 - Use function declarations `function fnName()` for standalone functions so they can be hoisted and arrow functions `() => {}` for smaller functions declared inside of other functions.
 - Prepend helper functions (function declarations not meant to be used outside of their file) with an underscore (i.e. `function _helperFn() {}`)
 
