@@ -40,7 +40,7 @@ Patterns and Best Practices for procedural Typescript development follow the rul
 ### Functions
 - camelCase in most situtations but for special exceptions like jsx elements can be PascalCase.
 - Name functions in a verb format: (i.e. don't say `name()` say `fetchName()`).
-- Functions as part of objects just meant to return constants (but we use a function to insert a value) can also be PascalCase and don't necessarily need to be in a verb format. Example:
+- Simple functions as part of objects just meant to return constants (but we use a function to insert a value) can also be PascalCase and don't necessarily need to be in a verb format. Example:
 ```
 const Errors = {
    SomeError: 'foo',
