@@ -31,7 +31,7 @@ Patterns and Best Practices for procedural Typescript development follow the rul
 - Modular scripts: PascalCase.
 - Inventory: lowercase with hyphens (shared-types.ts)
 - Linear: lowercase with hyphens (setup-db.ts)
-- Folders not meant to be committed as part of the final code, but may exists along other source folders, (i.e. a test folder) should start and end with a double underscore __test-helpers__
+- Folders not meant to be committed as part of the final code, but may exists along other source folders, (i.e. a test folder) should start and end with a double underscore `__test-helpers__`
 
 ### Variables
 - Static primitives should be declared at the top of files at the beginning of the "Variables" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
