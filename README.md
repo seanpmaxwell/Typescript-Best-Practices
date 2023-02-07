@@ -120,10 +120,16 @@ const transporter = nodemailer
 
 // **** Functions **** //
 
+/**
+ * Send an email anywhere.
+ */
 function sendMail(to: string, from: string, subject: string, body: string): Promise<void> {
    await mailer?.send({to, from, subject, body});
 }
 
+/**
+ * Send an email to your application's support staff.
+ */
 function sendSupportStaffEmail(from, subject, body) {
    await mailer?.send({to: SUPPORT_STAFF_EMAIL, from, subject, body});
 }
