@@ -15,6 +15,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - Types
 - Setup
 - Functions
+_Note that your file may not have all of these sections_
 
 ### Script types explained 
 - Declaration: exports one large declared item (i.e. a file called HttpStatusCodes.ts which exports a single enum containing all the http status codes.
