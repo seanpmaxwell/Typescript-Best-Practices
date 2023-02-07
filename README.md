@@ -113,8 +113,9 @@ type TTransport = Transporter<SMTPTransport.SentMessageInfo>;
 // **** Setup **** //
 
 const transporter = nodemailer
- .createTransport({ ...settings });
- .transporter.verify((err, success) => {
+ .createTransport({ ...settings })
+ .transporter
+ .verify((err, success) => {
    if (success) {
      mailer = transporter;
    }
