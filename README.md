@@ -87,10 +87,10 @@ function foo() {
 
 
 ## Example of Script
-- Now that we've gone over the main points, let's look at example script.
+- Now that we've gone over the main points, let's look at an example script.
 
 ```
-// Modular Script MailUtil.ts
+// Modular Script, MailUtil.ts
 
 import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
 
