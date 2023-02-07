@@ -134,7 +134,7 @@ function sendMail(to: string, from: string, subject: string, body: string): Prom
 /**
  * Send an email to your application's support staff.
  */
-function sendSupportStaffEmail(from, subject, body) {
+function sendSupportStaffEmail(from, subject, body): Promise<void> {
    await mailer?.send({to: SUPPORT_STAFF_EMAIL, from, subject, body});
 }
 
