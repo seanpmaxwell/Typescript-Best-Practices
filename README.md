@@ -92,7 +92,7 @@ function foo() {
 ## Example of Script
 - Now that we've gone over the main points, let's look at an example script.
 
-```
+```typescript
 // Modular Script, MailUtil.ts
 
 import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
