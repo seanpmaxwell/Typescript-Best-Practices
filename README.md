@@ -1,4 +1,4 @@
-# Typescript-Best-Practices
+# Typescript-Best-Practices (Most of these work for JavaScript too!)
 Patterns and Best Practices for procedural Typescript development follow the rule of 4 principle
 
 
@@ -83,13 +83,66 @@ function foo() {
 }
 ```
 
-- Separate the major sections of scripts (variables/types/setup/functions) by a `// **** "Section Name" **** //`. 
+- Separate the major sections of scripts (variables/types/setup/functions) by a `// **** "Section Name" **** //`.
 
+
+## Example of Script
+- Now that we've gone over the main points, let's look at example script.
+
+```
+// Modular Script MailUtil.ts
+
+import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
+
+
+// **** Variables **** //
+
+const SUPPORT_STAFF_EMAIL = 'do_not_reply@example.com';
+
+let mailer; TTransport | null = null;
+
+
+// **** Types **** //
+
+type TTransport = Transporter<SMTPTransport.SentMessageInfo>;
+
+
+// **** Setup **** //
+
+const transporter = nodemailer
+ .createTransport({ ...settings });
+ .transporter.verify((err, success) => {
+   if (success) {
+     mailer = transporter;
+   }
+ });
+ 
+
+// **** Functions **** //
+
+function sendMail(to: string, from: string, subject: string, body: string): Promise<void> {
+   await mailer?.send({to, from, subject, body});
+}
+
+function sendSupportStaffEmail(from, subject, body) {
+   await mailer?.send({to: SUPPORT_STAFF_EMAIL, from, subject, body});
+}
+
+
+// **** Export default **** //
+
+export default {
+   sendMail,
+   sendSupportStaffEmail,
+}
+```
 
 ## Misc Style
+- Use a semicolon at the end of statements. 
 - Wrap boolean statements in parenthesis to make them more readable (i.e `(((isFoo && isBar) || isBar) ? retThis : retThat)`
 - Use optional chaining whenever possible. Don't do `foo && foo.bar` do `foo?.bar`.
 - Use null coalescing `??` whenever possible. Don't do `(str || '') do `(str ?? '')`.
+- Specify a return type if you are using the function elsewhere in your code. However, always specifying a return type when your function is just getting passed to a library could be overkill (i.e. a router function passed to an express route). Another exception could be JSX function where it's obvious a JSX.Elements is what's getting returned.
 
 ## Testing
 Anything that changes based on user interaction should be unit-tested. All phases of development should include unit-tests. Developers should write their own unit-tests.- Integration tests should test any user interaction that involves talking to the back-end. Overkill for startups, should be done by a dedicated integration tester who's fluent with the framework in a separate repository. Makes code more readable. Errors in integration tests should be rare as unit-tests should weed out most of them.
