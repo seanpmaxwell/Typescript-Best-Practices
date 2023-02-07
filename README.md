@@ -70,13 +70,15 @@ const Errors = {
 
 ## Comments
 
-- Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through comments. Use `//` for comments inside of functions.
+- Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through comments. 
+- Use `//` for comments inside of functions.
 
 ```typescript
 /**
- * Method comments
+ * Function declaration comment.
  */
 function foo() {
+  // Init
   const bar = (arg: string) => arg.trim(),
     blah = 'etc';
   // Return
@@ -84,7 +86,7 @@ function foo() {
 }
 ```
 
-- Separate the major sections of scripts (variables/types/setup/functions) by a `// **** "Section Name" **** //`.
+- Separate the major sections of scripts (variables/types/setup/functions,export default) by a `// **** "Section Name" **** //`.
 
 
 ## Example of Script
