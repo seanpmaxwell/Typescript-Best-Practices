@@ -1,5 +1,5 @@
-# Typescript-Best-Practices (Most of these work for JavaScript too!)
-Patterns and Best Practices for procedural Typescript development follow the rule of 4 principle
+# Typescript-Best-Practices
+Patterns and Best Practices for procedural Typescript/JavaScript development following the rule of 4 principle
 
 
 ## Files/Folder Organization
