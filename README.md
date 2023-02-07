@@ -70,7 +70,7 @@ const Errors = {
 
 ## Comments
 
-- Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through comments. 
+- Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through large files. 
 - Use `//` for comments inside of functions.
 
 ```typescript
@@ -92,8 +92,9 @@ function foo() {
 ## Example of Script
 - Now that we've gone over the main points, let's look at an example script.
 
+- A modular script:
 ```typescript
-// Modular Script, MailUtil.ts
+// MailUtil.ts
 
 import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
 
@@ -145,6 +146,33 @@ export default {
    sendMail,
    sendSupportStaffEmail,
 }
+```
+
+- An inventory script
+```typescript
+// shared-buttons.tsx
+
+/**
+ * Close a html dialog box.
+ */
+export function CloseBtn() {
+    return (
+        <button css={{ color: 'grey' }}>
+         Close
+        </button>
+    );
+}
+
+/**
+ * Cancel editing a html form.
+ */
+export function CancelBtn() {
+    return (
+        <button css={{ color: 'red' }}>
+         Cancel
+        </button>
+    );
+} 
 ```
 
 ## Misc Style
