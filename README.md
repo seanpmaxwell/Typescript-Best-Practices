@@ -90,7 +90,7 @@ function foo() {
 
 
 ## Example of Script
-- Now that we've gone over the main points, let's look at an example script.
+- Now that we've gone over the main points, let's look at some example scripts.
 
 - A modular script:
 ```typescript
@@ -173,6 +173,18 @@ export function CancelBtn() {
         </button>
     );
 } 
+```
+
+- A declaration script:
+```typescript
+// EnvVars.ts
+
+export default {
+    port: process.env.PORT,
+    host: process.env.Host,
+    databaseUsername: process.env.DB_USERNAME,
+    ...etc,
+} as const;
 ```
 
 ## Misc Style
