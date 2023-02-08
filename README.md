@@ -22,6 +22,23 @@ _Note that your file may not have all of these sections_
 - Modular: exports a single object containing a bunch of closely related functions (i.e. a file call UserRepo.ts which has a bunch of functions for handling database queries related to user objects).
 - Inventory: for storing a large number of smaller declared items. (i.e. a file called types.ts which stores commonly shared types throughout your application)
 - Linear: executes a series of commands (i.e. an file called setup-db.ts which executes a bunch of file system commands to initialize a database).
+
+
+## Data Types
+- Primitives, Functions, Objects, and Class
+- Functions are technicaly objects too and classes are technically functions but we'll consider them something different cause of how we use them.
+
+### Primitives
+- null, undefined, boolean, number, string. Boolean, Number, String are object counter parts
+
+### Functions
+- function declarations with `function fnName()` and arrow functions with `const () => {}`.
+
+### Objects
+- Anything with key/value pairs is technically an object
+
+### Classes
+- Syntax sugar for using functions with `new`. Use these sparingly. Don't use them for I/O data because that would require a constructor call for every item that gets returned.
  
  
 ## Naming
