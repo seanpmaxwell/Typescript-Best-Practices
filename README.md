@@ -25,8 +25,8 @@ _Note that your file may not have all of these sections_
 
 
 ## Data Types
-- Primitives, Functions, Objects, and Class
-- Functions are technicaly objects too and classes are technically functions but we'll consider them something different cause of how we use them.
+- Primitives, Functions, Objects, and Classes
+- Functions are technicaly objects but are also callable and Classes are syntax sugar for using functions with `new`. For all practical purposes we'll consider these our four datatypes cause of how we use them.
 
 ### Primitives
 - null, undefined, boolean, number, string. Boolean, Number, String are object counter parts
@@ -35,10 +35,10 @@ _Note that your file may not have all of these sections_
 - function declarations with `function fnName()` and arrow functions with `const () => {}`.
 
 ### Objects
-- Anything with key/value pairs is technically an object
+- Anything with key/value pairs is technically an object.
 
 ### Classes
-- Syntax sugar for using functions with `new`. Use these sparingly. Don't use them for I/O data because that would require a constructor call for every item that gets returned.
+- Use these for managing dynamic data (i.e. a User object returned from a database query). Always protect your class with an interface. It's not typically necesasary to instantiate your classes when working with dynamic data, as a plain object represented by the class's interface can usually suffice. For example, if an ORM returns an object with all the key/value pairs for user (even if it's not an `instanceof` User) often times that's good enough and we don't need to call `new User()` to work with the data.
  
  
 ## Naming
@@ -72,8 +72,8 @@ const Errors = {
 - Prepend helper functions (function declarations not meant to be used outside of their file) with an underscore (i.e. `function _helperFn() {}`)
 
 ### Objects
-- Generally, objects initialized outside of functions and directly inside of files should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. Immutable objects and their keys and child keys should be PascalCase. This is useful for distinguishing dynamic and static data inside of functions.
-- Objects which represent dynamic values, (i.e. a user object returned from a database query) should use pascalCase: both the object variable itself a its keys.
+- Generally, objects initialized outside of functions and directly inside of files with object-literals should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. Immutable objects and their keys and child keys should be PascalCase. This is useful for distinguishing dynamic and static data inside of functions.
+- Objects instantiated from classes or function calls should be pascalCase.
 
 ### Enums
 - Use PascalCase for the enum name and keys. (i.e. `enum NodeEnvs { Dev = 'development'}`)
