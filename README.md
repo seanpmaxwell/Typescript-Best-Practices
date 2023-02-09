@@ -38,7 +38,7 @@ _Note that your file may not have all of these sections_
 - Anything with key/value pairs is technically an object.
 
 ### Classes
-- Use these for managing data that has both dynamic and static properties (i.e. a User object returned from a database query). Always protect your class with an interface. It's not typically necesasary to instantiate your classes when working with dynamic data, as a plain object represented by the class's interface can usually suffice. For example, if an ORM returns an object with all the key/value pairs for user (even if it's not an `instanceof` User) often times that's good enough and we don't need to call `new User()` to work with the data.
+- Use these for managing data that has both dynamic and static properties (i.e. a User object returned from a database query). Don't use classes for your application layers as an immutable-object itself is usually sufficient. Always protect your class with an interface. It's not typically necesasary to instantiate your classes when working with dynamic data, as a plain object represented by the class's interface can usually suffice. For example, if an ORM returns an object with all the key/value pairs for user (even if it's not an `instanceof` User) often times that's good enough and we don't need to call `new User()` to work with the data. Conversely, many times even an interface itself is enough and we don't even need create a class for the data.
  
  
 ## Naming
@@ -85,6 +85,7 @@ const Errors = {
 - Prepend types with a 'T' (i.e. `type TMounseEvent = React.MouseEvent<HtmlButtonElement>;`) 
 
 ### Interfaces
+- Used to define the key/value pairs in an object literal or the key/value pairs returned from an objects constructor.
 - Prepend with an 'I' (i.e. `interface IUser { name: string; email: string; }`)
 
 
