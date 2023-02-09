@@ -75,6 +75,9 @@ const Errors = {
 - Generally, objects initialized outside of functions and directly inside of files with object-literals should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. Immutable objects and their keys and child keys should be PascalCase. This is useful for distinguishing dynamic and static data inside of functions.
 - Objects instantiated from classes or function calls should be pascalCase.
 
+### Classes
+- PascalCase for class names, static members (vars and functions), and camelCase for instance-object variables and dynamic members.  
+
 ### Enums
 - Use PascalCase for the enum name and keys. (i.e. `enum NodeEnvs { Dev = 'development'}`)
 
