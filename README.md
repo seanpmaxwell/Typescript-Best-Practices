@@ -14,7 +14,8 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - Variables
 - Types
 - Setup
-- Functions<br/>
+- Functions (or Class)
+<br/>
 _Note that your file may not have all of these sections_
 
 ### Script types explained 
