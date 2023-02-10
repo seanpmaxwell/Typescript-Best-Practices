@@ -67,6 +67,8 @@ const Errors = {
       return `We're sorry, but a user with the email "${email}" was not found.`;
    },
 } as const;
+
+// Note: Errors in an immutable basic-object because we create it with an object-literal and make it immutable with 'as const'.
 ```
 - Use function declarations `function fnName()` for standalone functions so they can be hoisted and arrow functions `() => {}` for smaller functions declared inside of other functions.
 - Prepend helper functions (function declarations not meant to be used outside of their file) with an underscore (i.e. `function _helperFn() {}`)
