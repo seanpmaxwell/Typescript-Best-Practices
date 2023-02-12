@@ -19,7 +19,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 
 ### Script types explained 
 - Declaration: exports one large declared item (i.e. a file called HttpStatusCodes.ts which exports a single enum containing all the http status codes.
-- Modular: exports a single object containing a bunch of closely related functions (i.e. a file call UserRepo.ts which has a bunch of functions for handling database queries related to user objects).
+- Modular: export default is an `object-literal` containing a bunch of closely related functions/variables (i.e. a file call UserRepo.ts which has a bunch of functions for handling database queries related to user objects).
 - Inventory: for storing a large number of smaller declared items. (i.e. a file called types.ts which stores commonly shared types throughout your application)
 - Linear: executes a series of commands (i.e. an file called setup-db.ts which executes a bunch of file system commands to initialize a database).
 
