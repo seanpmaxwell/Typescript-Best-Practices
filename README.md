@@ -209,6 +209,31 @@ export default {
 } as const;
 ```
 
+- A linear script:
+```typescript
+import express from 'express';
+
+
+// **** Variables **** //
+
+const app = express(); 
+
+
+// **** Setup **** //
+
+app.use(middleware1);
+app.use(middleware2);
+
+doSomething();
+doSomethingElse();
+
+
+// **** Export default **** //
+
+export default app;
+```
+
+
 ## Misc Style (Don't need to mention things covered by the linter)
 - Wrap boolean statements in parenthesis to make them more readable (i.e `(((isFoo && isBar) || isBar) ? retThis : retThat)`
 - Use optional chaining whenever possible. Don't do `foo && foo.bar` do `foo?.bar`.
