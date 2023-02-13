@@ -107,8 +107,23 @@ function foo() {
   return (bar(arg) + bar(arg) + bar(arg));
 }
 ```
-
 - Separate the major sections of scripts (variables/types/setup/functions,export default) by a `// **** "Section Name" **** //`.
+
+
+## Imports
+- Try to group together similarly related imports (i.e. Service Layer and Repository Layer in an express server).
+- Be generous with spacing.
+- Put libraries at the top and your code below.
+- Try to put code imported from the same folder towards the bottom.
+```
+import express from 'express';
+import insertUrlParams from 'inserturlparams';
+
+import UserRepo from '@src/repos/UserRepo';
+import DogRepo from '@src/repos/DogRepo';
+
+import helpers from './helpers';
+```
 
 
 ## Example of Script
@@ -237,7 +252,7 @@ export default app;
 
 
 ## Misc Style (Don't need to mention things covered by the linter)
-- Wrap boolean statements in parenthesis to make them more readable (i.e `(((isFoo && isBar) || isBar) ? retThis : retThat)`
+- Wrap boolean statements in parenthesis to make them more readable (i.e `(((isFoo && isBar) || isBar) ? retThis : retThat)`)
 - Use optional chaining whenever possible. Don't do `foo && foo.bar` do `foo?.bar`.
 - Use null coalescing `??` whenever possible. Don't do `(str || '') do `(str ?? '')`.
 - For boolean statements, put the variable to the left of the constant, not the other way around:
@@ -249,6 +264,7 @@ if (5 === value) {
 if (value === 5) {
 ```
 - For Typescript, specify a return type if you are using the function elsewhere in your code. However, always specifying a return type when your function is just getting passed to a library could be overkill (i.e. a router function passed to an express route). Another exception could be JSX function where it's obvious a JSX.Elements is what's getting returned.
+
 
 ## Testing
 Anything that changes based on user interaction should be unit-tested. All phases of development should include unit-tests. Developers should write their own unit-tests.- Integration tests should test any user interaction that involves talking to the back-end. Overkill for startups, should be done by a dedicated integration tester who's fluent with the framework in a separate repository. Makes code more readable. Errors in integration tests should be rare as unit-tests should weed out most of them.
