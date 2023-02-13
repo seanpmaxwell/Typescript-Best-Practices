@@ -211,6 +211,8 @@ export default {
 
 - A linear script:
 ```typescript
+// server.ts
+
 import express from 'express';
 
 
