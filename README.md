@@ -39,7 +39,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 
 ### Classes
 - Use these for managing items instantiated multiple times and that have both dynamic and static properties (i.e. a Dog object returned from a database query that has both `name` and `Species` properties). Don't use classes for your application layers as an immutable `basic-object` itself is usually sufficient. Always protect your class with an interface. 
-- It's not typically necesasary to make a constructor call (instantiate) your classes when working with IO data, as a basic-object represented by the class's interface can usually suffice. For example, if an ORM returns a basic-object with all the key/value pairs for user (even if it's not an `instanceof` User) often times that's good enough and we don't need to call `new User()` to work with the data. Go further, many times even an interface itself is enough to represent a data item and we don't even need create a class for the data if all the values are dynamic (i.e a user object whose only props are id, name, email).
+- It's not typically necesasary to make a constructor call (instantiate) your classes when working with IO data, as a basic-object represented by the class's interface can usually suffice. For example, if an ORM returns a basic-object with all the key/value pairs for user (even if it's not an `instanceof` User) often times that's good enough and we don't need to call `new User()` to work with the data. Going further, many times even an interface itself is enough to represent a data item and we don't even need create a class for the data if all the values are dynamic (i.e a user object whose only props are id, name, email).
  
  
 ## Naming
