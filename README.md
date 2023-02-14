@@ -38,8 +38,11 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - Anything with key/value pairs is technically an object. However, we'll use the term `basic-object` to refer to an object returned from an object-literal or serialzed from somewhere (i.e. JSON.parse()) since they are just instances of the `Object()` class. Also note that in Javascript we can append as many properties as we want to a basic-object but in Typescript the keys are static once the object is instantiated, although the values can change unless we make it immutable. 
 
 ### Classes
-- Use these for managing items instantiated multiple times and that have both dynamic and static properties (i.e. a Dog object returned from a database query that has both `name` and `Species` properties). Don't use classes for your application layers as an immutable `basic-object` itself is usually sufficient. Always protect your class with an interface. 
-- It's not typically necesasary to make a constructor call (instantiate) your classes when working with IO data, as a basic-object represented by the class's interface can usually suffice. For example, if an ORM returns a basic-object with all the key/value pairs for user (even if it's not an `instanceof` User) often times that's good enough and we don't need to call `new User()` to work with the data. Going further, many times even an interface itself is enough to represent a data item and we don't even need create a class for the data if all the values are dynamic (i.e a user object whose only props are id, name, email).
+- Use these for managing objects that can be instantiated, theoretically any number times, as the application executes (i.e. a Promise or a database record that has dynamic and static properties and/or functions).
+- For IO data which has no functions or static properties, usually a basic-object + interface is enough to manage the item (i.e. a user record who's only properties are id, name, and email).
+- Do not use classes for the layers of your application as an immutable `basic-object` will usually suffice. 
+- If you do end up making a class for a database record, it's not typically necesasary to make a constructor call (instantiate) for your classes when working with IO data, as a basic-object represented by the class's interface can usually suffice. For example, if an ORM returns a basic-object with all the key/value pairs for user (even if it's not an `instanceof` User) often times that's good enough and we don't need to call `new User()` to work with the data.
+- Long story short, classes are usually overkill, but they do have certain use cases.
  
  
 ## Naming
