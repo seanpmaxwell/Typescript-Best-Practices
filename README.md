@@ -88,12 +88,25 @@ class User implements IUser {
 - Static primitives should be declared at the top of files at the beginning of the "Variables" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
 - Variables declared inside functions should be camelCase
 - Boolean values should generally start with an 'is' (i.e. session.isLoggedIn)
+- Use `one-var-scope` declarations for a group of closely related variables. This actually leads to a slight increase in performance during minification. DONT overuse it though. Keep only the closely related stuff together.
+```typescript
+// One block
+const FOO_BAR = 'asdf',
+ BLAH = 12,
+ SOMETHING = 'asdf';
+
+// Errors, don't merge this with above
+const Errs = {
+   Foo: 'foo',
+   Bar: 'bar',
+} as const;
+```
 
 ### Functions
 - camelCase in most situtations but for special exceptions like jsx elements can be PascalCase.
 - Name functions in a verb format: (i.e. don't say `name()` say `fetchName()`).
 - Simple functions as part of objects just meant to return constants (but we use a function to insert a value) can also be PascalCase and don't necessarily need to be in a verb format. Example:
-```
+```typescript
 const Errors = {
    SomeError: 'foo',
    EmailNotFound(email: string) {
