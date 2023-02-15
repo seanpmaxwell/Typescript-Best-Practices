@@ -125,8 +125,8 @@ const Errors = {
 
 ## Comments
 
-- Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through large files. 
-- Use `//` for comments inside of functions.
+- Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through large files. The first word in the comment should be capitalized and the sentence should end with a period.
+- Use `//` for comments inside of functions. The first word in the comment should be capitalized.
 
 ```typescript
 /**
