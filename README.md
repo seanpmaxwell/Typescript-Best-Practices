@@ -57,7 +57,7 @@ class User implements IUser {
   /**
    * Constructor()
    */
-  constructor(name: string, email?: string) {
+  public constructor(name: string, email?: string) {
     this.name = name;
     this.email = (email ?? '');
   }
