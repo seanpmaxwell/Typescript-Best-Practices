@@ -80,7 +80,7 @@ const Errors = {
 - Objects instantiated from classes or function calls should be pascalCase.
 
 ### Classes
-- PascalCase for class names, static members (vars and functions), and camelCase for instance-object variables and dynamic members.  
+- PascalCase for class names and static readonly variables (i.e. Dog.Species), and camelCase for instance-objects and class functions.  
 
 ### Enums
 - Use PascalCase for the enum name and keys. (i.e. `enum NodeEnvs { Dev = 'development'}`)
