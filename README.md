@@ -318,6 +318,19 @@ if (5 === value) {
 if (value === 5) {
 ```
 - For Typescript, specify a return type if you are using the function elsewhere in your code. However, always specifying a return type when your function is just getting passed to a library could be overkill (i.e. a router function passed to an express route). Another exception could be JSX function where it's obvious a JSX.Elements is what's getting returned.
+- For if statements that are really long, put each boolean statement on it's own line, and put the boolean operator and the end of each statement. For nested boolean statements, use indentation:
+```typescript
+  if (
+    data?.foo.trim() &&
+    data?.bar && (
+      role !== ADMIN || 
+      data?.id !== 3 || 
+      name !== ''
+    )
+  ) {
+     ...doSomething
+  }
+```
 
 
 ## Testing
