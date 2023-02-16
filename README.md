@@ -161,12 +161,20 @@ function foo() {
 - Be generous with spacing.
 - Put libraries at the top and your code below.
 - Try to put code imported from the same folder towards the bottom.
+- For imports that extend past the character limit (I use 80), give it a new but keep it just below the related imports.
 ```
 import express from 'express';
 import insertUrlParams from 'inserturlparams';
 
 import UserRepo from '@src/repos/UserRepo';
 import DogRepo from '@src/repos/DogRepo';
+
+import {
+ horseDogCowPigBlah,
+ horseDogCowPigBlahhhhhh,
+ horseDogHelllllloooooPigBlahhhhhh,
+} from '@src/repos/FarmAnimalRepo';
+ 
 
 import helpers from './helpers';
 ```
