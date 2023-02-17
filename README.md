@@ -129,7 +129,7 @@ const Errors = {
 - Use PascalCase for the enum name and keys. (i.e. `enum NodeEnvs { Dev = 'development'}`)
 
 ### Types
-- Prepend types with a 'T' (i.e. `type TMounseEvent = React.MouseEvent<HtmlButtonElement>;`) 
+- Prepend types with a 'T' (i.e. `type TMouseEvent = React.MouseEvent<HtmlButtonElement>;`) 
 
 ### Interfaces
 - Used to define the key/value pairs in an object literal or the key/value pairs returned from an objects constructor.
