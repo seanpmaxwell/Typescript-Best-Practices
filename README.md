@@ -161,7 +161,7 @@ function foo() {
 - Be generous with spacing.
 - Put libraries at the top and your code below.
 - Try to put code imported from the same folder towards the bottom.
-- For imports that extend past the character limit (I use 80), give it a new but keep it just below the related imports.
+- For imports that extend past the character limit (I use 80), give it a new line above and below but keep it just below the other related imports.
 ```
 import express from 'express';
 import insertUrlParams from 'inserturlparams';
