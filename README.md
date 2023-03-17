@@ -33,6 +33,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 
 ### Functions
 - There are function declarations with `function fnName()` and arrow functions with `() => {}`. Function-declarations should be used directly in files, so they can be hoisted, and arrow functions should be used when creating functions inside of functions and jsx-elements.
+- For functions that return data, use the `get` word for non-io data and fetch for IO data (i.e. `user.getFullName()` and `UserRepo.fetchUser()`).
 
 ### Objects
 - Anything with key/value pairs is technically an object. However, we'll use the term `basic-object` to refer to an object returned from an object-literal or serialzed from somewhere (i.e. JSON.parse()) since they are just instances of the `Object()` class. Also note that in Javascript we can append as many properties as we want to a basic-object but in Typescript the keys are static once the object is instantiated, although the values can change unless we make it immutable. 
