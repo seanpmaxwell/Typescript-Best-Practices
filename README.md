@@ -125,7 +125,7 @@ const Errors = {
 // Login.test.tsx
 
 // Data item object
-const LocalUser1 = new User('asd', 'adsf);
+const LocalUser1 = new User('asd', 'adsf');
 
 // Non data-item object
 const testerLib = new TestRunner();
