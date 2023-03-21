@@ -38,39 +38,53 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - Anything with key/value pairs is technically an object. However, we'll use the term `basic-object` to refer to an object returned from an object-literal or serialzed from somewhere (i.e. JSON.parse()) since they are just instances of the `Object()` class. Also note that in Javascript we can append as many properties as we want to a basic-object but in Typescript the keys are static once the object is instantiated, although the values can change unless we make it immutable. 
 
 ### Classes
-- Use classes for managing IO data that has both dynamic and static (that includes functions) properties. For example, if user has the `firstName` and `lastName` properties and we want to make a function called `getFullName()` which returns `firstName` + `lastName`, we should use a class so that we can call `new User()` and access the dynamic-functions. For IO data which has no functions or static properties, usually just a basic-object + interface is enough to manage the item (i.e. a signup-request record whose only properties are id, name, and email).
-- Do not use classes for the layers of your application as they are not typically instatiated multiple times (i.e. UserRepo.ts module that stores functions for making db calls)
-- If you do end up making a class for a database record, it's not typically necesasary to make a constructor call (instantiate) for your classes when working with IO data, as a basic-object represented by the class's interface can usually suffice. For example, if an ORM returns a basic-object with all the key/value pairs for user (even if it's not an `instanceof` User) often times that's good enough and we don't need to call `new User()` to work with the data.
-- Because Typescript classes do not allow for multiple constructors, I usually make a constructor for the classes individual properties and a static `.from()` function to return the class's instance from an object in place of a copy constructor. Note that the param could be an instance of the class or just a basic object with all the required key/value pairs.
+- Classes are not really necessary anymore. The trend in javascript is to move away from classes and now use procedural/functional programming. Modules are generally good enough to replace static functions. For dynamic-functions remember that `this` can be passed as the first param to a function and refers to the containing object.
 ```
+// The User module in the User.ts 
+
 interface IUser {
  name: string;
  email: string;
+ toString: () => string;
 }
 
-class User implements IUser {
 
-  public name: string;
-  public email: string;
+// **** Module Functions **** //
 
-  /**
-   * Constructor()
-   */
-  public constructor(name: string, email?: string) {
-    this.name = name;
-    this.email = (email ?? '');
-  }
-
-  /**
-   * Get user instance from object.
-   */
-  public static from(param: object): User {
-    const p = param as IUser;
-    return new User(p.name, p.email);
-  }
+/**
+ * Create new user.
+ */
+function new_(name: string, email?: string): IUser {
+  return { 
+    name,
+    email: (email ?? ''),
+    toString,
+  };
 }
+
+/**
+ * Create user from object.
+ */
+function from(param: object): IUser {
+  const p = param as IUser;
+  return new_(p.name, p.email);
+}
+
+
+// **** Dynamic Functions **** //
+
+function toString(this: IUser): string {
+  return (this.name + '' + this.email);
+}
+
+
+// **** Export default **** //
+
+export default {
+  new: new_,
+  from,
+} as const;
 ```
-- This should be standard practice whenever making a new class.
  
  
 ## Naming
