@@ -38,7 +38,8 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - Anything with key/value pairs is technically an object. However, we'll use the term `basic-object` to refer to an object returned from an object-literal or serialzed from somewhere (i.e. JSON.parse()) since they are just instances of the `Object()` class. Also note that in Javascript we can append as many properties as we want to a basic-object but in Typescript the keys are static once the object is instantiated, although the values can change unless we make it immutable. 
 
 ### Classes
-- Classes are not really necessary anymore. The trend in javascript is to move away from classes and now use procedural/functional programming. Modules are generally good enough to replace static functions. For dynamic-functions remember that `this` can be passed as the first param to a function and refers to the containing object.
+- Classes are not really necessary anymore. The trend in javascript is to move away from classes and now use procedural/functional programming. Keep in mind that because of IO, certain features of class's won't be available. For example, if `User` is a class, with properties (like `name` and `email`) and functions (like `toString()`) and we call `const john = new User()` and send that `john` variable through an IO request (like an api), `name` and `email` will be all that gets sent. Accordingly, on the receiving end (assuming it's still JavaScript) not the functions nor the _proto_ property are sent so `john instanceof User` and `john.toString()` won't work. We would have to call `new User(john)` again. To avoid the overhead of working with classes, have a module-counterpart for data items is usually a better alertnative.
+- Modules are generally good enough to replace static functions. For dynamic-functions remember that `this` can be passed as the first param to a function and refers to the containing object.
 ```
 // The User module in the User.ts 
 
@@ -73,6 +74,9 @@ function from(param: object): IUser {
 
 // **** Dynamic Functions **** //
 
+/**
+ * Convert object to a string.
+ */
 function toString(this: IUser): string {
   return (this.name + '' + this.email);
 }
