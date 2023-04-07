@@ -190,6 +190,17 @@ function foo() {
 }
 ```
 - Separate the major sections of scripts (variables/types/setup/functions,export default) by a `// **** "Section Name" **** //`.
+- If you need to put comments in an `if else` block put them above the `if` and `else` keywords:
+```typescript
+// blah
+if (something) {
+   do something...
+// foo
+} else {
+   do something else...
+}
+```
+
 
 
 ## Imports
