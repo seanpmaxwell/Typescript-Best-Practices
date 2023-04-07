@@ -125,8 +125,8 @@ const Errs = {
 
 ### Functions
 - camelCase in most situtations but for special exceptions like jsx elements can be PascalCase.
-- Name functions in a verb format: (i.e. don't say `name()` say `fetchName()`).
-- Simple functions as part of objects just meant to return constants (but we use a function to insert a value) can also be PascalCase and don't necessarily need to be in a verb format. Example:
+- Generally, you should name functions in a verb format: (i.e. don't say `name()` say `fetchName()` or an IO call).
+- Simple functions as part of objects just meant to return constants don't necessarily need to be in a verb format. Example:
 ```typescript
 const Errors = {
    SomeError: 'foo',
