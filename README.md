@@ -106,7 +106,7 @@ export default {
 - Folders not meant to be committed as part of the final code, but may exists along other source folders, (i.e. a test folder) should start and end with a double underscore `__test-helpers__`
 
 ### Variables
-- Static primitives should be declared at the top of files at the beginning of the "Variables" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
+- Static primitives/arrays should be declared at the top of files at the beginning of the "Variables" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
 - Variables declared inside functions should be camelCase
 - Boolean values should generally start with an 'is' (i.e. session.isLoggedIn)
 - Use `one-var-scope` declarations for a group of closely related variables. This actually leads to a slight increase in performance during minification. DONT overuse it though. Keep only the closely related stuff together.
@@ -115,6 +115,12 @@ export default {
 const FOO_BAR = 'asdf',
  BLAH = 12,
  SOMETHING = 'asdf';
+
+// Auth Paths
+const AUTH_PATHS = [
+  '/login',
+  '/signup',
+ ];
 
 // Errors, don't merge this with above
 const Errs = {
@@ -142,17 +148,20 @@ const Errors = {
 
 ### Objects
 - Generally, objects initialized outside of functions and directly inside of files with object-literals should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. Immutable objects and their keys and child keys should be PascalCase. This is useful for distinguishing dynamic and static data inside of functions.
-- Most of the time, outside of functions, objects instantiated function calls or constructors (not object-literals) should be pascalCase. However, objects which represent data items like `new User()` could be CamelCase instead.
+- Inside of functions, just like all other variables use camelCase.
+- Outside of functions, objects returned from function calls or constructors (not object-literals) should be camelCase. However, objects which represent hardcoded data-items (like `User.new('name', 'email')`) in a testing environment could be PascalCase instead.
 ```typescript
 // Login.test.tsx
 
 // Data item object
-const LocalUser1 = new User('asd', 'adsf');
+const LocalUser1 = User.new('asd', 'adsf');
 
 // Non data-item object
 const testerLib = new TestRunner();
 
-testerLib.execute(...);
+async function() {
+   testerLib.execute(...);
+}
 
 ...
 ```
