@@ -5,24 +5,17 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 ## Files/Folder Organization
 
 ### 4 types of scripts (files)
-- Declaration
-- Modular
-- Inventory
-- Linear
+- <b>Declaration</b>: exports one large declared item (i.e. a file called HttpStatusCodes.ts which exports a single enum containing all the http status codes.
+- <b>Modular</b>: export default is an `object-literal` containing a bunch of closely related functions/variables (i.e. a file call UserRepo.ts which has a bunch of functions for handling database queries related to user objects).
+- <b>Inventory</b>: for storing a large number of smaller declared items. (i.e. a file called types.ts which stores commonly shared types throughout your application)
+- <b>Linear</b>: executes a series of commands (i.e. an file called setup-db.ts which executes a bunch of file system commands to initialize a database).
  
 ### Organize file into 4 sections
 - Variables
 - Types
 - Setup
-- Functions (or Class)
-<br/>Note that your file may not have all of these sections
-
-### Script types explained 
-- Declaration: exports one large declared item (i.e. a file called HttpStatusCodes.ts which exports a single enum containing all the http status codes.
-- Modular: export default is an `object-literal` containing a bunch of closely related functions/variables (i.e. a file call UserRepo.ts which has a bunch of functions for handling database queries related to user objects).
-- Inventory: for storing a large number of smaller declared items. (i.e. a file called types.ts which stores commonly shared types throughout your application)
-- Linear: executes a series of commands (i.e. an file called setup-db.ts which executes a bunch of file system commands to initialize a database).
-
+- Functions (or Class) <br/>
+Note that your file may not have all of these sections
 
 ## Data Types
 - Primitives, Functions, Objects, and Classes
@@ -185,6 +178,7 @@ async function() {
 
 - Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through large files. The first word in the comment should be capitalized and the sentence should end with a period.
 - Use `//` for comments inside of functions. The first word in the comment should be capitalized.
+- Capitalize the first letter in a comment and use a '.' at the end of complete sentences.
 
 ```typescript
 /**
