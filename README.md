@@ -178,6 +178,7 @@ async function() {
 
 - Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through large files. The first word in the comment should be capitalized and the sentence should end with a period.
 - Use `//` for comments inside of functions. The first word in the comment should be capitalized.
+- Use `// * Some Comment * //` to separate large chunks of logic inside of functions (although this means your function probably needs to be reformatted).
 - Capitalize the first letter in a comment and use a '.' at the end of complete sentences.
 
 ```typescript
