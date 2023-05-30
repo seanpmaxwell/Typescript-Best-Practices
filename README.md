@@ -205,7 +205,35 @@ if (something) {
 }
 ```
 
+- Don't put spaces within functions (except for maybe between JSX elements in React functions). Use `//` comments to separate chunks of logic within functions. Use one space with a `/** */` comment to separate functions.
 
+```typescript
+/**
+ * Some function
+ */
+function doThis() {
+   // Some logic
+   if (this) {
+     console.log('dude');
+   }
+   // Some more logic
+   ...do other stuff blah blah blah
+   // Return
+   return retVal;
+}
+
+/**
+ * Some other function
+ */
+ function doThat() {
+   // Some other logic
+   for (const item of arr) {
+      ...hello
+   }
+   // Last comment
+   if (cool) { return 'yeah'; }
+}
+```
 
 ## Imports
 - Try to group together similarly related imports (i.e. Service Layer and Repository Layer in an express server).
