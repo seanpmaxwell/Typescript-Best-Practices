@@ -178,7 +178,6 @@ async function() {
 
 - Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through large files. The first word in the comment should be capitalized and the sentence should end with a period.
 - Use `//` for comments inside of functions. The first word in the comment should be capitalized.
-- Use `// * Some Comment * //` to separate large chunks of logic inside of functions (although this means your function probably needs to be reformatted).
 - Capitalize the first letter in a comment and use a '.' at the end of complete sentences.
 
 ```typescript
@@ -205,7 +204,7 @@ if (something) {
 }
 ```
 
-- Don't put spaces within functions (except for maybe between JSX elements in React functions). Use `//` comments to separate chunks of logic within functions. Use one space with a `/** */` comment to separate functions.
+- Don't put spaces within functions generally, but there can be exception like between HTML elements in React functions. Use `//` comments to separate chunks of logic within functions. Use one space with a `/** */` comment to separate functions.
 
 ```typescript
 /**
