@@ -100,7 +100,8 @@ export default {
 
 ### Variables
 - Static primitives/arrays should be declared at the top of files at the beginning of the "Variables" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
-- Variables declared inside functions should be camelCase
+- Simple arrays and objects (objects don't contain any nested objects) just meant to hold static data and marked with `as const` can also be UPPER_SNAKE_CASE.
+- Variables declared inside functions should be camelCase, always.
 - Boolean values should generally start with an 'is' (i.e. session.isLoggedIn)
 - Use `one-var-scope` declarations for a group of closely related variables. This actually leads to a slight increase in performance during minification. DONT overuse it though. Keep only the closely related stuff together.
 ```typescript
@@ -116,7 +117,7 @@ const AUTH_PATHS = [
  ];
 
 // Errors, don't merge this with above
-const Errs = {
+const ERRS = {
    Foo: 'foo',
    Bar: 'bar',
 } as const;
@@ -140,20 +141,39 @@ const Errors = {
 - For functions that return data, use the `get` word for non-io data and fetch for IO data (i.e. `user.getFullName()` and `UserRepo.fetchUser()`).
 
 ### Objects
-- Generally, objects initialized outside of functions and directly inside of files with object-literals should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. Immutable objects and their keys and child keys should be PascalCase. This is useful for distinguishing dynamic and static data inside of functions.
+- Generally, objects initialized outside of functions and directly inside of files with object-literals should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. As mentioned in the <b>Variables</b> section, simple static objects/arrays can be UPPER_SNAKE_CASE. However, large objects which are the `export default` of Declaration or Modular scripts should be PascalCase. 
 - Inside of functions, just like all other variables use camelCase.
 - Outside of functions, objects returned from function calls or constructors (not object-literals) should be camelCase. However, objects which represent hardcoded data-items (like `User.new('name', 'email')`) in a testing environment could be PascalCase instead.
 ```typescript
-// Login.test.tsx
+// **** UserRepo.ts **** //
 
-// Data item object
-const LocalUser1 = User.new('asd', 'adsf');
+function findById(id: number): Promise<IUser> {
+  db.doStuff()...
+}
 
-// Non data-item object
-const testerLib = new TestRunner();
+function findByName(name: string): Promise<IUser> {
+  db.doStuff()...
+}
 
-async function() {
-   testerLib.execute(...);
+export default {
+  findById,
+  findByName,
+} as const;
+
+
+// **** UserService.ts **** //
+
+// PascalCase
+import UserRepo from './UserRepo.ts'; 
+
+// UPPER_SNAKE_CASE
+const ERRS = {
+   Foo: 'foo',
+   Bar: 'bar',
+} as const;
+
+function login() {
+  ...do stuff
 }
 
 ...
