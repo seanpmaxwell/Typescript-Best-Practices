@@ -31,8 +31,9 @@ Note that your file may not have all of these sections
 - Anything with key/value pairs is technically an object. However, we'll use the term `basic-object` to refer to an object returned from an object-literal or serialzed from somewhere (i.e. JSON.parse()) since they are just instances of the `Object()` class. Also note that in Javascript we can append as many properties as we want to a basic-object but in Typescript the keys are static once the object is instantiated, although the values can change unless we make it immutable. 
 
 ### Classes
-- Classes are not really necessary anymore. The trend in javascript is to move away from classes and now use procedural/functional programming. Note that when doing IO, working with classes could get a little messy. For example, if `User` is a class, with properties (like `name` and `email`) and functions (like `toString()`) and we call `const john = new User()` and send that `john` variable through an IO request (like an api), `name` and `email` will be all that gets sent. Accordingly, on the receiving end (assuming it's still JavaScript) neither the functions nor the `_proto_` property are sent so `john instanceof User` and `john.toString()` won't work. We would have to call `new User(john)` again. Also keep in mind, for large projects it could get confusing as to whether the `john` variable somewhere is simply a basic-object or an actual instance of the User class. To avoid the overhead and confusion of working with classes, having a module-counterpart to store data-item functions and describing the structure of the item with an interface is usually a better alternative (i.e. for users have a `User.ts` modular file and an `IUser` interface). 
-- Modules are generally good enough to replace static functions. For dynamic-functions remember that `this` can be passed as the first param to a function and refers to the containing object.
+- Classes are not really necessary anymore. The trend in javascript is to move away from classes and now use procedural/functional programming. Note that when doing IO, working with classes could get a little messy. For example, if `User` is a class, with properties (like `name` and `email`) and functions (like `toString()`) and we call `const john = new User()` and send that `john` variable through an IO request (like an api), `name` and `email` will be all that gets sent. Accordingly, on the receiving end (assuming it's still JavaScript) neither the functions nor the `_proto_` property are sent so `john instanceof User` and `john.toString()` won't work. We would have to call `new User(john)` again. Also keep in mind, for large projects it could get confusing as to whether the `john` variable somewhere is simply a basic-object or an actual instance of the User class. To avoid the overhead and confusion of working with classes, having a module-counterpart to store data-item functions and describing the structure of the item with an interface is usually a better alternative (i.e. for users have a `User.ts` modular file and an `IUser` interface).
+- For modules used to present data (i.e. users stored in a database) as opposed to static modules (UserService layer in a server) we'll refer to these as `Data-Modules`. 
+- A good standard practice for every new data-module is to implement `new()`, `from()`, and `isValid()` functions and give it a corresponding interface.
 ```
 // The User module in the User.ts 
 
@@ -46,7 +47,7 @@ interface IUser {
 // **** Functions **** //
 
 /**
- * Create new user.
+ * Create new user. Appending name with '_' cause new is a built in keyword.
  */
 function new_(name: string, email?: string): IUser {
   return { 
@@ -65,16 +66,22 @@ function from(param: object): IUser {
 }
 
 /**
- * Convert object to a string.
+ * See if the param is a user.
  */
-function toString(this: IUser): string {
-  return (this.name + '' + this.email);
+function isValid(param: unknown): param is IUser {
+  return (
+    !!arg &&
+    typeof arg === 'object' &&
+    'id' in arg &&
+    'email' in arg
+  );
 }
 
-// OR as an alterative to above
-
-function toStringAlt(user: IUser): string {
-  return (user.name + ' ' + user.email);
+/**
+ * Convert object to a string.
+ */
+function toString(user: IUser): string {
+  return (this.name + '' + this.email);
 }
 
 
@@ -83,7 +90,8 @@ function toStringAlt(user: IUser): string {
 export default {
   new: new_,
   from,
-  toStringAlt,
+  isValid,
+  toString,
 } as const;
 ```
  
