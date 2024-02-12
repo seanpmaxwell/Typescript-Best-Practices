@@ -13,7 +13,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 ### Organize file into 4 sections
 - Variables
 - Types
-- Setup
+- Run
 - Functions (or Class) <br/>
 Note that your file may not have all of these sections
 
@@ -220,7 +220,7 @@ function foo() {
   return (bar(arg) + bar(arg) + bar(arg));
 }
 ```
-- Separate the major sections of scripts (variables/types/setup/functions,export default) by a `// **** "Section Name" **** //`.
+- Separate the major sections of scripts (variables/types/run/functions,export default) by a `// **** "Section Name" **** //`.
 - If you need to put comments in an `if else` block put them above the `if` and `else` keywords:
 ```typescript
 // blah
@@ -308,7 +308,7 @@ let mailer; TTransport | null = null;
 type TTransport = Transporter<SMTPTransport.SentMessageInfo>;
 
 
-// **** Setup **** //
+// **** Run **** //
 
 const transporter = nodemailer
  .createTransport({ ...settings })
@@ -396,7 +396,7 @@ import express from 'express';
 const app = express(); 
 
 
-// **** Setup **** //
+// **** Run **** //
 
 app.use(middleware1);
 app.use(middleware2);
