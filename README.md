@@ -8,7 +8,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - <b>Declaration</b>: exports one large declared item (i.e. a file called HttpStatusCodes.ts which exports a single enum containing all the http status codes.
 - <b>Modular</b>: export default is an `object-literal` containing a bunch of closely related functions/variables (i.e. a file call UserRepo.ts which has a bunch of functions for handling database queries related to user objects).
 - <b>Inventory</b>: for storing a large number of smaller declared items. (i.e. a file called types.ts which stores commonly shared types throughout your application)
-- <b>Linear</b>: executes a series of commands (i.e. an file called setup-db.ts which executes a bunch of file system commands to initialize a database).
+- <b>Linear</b>: executes a series of commands (i.e. a file called setup-db.ts which executes a bunch of file system commands to initialize a database).
  
 ### Organize file into 4 sections
 - Variables
