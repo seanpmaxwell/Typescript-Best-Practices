@@ -25,7 +25,16 @@ Note that your file may not have all of these sections
 - null, undefined, boolean, number, string. Boolean(), Number(), String() are object counter parts used during coercian.
 
 ### Functions
-- There are function declarations with `function fnName()` and arrow functions with `() => {}`. Function-declarations should be used directly in files, so they can be hoisted, and arrow functions should be used when creating functions inside of functions and jsx-elements.
+- There are function declarations with `function fnName()` and arrow functions with `() => {}`. Function-declarations should be used directly in files, so they can be hoisted, and arrow functions should be used when creating functions inside of functions and jsx-elements. You may have to make exceptions to this when working with certain libraries but generally this is how it should be done.
+- When using arrow functions, only use parenthesis for the params if there are multiple params. Paranthesis is overall if there is only one param:
+```.ts
+function ParentFn(param) {
+   const childFn = val => ...do something with the val;
+   const childFn2 = (val1, val2) => do something else;
+   const badThing = (val) => ...do something else with the val;
+   childFn(val);
+}
+```
 
 ### Objects
 - Anything with key/value pairs is technically an object. However, we'll use the term `basic-object` to refer to an object returned from an object-literal or serialzed from somewhere (i.e. JSON.parse()) since they are just instances of the `Object()` class. Also note that in Javascript we can append as many properties as we want to a basic-object but in Typescript the keys are static once the object is instantiated, although the values can change unless we make it immutable. 
@@ -34,7 +43,8 @@ Note that your file may not have all of these sections
 - Classes are not really necessary anymore. The trend in javascript is to move away from classes and now use procedural/functional programming. Note that when doing IO, working with classes could get a little messy. For example, if `User` is a class, with properties (like `name` and `email`) and functions (like `toString()`) and we call `const john = new User()` and send that `john` variable through an IO request (like an api), `name` and `email` will be all that gets sent. Accordingly, on the receiving end (assuming it's still JavaScript) neither the functions nor the `_proto_` property are sent so `john instanceof User` and `john.toString()` won't work. We would have to call `new User(john)` again. Also keep in mind, for large projects it could get confusing as to whether the `john` variable somewhere is simply a basic-object or an actual instance of the User class. To avoid the overhead and confusion of working with classes, having a module-counterpart to store data-item functions and describing the structure of the item with an interface is usually a better alternative (i.e. for users have a `User.ts` modular file and an `IUser` interface).
 - For modules used to present data (i.e. users stored in a database) as opposed to static modules (UserService layer in a server) we'll refer to these as `Data-Modules`. 
 - A good standard practice for every new data-module is to implement `new()`, `from()`, and `isValid()` functions and give it a corresponding interface.
-```
+
+```typescript
 // The User module in the User.ts 
 
 interface IUser {
