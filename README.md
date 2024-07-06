@@ -356,7 +356,7 @@ export default {
 ```
 
 - An inventory script
-```typescript
+```.tsx
 // shared-buttons.tsx
 
 /**
