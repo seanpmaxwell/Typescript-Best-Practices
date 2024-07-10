@@ -26,7 +26,7 @@ Note that your file may not have all of these sections
 
 ### Functions
 - There are function declarations with `function fnName()` and arrow functions with `() => {}`. Function-declarations should be used directly in files, so they can be hoisted, and arrow functions should be used when creating functions inside of functions and jsx-elements. You may have to make exceptions to this when working with certain libraries but generally this is how it should be done.
-- When using arrow functions, only use parenthesis for the params if there are multiple params. Paranthesis is overall if there is only one param:
+- When using arrow functions, only use parenthesis for the params if there are multiple params. Paranthesis are overkill if there is only one param:
 ```.ts
 function ParentFn(param) {
    const childFn = val => ...do something with the val;
