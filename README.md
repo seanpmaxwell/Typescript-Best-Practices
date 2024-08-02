@@ -40,10 +40,9 @@ function ParentFn(param) {
 - Anything with key/value pairs is technically an object. However, we'll use the term `basic-object` to refer to an object returned from an object-literal or serialzed from somewhere (i.e. JSON.parse()) since they are just instances of the `Object()` class. Also note that in Javascript we can append as many properties as we want to a basic-object but in Typescript the keys are static once the object is instantiated, although the values can change unless we make it immutable. 
 
 ### Classes
-- Classes are not really necessary anymore. The trend in javascript is to move away from classes and now use procedural/functional programming. Note that when doing IO, working with classes could get a little messy. For example, if `User` is a class, with properties (like `name` and `email`) and functions (like `toString()`) and we call `const john = new User()` and send that `john` variable through an IO request (like an api), `name` and `email` will be all that gets sent. Accordingly, on the receiving end (assuming it's still JavaScript) neither the functions nor the `_proto_` property are sent so `john instanceof User` and `john.toString()` won't work. We would have to call `new User(john)` again. Also keep in mind, for large projects it could get confusing as to whether the `john` variable somewhere is simply a basic-object or an actual instance of the User class. To avoid the overhead and confusion of working with classes, having a module-counterpart to store data-item functions and describing the structure of the item with an interface is usually a better alternative (i.e. for users have a `User.ts` modular file and an `IUser` interface).
-- For modules used to present data (i.e. users stored in a database) as opposed to static modules (UserService layer in a server) we'll refer to these as `Data-Modules`. 
+- As for classes, the trend in javascript is to move away from classes and now use procedural/functional programming. A good reason is that when doing IO, working with classes could get a little messy. For example, if `User` is a class, with properties (like `name` and `email`) and functions (like `toString()`) and we call `const john = new User()` and send that `john` variable through an IO request (like an api), `name` and `email` will be all that gets sent. Accordingly, on the receiving end (assuming it's still JavaScript) neither the functions nor the `_proto_` property are sent so `john instanceof User` and `john.toString()` won't work. We would have to call `new User(john)` again. Also keep in mind, for large projects it could get confusing as to whether the `john` variable somewhere is simply a basic-object or an actual instance of the User class. To avoid the overhead and confusion of working with classes, having a module-counterpart to store data-item functions and describing the structure of the item with an interface is usually a better alternative (i.e. for users have a `User.ts` modular file and an `IUser` interface).
+- For modules used to present IO data (i.e. users stored in a database) as opposed to static modules (UserService layer in a server) we'll refer to these as `Data-Modules`.
 - A good standard practice for every new data-module is to implement `new()`, `from()`, and `isValid()` functions and give it a corresponding interface.
-
 ```typescript
 // The User module in the User.ts 
 
@@ -104,7 +103,9 @@ export default {
   toString,
 } as const;
 ```
- 
+
+ - Despite the trend though, there are a few scenarios where a class might make sense. Suppose there's a situation where you have non IO data with an internal state and you that you want to call functions on it in order to manipulate that state. For example, take the `new Map()` object. It has it's own internal state which is used to track a list of key value pairs, and it provides you with all kinds of handy functions/properties `get(), set(), keys(), length etc` to manipulate and access that date. It'd be pretty inconvenient to constantly have to do `const someMap = Map.new(); Map.set(someMap, 'key', 'value'), Map.get(someMap, 'key');`. But definitely anything IO, or static should be done with `basic-objects` though and do note that classes often tend to get overused.
+
  
 ## Naming
 
