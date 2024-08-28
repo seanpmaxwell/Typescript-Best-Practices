@@ -8,24 +8,30 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - <b>Declaration</b>: exports one large declared item (i.e. a file called HttpStatusCodes.ts which exports a single enum containing all the http status codes.
 - <b>Modular</b>: export default is an `object-literal` containing a bunch of closely related functions/variables (i.e. a file call UserRepo.ts which has a bunch of functions for handling database queries related to user objects).
 - <b>Inventory</b>: for storing a large number of smaller declared items. (i.e. a file called types.ts which stores commonly shared types throughout your application)
-- <b>Linear</b>: executes a series of commands (i.e. a file called setup-db.ts which executes a bunch of file system commands to initialize a database).
- 
-### Organize file into 4 sections
-- Variables
-- Types
-- Run
-- Functions (or Class) <br/>
-Note that your file may not have all of these sections
+- <b>Linear</b>: executes a series of commands (i.e. a file called `setup-db.ts` which does a bunch of system commands to initialize a database).
 
-## Data Types
+### 4 "Fundamental" Types
 - Primitives, Functions, Objects, and Classes
-- Functions are technicaly objects but are also callable and Classes are syntax sugar for using functions with `new`, but for all practical purposes we'll consider these our four datatypes cause of how we use them.
+- Functions are technicaly objects but are also callable and classes are syntax sugar for calling functions with `new`, but for all practical purposes we'll consider these our four fundamental types cause of how we use them.
+ 
+### Organize files into 4 sections (group them by the "fundamental" type)
+- Because of how hoisting works in JavaScript, generally you should organize a file into these 4 sections (note that your file may not have all of them):
+ - Variables
+ - Types
+ - Run (execute any logic that you need to)
+ - Functions
+
+- Some special notes about organization:
+ - Only constant/readonly variables (primitive and object values) should go directly in files in the `Variables` section (except maybe in linear scripts).
+ - If you have a any classes that are small enough and not shared that they don't warrant creating a separate file, put them in another section below the functions. Although with modular-programming we usually (but not always) don't need to create classes.
+ - If you are writing a large linear-script (i.e. task-automation or initializing a server), it might make more since to group your code by the task they are doing instead of by the fundamental-type. Still, if you decide to create some function-declarations in this script, place your function-declarations in another section at the bottom which is declared after all logic has executed.
+ - Always put the `export default` at the very bottom of every file. This makes your default export easier to keep track of and apply any wrappers it may need. 
 
 ### Primitives
-- null, undefined, boolean, number, string. Boolean(), Number(), String() are object counter parts used during coercian.
+- `null`, `undefined`, `boolean`, `number`, `string` are the 5 o.g. primitives. es6 has added some new ones like `symbol` but we should all at least be familiar with the original 5 and how coercion works. Coercion is when we try to call a function on a primtive and JavaScript (under the hood) wraps its object counterpart (`Boolean`, `Number`, or `String`) around it so we can make the function call since primitives by themselves don't have functions.
 
 ### Functions
-- There are function declarations with `function fnName()` and arrow functions with `() => {}`. Function-declarations should be used directly in files, so they can be hoisted, and arrow functions should be used when creating functions inside of functions and jsx-elements. You may have to make exceptions to this when working with certain libraries but generally this is how it should be done.
+- There are function-declarations made with `function fnName() {}` and arrow-functions made with `() => {}`. Function-declarations should be used directly in files (so that we can use hoisting) and arrow functions should be used when creating functions inside of other functions (i.e. a callback passed to a JSX element). You may have to make exceptions to this when working with certain libraries cause of how `this` works in each but generally this is how it should be done.
 - When using arrow functions, only use parenthesis for the params if there are multiple params. Paranthesis are overkill if there is only one param:
 ```.ts
 function ParentFn(param) {
@@ -37,7 +43,7 @@ function ParentFn(param) {
 ```
 
 ### Objects
-- Anything with key/value pairs is technically an object. However, we'll use the term `basic-object` to refer to an object returned from an object-literal or serialzed from somewhere (i.e. JSON.parse()) since they are just instances of the `Object()` class. Also note that in Javascript we can append as many properties as we want to a basic-object but in Typescript the keys are static once the object is instantiated, although the values can change unless we make it immutable. 
+- Anything with key/value pairs is technically an object. However, we'll use the term `basic-object` to refer to an object returned from an object-literal since they are just instances of the `Object()` class. Also note that in Javascript we can append as many properties as we want to a basic-object but in Typescript the keys are static once the object is instantiated, although the values can change unless we make it immutable. 
 
 ### Classes
 - As for classes, the trend in javascript is to move away from object-oriented and now use procedural/functional programming. A good reason is that when doing IO, working with classes could get a little messy. For example, if `User` is a class, with properties (like `name` and `email`) and functions (like `toString()`) and we call `const john = new User()` and send that `john` variable through an IO request (like an api), `name` and `email` will be all that gets sent. Accordingly, on the receiving end (assuming it's still JavaScript) neither the functions nor the `_proto_` property are sent so `john instanceof User` and `john.toString()` won't work. We would have to call `new User(john)` again. Also keep in mind, for large projects it could get confusing as to whether the `john` variable somewhere is simply a basic-object or an actual instance of the User class. To avoid the overhead and confusion of working with classes, having a module-counterpart to store data-item functions and describing the structure of the item with an interface is usually a better alternative (i.e. for users have a `User.ts` modular file and an `IUser` interface).
@@ -104,7 +110,7 @@ export default {
 } as const;
 ```
 
- - Despite the trend though, there are a few scenarios where a class might make sense. Suppose there's a situation where you have non IO data with an internal state and you that you want to call functions on it in order to manipulate that state. For example, take the `new Map()` object. It has it's own internal state which is used to track a list of key value pairs, and it provides you with all kinds of handy functions/properties `get(), set(), keys(), length etc` to manipulate and access that date. It'd be pretty inconvenient to constantly have to do `const someMap = Map.new(); Map.set(someMap, 'key', 'value'), Map.get(someMap, 'key');`. But definitely anything IO, or static should be done with `basic-objects` though and do note that classes often tend to get overused.
+ - Despite the trend though, there are a few scenarios where a class might make sense. Suppose there's a situation where you have non IO data with an internal state and you that you want to call functions on it in order to manipulate that state. For example, take the `new Map()` object. It has it's own internal state which is used to track a list of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to manipulate and access that state. It'd be pretty inconvenient to constantly have to do `const someMap = Map.new(); Map.set(someMap, 'key', 'value'), Map.get(someMap, 'key');`. But definitely any object that is IO data or static should be made with `basic-objects` and do note that classes often tend to get overused.
 
  
 ## Naming
