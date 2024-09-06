@@ -62,13 +62,12 @@ interface IUser {
 // **** Functions **** //
 
 /**
- * Create new user. Appending name with '_' cause new is a built in keyword.
+ * Create new user. Appending name with "_" cause new is a built in keyword.
  */
 function new_(name: string, email?: string): IUser {
   return { 
     name,
     email: (email ?? ''),
-    toString,
   };
 }
 
@@ -96,7 +95,7 @@ function isValid(param: unknown): param is IUser {
  * Convert object to a string.
  */
 function toString(user: IUser): string {
-  return (this.name + '' + this.email);
+  return (user.name + '' + user.email);
 }
 
 
@@ -110,7 +109,7 @@ export default {
 } as const;
 ```
 
- - Despite the trend though, there are a few scenarios where a class might make sense. Suppose there's a situation where you have non IO data with an internal state and you that you want to call functions on it in order to manipulate that state. For example, take the `new Map()` object. It has it's own internal state which is used to track a list of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to manipulate and access that state. It'd be pretty inconvenient to constantly have to do `const someMap = Map.new(); Map.set(someMap, 'key', 'value'), Map.get(someMap, 'key');`. But definitely any object that is IO data or static should be made with `basic-objects` and do note that classes often tend to get overused.
+ - Despite the trend though, there are a few scenarios where a class might make sense. Suppose there's a situation where you have non-IO data with an internal state and you want to call functions on that state either to manipulate or access it (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerious if the state is external) to constantly have to do `const someMap = Map.new(); Map.set(someMap, 'key', 'value'), Map.get(someMap, 'key');`. But definitely any object that is IO data or static should be made with `basic-objects` and do note that classes often tend to get overused. Sometimes you might not be sure about whether to use a class or not. And good rule of thumb is if you have a function that needs to be initialized with some data and called multiple times and you're tempted to use the `this` keyword, you should probably be using a class.
 
  
 ## Naming
