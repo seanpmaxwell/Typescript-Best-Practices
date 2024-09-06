@@ -74,9 +74,11 @@ function new_(name: string, email?: string): IUser {
 /**
  * Create user from object.
  */
-function from(param: object): IUser {
-  const p = param as IUser;
-  return new_(p.name, p.email);
+function from(param: unknown): IUser {
+  if (isValid(param)) {
+    return new_(param.name, param.email);
+  }
+  throw new Error('argument not a valid User object');
 }
 
 /**
