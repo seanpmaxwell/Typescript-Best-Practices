@@ -16,7 +16,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
  
 ### Organize files into the following sections:
 - Because of how hoisting works in JavaScript, you should organize a file into these sections. Note that your file may not (and usually won't) have all of them:
--- Variables
+ - Variables
  Types
  Run (Special Note: execute any logic that you need to here. Outside of linear scripts you usually shouldn't need this section, but if you do keep it short).
  Functions
