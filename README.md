@@ -11,24 +11,24 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - <b>Linear</b>: executes a series of commands (i.e. a file called `setup-db.ts` which does a bunch of system commands to initialize a database).
 
 ### 4 "Fundamental" Types
-- Primitives, Functions, Objects, and Classes
+- Primitives, Functions, Basic-Objects, and Classes
 - Functions are technicaly objects but are also callable and classes are syntax sugar for calling functions with `new`, but for all practical purposes we'll consider these our four fundamental types cause of how we use them.
  
-### Organize files into 4 sections (group them by the "fundamental" type)
-- Because of how hoisting works in JavaScript, generally you should organize a file into these 4 sections (note that your file may not have all of them):
+### Organize files into the following sections:
+- Because of how hoisting works in JavaScript, you should organize a file into these sections. Note that your file may not (and usually won't) have all of them:
  - Variables
  - Types
- - Run (execute any logic that you need to)
+ - Run (Special Note: execute any logic that you need to here. Outside of linear scripts you usually shouldn't need this section, but if you do keep it short).
  - Functions
+ - Classes (only very small ones, large classes should go in a separate file).
 
 - Some special notes about organization:
  - Only constant/readonly variables (primitive and object values) should go directly in files in the `Variables` section (except maybe in linear scripts).
- - If you have a any classes that are small enough and not shared that they don't warrant creating a separate file, put them in another section below the functions. Although with modular-programming we usually (but not always) don't need to create classes.
- - If you are writing a large linear-script (i.e. task-automation or initializing a server), it might make more since to group your code by the task they are doing instead of by the fundamental-type. Still, if you decide to create some function-declarations in this script, place your function-declarations in another section at the bottom which is declared after all logic has executed.
+ - If you are writing a linear script, it might make more since to group your code by the task they are doing instead of by the fundamental-type. Still, if you decide to create some function-declarations in the same script, place your function-declarations in another section at the bottom of the file below the <b>Run</b>.
  - Always put the `export default` at the very bottom of every file. This makes your default export easier to keep track of and apply any wrappers it may need. 
 
 ### Primitives
-- `null`, `undefined`, `boolean`, `number`, `string` are the 5 o.g. primitives. es6 has added some new ones like `symbol` but we should all at least be familiar with the original 5 and how coercion works. Coercion is when we try to call a function on a primtive and JavaScript (under the hood) wraps its object counterpart (`Boolean`, `Number`, or `String`) around it so we can make the function call since primitives by themselves don't have functions.
+- `null`, `undefined`, `boolean`, `number`, `string` are the 5 o.g. primitives. `es6` has added some new ones like `symbol` but we should all at least be familiar with the original 5 and how coercion works. Coercion is when we try to call a function on a primtive and JavaScript (under the hood) wraps its object counterpart (`Boolean`, `Number`, or `String`) around it so we can make the function call since primitives by themselves don't have functions.
 
 ### Functions
 - There are function-declarations made with `function fnName() {}` and arrow-functions made with `() => {}`. Function-declarations should be used directly in files (so that we can use hoisting) and arrow functions should be used when creating functions inside of other functions (i.e. a callback passed to a JSX element). You may have to make exceptions to this when working with certain libraries cause of how `this` works in each but generally this is how it should be done.
@@ -42,7 +42,7 @@ function ParentFn(param) {
 }
 ```
 
-### Objects
+### Basic-Objects
 - Anything with key/value pairs is technically an object. However, we'll use the term `basic-object` to refer to an object returned from an object-literal since they are just instances of the `Object()` class. Also note that in Javascript we can append as many properties as we want to a basic-object but in Typescript the keys are static once the object is instantiated, although the values can change unless we make it immutable. 
 
 ### Classes
@@ -111,9 +111,19 @@ export default {
 } as const;
 ```
 
- - Despite the trend though, there are a few scenarios where a class might make sense. Suppose there's a situation where you have non-IO data with an internal state and you want to call functions on that state either to manipulate or access it (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerious if the state is external) to constantly have to do `const someMap = Map.new(); Map.set(someMap, 'key', 'value'), Map.get(someMap, 'key');`. But definitely any object that is IO data or static should be made with `basic-objects` and do note that classes often tend to get overused. Sometimes you might not be sure about whether to use a class or not. And good rule of thumb is if you have a function that needs to be initialized with some data and called multiple times and you're tempted to use the `this` keyword, you should probably be using a class.
+ - Despite the trend though, there are a few scenarios where a class might make sense. Suppose there's a situation where you have non-IO data with an internal state and you want to call functions on that state either to manipulate or access it (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerious if the state is external) to constantly have to do `const someMap = Map.new(); Map.set(someMap, 'key', 'value'), Map.get(someMap, 'key');`. But definitely any object that is IO data or static should be made with `basic-objects` and do note that classes often tend to get overused. Sometimes you might not be sure about whether to use a class or not. And good rule of thumb is if you have a function or functions that needs to be initialized with some data/settings and called multiple times and you're tempted to use the `this` keyword, you should probably be using a class.
 
- 
+### Basic-Objects vs Classes Summary:
+- <b>Basic-Objects:</b>
+-  Organizing Code
+-  IO-Data
+-  Passing a large number of arguments between functions
+-  Storing data which has no functions attached to it 
+- <b>Classes:</b> 
+-  Anytime your have a group of related functions and data that need to work together (i.e. data-structures)
+-  Personal Note: Rarely do I implement classes. Usually when I do its just for overloading the basic `Error` object in NodeJS or when I have an module that's ends up needing some configuration outside of just the application's initial startup time. For example, when I was doing some data visualization with a d3 library, I created a class to wrap it and store the data array internally then provided some public class functions to update the data if the user clicked buttons to fetch more data.
+
+
 ## Naming
 
 ### Files/Folders
