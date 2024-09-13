@@ -23,9 +23,9 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
   - Classes (only very small ones, large classes should go in a separate file).
 
 - Some special notes about organization:
- - Only constant/readonly variables (primitive and object values) should go directly in files in the `Variables` section (except maybe in linear scripts).
- - If you are writing a linear script, it might make more since to group your code by the task they are doing instead of by the fundamental-type. Still, if you decide to create some function-declarations in the same script, place your function-declarations in another section at the bottom of the file below the <b>Run</b>.
- - Always put the `export default` at the very bottom of every file. This makes your default export easier to keep track of and apply any wrappers it may need. 
+  - Only constant/readonly variables (primitive and object values) should go directly in files in the `Variables` section (except maybe in linear scripts).
+  - If you are writing a linear script, it might make more since to group your code by the task they are doing instead of by the fundamental-type. Still, if you decide to create some function-declarations in the same script, place your function-declarations in another section at the bottom of the file below the <b>Run</b>.
+  - Always put the `export default` at the very bottom of every file. This makes your default export easier to keep track of and apply any wrappers it may need. 
 
 ### Primitives
 - `null`, `undefined`, `boolean`, `number`, `string` are the 5 o.g. primitives. `es6` has added some new ones like `symbol` but we should all at least be familiar with the original 5 and how coercion works. Coercion is when we try to call a function on a primtive and JavaScript (under the hood) wraps its object counterpart (`Boolean`, `Number`, or `String`) around it so we can make the function call since primitives by themselves don't have functions.
