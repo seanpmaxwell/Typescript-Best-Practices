@@ -115,13 +115,13 @@ export default {
 
 ### Basic-Objects vs Classes Summary:
 - <b>Basic-Objects:</b>
--  Organizing Code
--  IO-Data
--  Passing a large number of arguments between functions
--  Storing data which has no functions attached to it 
+ - Organizing Code
+ - IO-Data
+ - Passing a large number of arguments between functions
+ - Storing data which has no functions attached to it 
 - <b>Classes:</b> 
--  Anytime your have a group of related functions and data that need to work together (i.e. data-structures)
--  Personal Note: Rarely do I implement classes. Usually when I do its just for overloading the basic `Error` object in NodeJS or when I have an module that's ends up needing some configuration outside of just the application's initial startup time. For example, when I was doing some data visualization with a d3 library, I created a class to wrap it and store the data array internally then provided some public class functions to update the data if the user clicked buttons to fetch more data.
+ - Anytime your have a group of related functions and data that need to work together (i.e. data-structures)
+ - Personal Note: Rarely do I implement classes. Usually when I do its just for overloading the basic `Error` object in NodeJS or when I have an module that's ends up needing some configuration outside of just the application's initial startup time. For example, when I was doing some data visualization with a d3 library, I created a class to wrap it and store the data array internally then provided some public class functions to update the data if the user clicked buttons to fetch more data.
 
 
 ## Naming
