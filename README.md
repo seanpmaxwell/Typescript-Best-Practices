@@ -215,7 +215,6 @@ function login() {
 ...
 ```
 
-
 ### Classes
 - PascalCase for class names and static readonly variables (i.e. Dog.Species), and camelCase for instance-objects and class functions.  
 
@@ -231,11 +230,9 @@ function login() {
 
 
 ## Comments
-
 - Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through large files. The first word in the comment should be capitalized and the sentence should end with a period.
 - Use `//` for comments inside of functions. The first word in the comment should be capitalized.
 - Capitalize the first letter in a comment and use a '.' at the end of complete sentences.
-
 ```typescript
 /**
  * Function declaration comment.
@@ -260,8 +257,7 @@ if (something) {
 }
 ```
 
-- Don't put spaces within functions generally, but there can be exception like between HTML elements in React functions. Use `//` comments to separate chunks of logic within functions. Use one space with a `/** */` comment to separate functions.
-
+- Don't put spaces within functions generally, but there can be exceptions like between dom elements or hooks elements in React functions. Use `//` comments to separate chunks of logic within functions. Use one space with a `/** */` comment to separate functions.
 ```typescript
 /**
  * Some function
@@ -289,6 +285,9 @@ function doThis() {
    if (cool) { return 'yeah'; }
 }
 ```
+
+- If you have a really long function inside of another really long function (i.e. React Hook in a JSX element) you can separate them using `// ** blah ** //`.
+
 
 ## Imports
 - Try to group together similarly related imports (i.e. Service Layer and Repository Layer in an express server).
