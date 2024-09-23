@@ -6,7 +6,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - `Primitives`, `Functions`, `Objects`, and `Types`
 - <b>Primitives</b> - 5 original: `null`, `undefined`, `boolean`, `number`, `string`. Two new ones added recently are `symbol` and `bigint`. 
 - <b>Functions</b> - 2 ways to create functions: function-declarations `function` and arrow-functions `() => {}`.
-- <b>Objects</b> - 3 ways to create objects: object-literals, calling functions with `new` (old), and classes (new).
+- <b>Objects</b> - 3 ways to create objects: object-literals, calling functions with `new` (old), and Classes (new).
 - <b>Types</b> - 2 main ways to create types: the `type` keyword and interfaces (`interface`).
 - Note: this does not include functions declared directly in object-literals or classes. Also functions are technically objects too but for all practical purposes we'll consider these are fundamental features. 
 
@@ -49,15 +49,15 @@ function ParentFn(param) {
 }
 ```
 
-### Objects (basic-objects, classes, and object-literals)
+### Objects (basic-objects, Classes, and object-literals)
 - Objects are lists of key/value pairs and they all inherit from the parent `Object` class. We'll use the term <b>basic-object</b> to refer to objects which inherit directly from this class and no other.
 - Just to point out, symbols have single key/value pair and functions also have key/values pairs and inherit from the `Function` class which in turn inherits from the `Object` class. Due to how we use these different features though we'll keep objects, functions, and symbols separate. Also note that in Javascript objects are dynamic (we can append as many properties as we want) but in Typescript the keys are static once the object is instantiated.
 - `object-literals` are a what's created from doing key/value pairs lists with curly-braces (ie `{ name: 'john' }`) and are a convenient, shorthand way of creating basic-objects. They make it easy to both organize code and pass data around.
 
 #### Classes
-- As for classes, the trend in javascript is to move away from object-oriented and now use procedural/functional programming: 2 main reasons for that are <b>IO</b> and <b>dependency-injection</b>. Although there are some scenarios where it could still make sense to use classes.
+- As for Classes, the trend in javascript is to move away from object-oriented and now use procedural/functional programming: 2 main reasons for that are <b>IO</b> and <b>dependency-injection</b>. Although there are some scenarios where it could still make sense to use classes.
 ##### IO
-- Using classes for IO calls could get a little messy. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, but not the functions themselves. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our classes (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or call `new User()` for every data item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`. If you need static-values and/or functions specific for that data-item, just wrap them in a readonly object-literal (append with `as const`).
+- Using classes for IO calls could get a little messy. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, but not the functions themselves. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or call `new User()` for every data item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`. If you need static-values and/or functions specific for that data-item, just wrap them in a readonly object-literal (append with `as const`).
 - What I usually do is a create a modular-script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). I like my data to just "be" things not "do" things.
 - Using a modular-script to handle data:
 ```
@@ -69,8 +69,8 @@ if (User.isValid(resp.data)) {
 }
 ```
 ##### Dependency-Injection
-- Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing the backbone of our code (such as is the case in strictly object-oriented languages like Java), then we need to make sure we use the same instance of that class everywhere. Otherwise, we end creating unnecessary instances or the internal state between the different instances could get out of sync. To avoid this using classes, we'd have to go through the hassel or marking every function `public static` and using it directly on the object OR make sure instantiate the classes before we export it (i.e. `export default new UserServiceLayer()`).
-##### When to use classes
+- Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use Classes for organizing the backbone of our code (such as is the case in strictly object-oriented languages like Java), then we need to make sure we use the same instance of that class everywhere. Otherwise, we end creating unnecessary instances or the internal state between the different instances could get out of sync. To avoid this using classes, we'd have to go through the hassel or marking every function `public static` and using it directly on the class itself OR make sure instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
+##### When to use Classes
  - Despite the trend though, there are a few scenarios where a class might make sense. Suppose there's a situation where you have some non-IO data with an internal state and you want to call functions on that state either to manipulate or access it (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerous if the state is external) to constantly have to do `const someMap = Map.new(); Map.set(someMap, 'key', 'value'), Map.get(someMap, 'key');`. To give a personal example: I sometimes uses classes for libraries if exported item is an object and I need to let the user pass some settings/data to it and then keep those settings constant throughout the object's lifespan.
 
 #### Objects summary:
