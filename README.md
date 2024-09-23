@@ -5,7 +5,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 ## 4 "Fundamental" Features
 - `Primitives`, `Functions`, `Objects`, and `Types`
 - <b>Primitives</b> - 5 original: `null`, `undefined`, `boolean`, `number`, `string`. Two new ones `symbol` and `bigint`. 
-- <b>Functions</b> - 4 ways to create functions: function-declarations `function functionName() {}`, arrow-functions `() => {}`, placing them directly in object-literals (not using arrows), and directly inside classes (not using arrows).
+- <b>Functions</b> - 4 ways to create functions: function-declarations `function functionName() {}`, arrow-functions `() => {}`, placing them directly in object-literals (not counting arrows), and directly inside classes (not counting arrows).
 - <b>Objects</b> - 3 ways to create objects: object-literals, calling functions with `new` (old), and Classes (new).
 - <b>Types</b> - 2 main ways to create types: the `type` keyword and interfaces (`interface`).
 - Note: Functions are technically objects too but for all practical purposes we'll consider them separate. 
