@@ -109,7 +109,7 @@ async function foo(): Promise<void> {
   - Passing a large number of arguments between functions
   - Storing a group of related static values and functions (i.e. the `export default` from a modular-script).
 - <b>Classes:</b> 
- - Anytime your have a group of related functions and data that need to work together (i.e. data-structures, libraries which need to be passed settings)
+  - Anytime your have a group of related functions and data that need to work together (i.e. data-structures, libraries which need to be passed settings)
 
 
 ## Naming
