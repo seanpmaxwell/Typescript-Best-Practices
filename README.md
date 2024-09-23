@@ -70,13 +70,16 @@ class Dog {
 ```
 
 ### Objects (basic-objects, Classes, and object-literals)
+- `object-literals`, `classes`, and calling functions with `new` are the 3 ways to instantiate new objects.
 - Objects are lists of key/value pairs and they all inherit from the parent `Object` class. We'll use the term <b>basic-object</b> to refer to objects which inherit directly from this class and no other.
 - Just to point out, symbols have single key/value pair and functions also have key/values pairs and inherit from the `Function` class which in turn inherits from the `Object` class. Due to how we use these different features though we'll keep objects, functions, and symbols separate. Also note that in Javascript objects are dynamic (we can append as many properties as we want) but in Typescript the keys are static once the object is instantiated.
 - `object-literals` are a what's created from doing key/value pairs lists with curly-braces (ie `{ name: 'john' }`) and are a convenient, shorthand way of creating basic-objects. They make it easy to both organize code and pass data around.
+- Aside from object-literals, the old way (pre es6) was the standard way to create objects with inheritance in JavaScript. Classes should be used over this approach though because they are much cleaner than trying to do inheritance with the `.prototype` property and using `this` in function declarations.
 
 #### Classes
-- As for Classes, the trend in javascript is to move away from object-oriented and now use procedural/functional programming: 2 main reasons for that are <b>IO</b> and <b>dependency-injection</b>. Although there are some scenarios where it could still make sense to use classes.
-- 
+- As for Classes, the trend in javascript is to move away from object-oriented and now use procedural/functional programming: 2 main reasons for that are <b>IO</b> and <b>dependency-injection</b>. Although there are some scenarios where it could still make sense to use classes though.
+- As note that under-the-hood classes are syntax sugar for calling functions with `new` and should be used instead. 
+  
 ##### IO
 - Using classes for IO calls could get a little messy. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, but not the functions themselves. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or call `new User()` for every data item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`. If you need static-values and/or functions specific for that data-item, just wrap them in a readonly object-literal (append with `as const`).
 - What I usually do is a create a modular-script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). I like my data to just "be" things not "do" things.
@@ -100,13 +103,13 @@ async function foo(): Promise<void> {
  - Despite the trend though, there are a few scenarios where a class might make sense. Suppose there's a situation where you have some non-IO data with an internal state and you want to call functions on that state either to manipulate or access it (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerous if the state is external) to constantly have to do `const someMap = Map.new(); Map.set(someMap, 'key', 'value'), Map.get(someMap, 'key');`. To give a personal example: I sometimes uses classes for libraries if exported item is an object and I need to let the user pass some settings/data to it and then keep those settings constant throughout the object's lifespan.
 
 #### Objects summary:
-- IO data: Leave data as a basic-object and describe with a modular-script/interface.
+- IO data: Leave data as a basic-object and handle it with a modular-script/interface.
 - <b>Object-Literals:</b>
   - Organizing Code
   - Passing a large number of arguments between functions
   - Storing a group of related static values and functions (i.e. the `export default` from a modular-script).
 - <b>Classes:</b> 
- - Anytime your have a group of related functions and data that need to work together (i.e. data-structures)
+ - Anytime your have a group of related functions and data that need to work together (i.e. data-structures, libraries which need to be passed settings)
 
 
 ## Naming
