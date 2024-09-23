@@ -4,11 +4,11 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 
 ## 4 "Fundamental" Features
 - `Primitives`, `Functions`, `Objects`, and `Types`
-- <b>Primitives</b> - 5 original: `null`, `undefined`, `boolean`, `number`, `string`. Two new ones added recently are `symbol` and `bigint`. 
-- <b>Functions</b> - 2 ways to create functions: function-declarations `function` and arrow-functions `() => {}`.
+- <b>Primitives</b> - 5 original: `null`, `undefined`, `boolean`, `number`, `string`. Two new ones `symbol` and `bigint`. 
+- <b>Functions</b> - 4 ways to create functions: function-declarations `function functionName() {}`, arrow-functions `() => {}`, placing them directly in object-literals (not using arrows), and directly inside classes (not using arrows).
 - <b>Objects</b> - 3 ways to create objects: object-literals, calling functions with `new` (old), and Classes (new).
 - <b>Types</b> - 2 main ways to create types: the `type` keyword and interfaces (`interface`).
-- Note: this does not include functions declared directly in object-literals or classes. Also functions are technically objects too but for all practical purposes we'll consider these are fundamental features. 
+- Note: Functions are technically objects too but for all practical purposes we'll consider them separate. 
 
 
 ## 4 types of scripts (files)
@@ -34,7 +34,8 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 ## 4 fundamental features in detail and when/how you should use them.
 
 ### Primitives
-- `symbol` is not often seen but is useful for creating unique keys on objects used in libraries. Since libraries in objects are passed around a lot, with symbols we don't have to worry about our key/value pairs getting overridden. 
+- To repeat: the 5 original are: `null`, `undefined`, `boolean`, `number`, `string` and the two new ones added recently are `symbol` and `bigint`.
+- `symbol` is not nearly as prevalent as the others but is useful for creating unique keys on objects used in libraries. Since libraries in objects are passed around a lot, with symbols we don't have to worry about our key/value pairs getting overridden. 
 - In addition to knowing what the primitives are you should know how coercion works. Coercion is when we try to call a function on a primtive and JavaScript (under the hood) wraps its object counterpart (`Boolean`, `Number`, or `String`) around it so we can make the function call, since primitives by themselves don't have functions.
 
 ### Functions
@@ -48,6 +49,25 @@ function ParentFn(param) {
    childFn(val);
 }
 ```
+- Functions can be be placed directly in object literals. I usually do it this way for longer multi-line functions but will use an arrow function for short functions. Note that for `direct-in-object-literal` functions The `this` keyword will refer to properties on the containing object. Although if you need to use the `this` keyword you should probably be using a class instead, see the classes section on when to use classes vs object-literals.
+```
+const objLiteral = {
+  helloPre: 'hello ',
+  sayHello(name: string) {
+    console.log(this.helloPre + name);
+  },
+  sayHelloAlt: (name: string) + console.log(...) // Can also use an arrow function but the `this` keyword won't refer to the parent-object literal. 
+}
+```
+- You can create functions inside of classes which allows you to do access modifiers:
+```
+class Dog {
+  public barkAlt: () => console.log() // Like with-object literals can also do arrow-functions.
+  public bark() {
+    console.log('woof woof');
+  }
+}
+```
 
 ### Objects (basic-objects, Classes, and object-literals)
 - Objects are lists of key/value pairs and they all inherit from the parent `Object` class. We'll use the term <b>basic-object</b> to refer to objects which inherit directly from this class and no other.
@@ -56,6 +76,7 @@ function ParentFn(param) {
 
 #### Classes
 - As for Classes, the trend in javascript is to move away from object-oriented and now use procedural/functional programming: 2 main reasons for that are <b>IO</b> and <b>dependency-injection</b>. Although there are some scenarios where it could still make sense to use classes.
+- 
 ##### IO
 - Using classes for IO calls could get a little messy. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, but not the functions themselves. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or call `new User()` for every data item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`. If you need static-values and/or functions specific for that data-item, just wrap them in a readonly object-literal (append with `as const`).
 - What I usually do is a create a modular-script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). I like my data to just "be" things not "do" things.
@@ -63,13 +84,18 @@ function ParentFn(param) {
 ```
 import User, { IUser } from 'models/User';
 
-const resp = await someIoCall();
-if (User.isValid(resp.data)) {
-   const user: IUser = resp.data;
+async function foo(): Promise<void> {
+  const resp = await someIoCall();
+  if (User.isValid(resp.data)) {
+     const user: IUser = resp.data;
+     ...some other stuff
+  }
 }
 ```
+
 ##### Dependency-Injection
 - Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use Classes for organizing the backbone of our code (such as is the case in strictly object-oriented languages like Java), then we need to make sure we use the same instance of that class everywhere. Otherwise, we end creating unnecessary instances or the internal state between the different instances could get out of sync. To avoid this using classes, we'd have to go through the hassel or marking every function `public static` and using it directly on the class itself OR make sure instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
+- 
 ##### When to use Classes
  - Despite the trend though, there are a few scenarios where a class might make sense. Suppose there's a situation where you have some non-IO data with an internal state and you want to call functions on that state either to manipulate or access it (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerous if the state is external) to constantly have to do `const someMap = Map.new(); Map.set(someMap, 'key', 'value'), Map.get(someMap, 'key');`. To give a personal example: I sometimes uses classes for libraries if exported item is an object and I need to let the user pass some settings/data to it and then keep those settings constant throughout the object's lifespan.
 
@@ -121,7 +147,7 @@ const ERRS = {
 ### Functions
 - camelCase in most situtations but for special exceptions like jsx elements can be PascalCase.
 - Generally, you should name functions in a verb format: (i.e. don't say `name()` say `fetchName()` or an IO call).
-- Simple functions as part of objects just meant to return constants don't necessarily need to be in a verb format. Example:
+- Simple functions as part of object-literals just meant to return constants don't necessarily need to be in a verb format. Example:
 ```typescript
 const Errors = {
    SomeError: 'foo',
