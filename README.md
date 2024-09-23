@@ -77,9 +77,9 @@ class Dog {
 - Aside from object-literals, the old way (pre es6) was the standard way to create objects with inheritance in JavaScript. Classes should be used over this approach though because they are much cleaner than trying to do inheritance with the `.prototype` property and using `this` in function declarations.
 
 #### Classes
-- As for Classes, the trend in javascript is to move away from object-oriented and now use procedural/functional programming: 2 main reasons for that are <b>IO</b> and <b>dependency-injection</b>. Although there are some scenarios where it could still make sense to use classes though.
-- As note that under-the-hood classes are syntax sugar for calling functions with `new` and should be used instead. 
-  
+- As for Classes, the trend in javascript is to move away from object-oriented and now use procedural/functional programming to organize projects. This means the backbone of our applications are simpiler and not having to worry about <b>dependency-injection</b>. Also, another situation where it may be a good idea to avoid classes is when working with IO data. However, despite these points, there are some scenarios where it could still make sense to use classes and we'll cover them. Note that under-the-hood, classes are just syntax sugar for calling functions with `new` (the old es5 way) and should be used instead of the old approach. 
+##### Dependency-Injection
+- Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use Classes for organizing the backbone of our code (such as is the case in strictly object-oriented languages like Java), then we need to make sure we use the same instance of that class everywhere. Otherwise, we end creating unnecessary instances or the internal state between the different instances could get out of sync. To avoid this using classes, we'd have to go through the hassel or marking every function `public static` and using it directly on the class itself OR make sure instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
 ##### IO
 - Using classes for IO calls could get a little messy. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, but not the functions themselves. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or call `new User()` for every data item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`. If you need static-values and/or functions specific for that data-item, just wrap them in a readonly object-literal (append with `as const`).
 - What I usually do is a create a modular-script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). I like my data to just "be" things not "do" things.
@@ -95,21 +95,19 @@ async function foo(): Promise<void> {
   }
 }
 ```
-
-##### Dependency-Injection
-- Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use Classes for organizing the backbone of our code (such as is the case in strictly object-oriented languages like Java), then we need to make sure we use the same instance of that class everywhere. Otherwise, we end creating unnecessary instances or the internal state between the different instances could get out of sync. To avoid this using classes, we'd have to go through the hassel or marking every function `public static` and using it directly on the class itself OR make sure instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
-  
 ##### When to use Classes
- - Despite the trend though, there are a few scenarios where a class might make sense. Suppose there's a situation where you have some non-IO data with an internal state and you want to call functions on that state either to manipulate or access it (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerous if the state is external) to constantly have to do `const someMap = Map.new(); Map.set(someMap, 'key', 'value'), Map.get(someMap, 'key');`. To give a personal example: I sometimes uses classes for libraries if exported item is an object and I need to let the user pass some settings/data to it and then keep those settings constant throughout the object's lifespan.
+ - Suppose there's a situation where you have some non-IO dynamic-data and functions closely tied together and you want to call functions specifically for that data (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerous if the state is external) to constantly have to do `const mapData = Map.new(); Map.set(mapData, 'key', 'value'), Map.get(mapData, 'key');`.
+ - To give a personal example: I sometimes uses classes for libraries if exported item is an object and I need to let the user pass some settings/data to it and then keep those settings constant throughout the object's lifespan.
 
 #### Objects summary:
-- IO data: Leave data as a basic-object and handle it with a modular-script/interface.
 - <b>Object-Literals:</b>
   - Organizing Code
   - Passing a large number of arguments between functions
-  - Storing a group of related static values and functions (i.e. the `export default` from a modular-script).
+  - Packaging a group of related constant values and functions (i.e. the `export default` from a modular-script).
 - <b>Classes:</b> 
-  - Anytime your have a group of related functions and data that need to work together (i.e. data-structures, libraries which need to be passed settings)
+  - Anytime you have a multiple-instance groups of related functions/data that's not IO.
+- <b>IO data:</b>
+ - Just leave them as basic-objects and manage with an interface/modular-script.
 
 
 ## Naming
