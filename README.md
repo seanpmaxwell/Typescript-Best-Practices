@@ -8,7 +8,8 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - <b>Functions</b> - 4 ways to create functions: function-declarations `function functionName() {}`, arrow-functions `() => {}`, placing them directly in object-literals (not counting arrows), and directly inside classes (not counting arrows).
 - <b>Objects</b> - 3 ways to create objects: object-literals, calling functions with `new` (old), and Classes (new).
 - <b>Types</b> - 2 main ways to create types: types-aliases (`type`) and interfaces (`interface`). Note: there's also function overloading for function-declarations. 
-- Note: Functions are technically objects too but for all practical purposes we'll consider them separate. 
+- Note: Functions are technically objects too but for all practical purposes we'll consider them separate.
+<br/>
 
 
 ## 4 types of scripts (files)
@@ -16,6 +17,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - <b>Modular</b>: export default is an `object-literal` containing a bunch of closely related functions/variables (i.e. a file call UserRepo.ts which has a bunch of functions for handling database queries related to user objects).
 - <b>Inventory</b>: for storing a large number of smaller declared items. (i.e. a file called types.ts which stores commonly shared types throughout your application)
 - <b>Linear</b>: executes a series of commands (i.e. a file called `setup-db.ts` which does a bunch of system commands to initialize a database).
+<br/>
 
 
 ## Script (file) Organization
@@ -29,6 +31,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
   - Only constant/readonly variables (primitive and object values) should go directly in files in the `Variables` section (except maybe in linear scripts).
   - If you are writing a linear script, it might make more since to group your code by the task they are doing instead of by the fundamental-type. Still, if you decide to create some function-declarations in the same script, place your function-declarations in another section at the bottom of the file below the <b>Run</b>.
   - Always put the `export default` at the very bottom of every file. This makes your default export easier to keep track of and apply any wrappers it may need.
+<br/>
 
 
 ## 4 fundamental features in detail and when/how you should use them.
@@ -112,6 +115,8 @@ async function foo(): Promise<void> {
 ### Types (type-aliases and interfaces)
 - Use interfaces by default for describing objects and only use type-aliases when you need to, i.e. setting the key/value pairs bases on what other key/values pairs that are there. Note that interfaces can be used to describe objects and classes. 
 - Use type-aliases for everything else.
+<br/>
+
 
 ## Naming
 
@@ -215,6 +220,7 @@ function login() {
 
 ### Interfaces
 - Prepend with an 'I' (i.e. `interface IUser { name: string; email: string; }`)
+<br/>
 
 
 ## Comments
@@ -275,6 +281,7 @@ function doThis() {
 ```
 
 - If you have a really long function inside of another really long function (i.e. React Hook in a JSX element) you can separate them using `// ** blah ** //`.
+<br/>
 
 
 ## Imports
@@ -424,6 +431,7 @@ doSomethingElse();
 
 export default app;
 ```
+<br/>
 
 
 ## Misc Style (Don't need to mention things covered by the linter)
@@ -474,6 +482,8 @@ function fooBar(beforeMsg: string, person: IPerson, afterMsg: string): void {
   ..do stuff
 }
 ```
+<br/>
+
 
 ## Testing
 Anything that changes based on user interaction should be unit-tested. All phases of development should include unit-tests. Developers should write their own unit-tests.- Integration tests should test any user interaction that involves talking to the back-end. Overkill for startups, should be done by a dedicated integration tester who's fluent with the framework in a separate repository. Makes code more readable. Errors in integration tests should be rare as unit-tests should weed out most of them.
