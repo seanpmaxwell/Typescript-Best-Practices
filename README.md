@@ -7,7 +7,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - <b>Primitives</b> - 5 original: `null`, `undefined`, `boolean`, `number`, `string`. Two new ones `symbol` and `bigint`. 
 - <b>Functions</b> - 4 ways to create functions: function-declarations `function functionName() {}`, arrow-functions `() => {}`, placing them directly in object-literals (not counting arrows), and directly inside classes (not counting arrows).
 - <b>Objects</b> - 3 ways to create objects: object-literals, calling functions with `new` (old), and Classes (new).
-- <b>Types</b> - 2 main ways to create types: the `type` keyword and interfaces (`interface`).
+- <b>Types</b> - 2 main ways to create types: types-aliases (`type`) and interfaces (`interface`). Note: there's also function overloading for function-declarations. 
 - Note: Functions are technically objects too but for all practical purposes we'll consider them separate. 
 
 
@@ -109,6 +109,8 @@ async function foo(): Promise<void> {
 - <b>IO data:</b>
  - Just leave them as basic-objects and manage with an interface/modular-script.
 
+### Types (type-aliases and interfaces)
+- Use interfaces for describing lists of key/value pairs  
 
 ## Naming
 
