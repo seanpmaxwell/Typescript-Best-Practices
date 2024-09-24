@@ -110,7 +110,8 @@ async function foo(): Promise<void> {
  - Just leave them as basic-objects and manage with an interface/modular-script.
 
 ### Types (type-aliases and interfaces)
-- Use interfaces for describing lists of key/value pairs  
+- Use interfaces by default for describing objects and only use type-aliases when you need to, i.e. setting the key/value pairs bases on what other key/values pairs that are there. Note that interfaces can be used to describe objects and classes. 
+- Use type-aliases for everything else.
 
 ## Naming
 
@@ -213,7 +214,6 @@ function login() {
 - Prepend types with a 'T' (i.e. `type TMouseEvent = React.MouseEvent<HtmlButtonElement>;`) 
 
 ### Interfaces
-- Used to define the key/value pairs in an object literal or the key/value pairs returned from an objects constructor.
 - Prepend with an 'I' (i.e. `interface IUser { name: string; email: string; }`)
 
 
