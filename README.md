@@ -2,7 +2,13 @@
 Patterns and Best Practices for procedural Typescript/JavaScript development following the rule of 4 principle
 
 
-## 4 "Fundamental" Features
+## Table of contents
+- [4 fundamental features](#4-fundamental-features)
+- [Quick Glance](#quick-glance)
+<br/>
+
+
+## 4 "Fundamental" Features <a name="4-fundamental-features"></a>
 - `Primitives`, `Functions`, `Objects`, and `Types`
 - <b>Primitives</b> - 5 original: `null`, `undefined`, `boolean`, `number`, `string`. Two new ones `symbol` and `bigint`. 
 - <b>Functions</b> - 4 ways to create functions: function-declarations `function functionName() {}`, arrow-functions `() => {}`, placing them directly in object-literals (not counting arrows), and directly inside classes (not counting arrows).
