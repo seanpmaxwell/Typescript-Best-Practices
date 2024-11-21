@@ -142,8 +142,8 @@ async function foo(): Promise<void> {
 - For **I/O** data use a combination of Modular Scripts and leave the data as basic-objects  
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
-- Use interfaces by default for describing objects and only use type-aliases when you need to, i.e. setting the key/value pairs bases on what other key/values pairs that are there. Note that interfaces can be used to describe objects and classes. 
-- Use type-aliases for everything else.
+- Use interfaces (`interface`) by default for describing simple structured key/value pair lists. Note that interfaces can be used to describe objects and classes. 
+- Use type-aliases (`type`) for everything else.
 <br/>
 
 
