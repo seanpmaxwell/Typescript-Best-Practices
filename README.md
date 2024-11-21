@@ -202,16 +202,19 @@ const Errors = {
 ### Objects <a name="naming-objects"></a>
 - Generally, objects initialized outside of functions and directly inside of files with object-literals should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. As mentioned in the <b>Variables</b> section, simple static objects/arrays can be UPPER_SNAKE_CASE. However, large objects which are the `export default` of Declaration or Modular scripts should be PascalCase. 
 - Inside of functions, just like all other variables use camelCase.
-- Outside of functions, objects returned from function calls or constructors (not object-literals) should be camelCase. However, objects which represent hardcoded data-items (like `User.new('name', 'email')`) in a testing environment could be PascalCase instead.
+- Outside of functions, objects returned from function calls or constructors (not object-literals) in the **Run** section should be camelCase.
 ```typescript
 // **** UserRepo.ts **** //
 
+// camelCase cause dynamic object
+const dbCaller = initializeDatabaseLibrary();
+
 function findById(id: number): Promise<IUser> {
-  db.doStuff()...
+  dbCaller.query()...
 }
 
 function findByName(name: string): Promise<IUser> {
-  db.doStuff()...
+  dbCaller.query()...
 }
 
 export default {
@@ -225,7 +228,7 @@ export default {
 // PascalCase
 import UserRepo from './UserRepo.ts'; 
 
-// UPPER_SNAKE_CASE
+// Immutable so use UPPER_SNAKE_CASE
 const ERRS = {
    Foo: 'foo',
    Bar: 'bar',
