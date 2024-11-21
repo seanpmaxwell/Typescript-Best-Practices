@@ -27,7 +27,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
   - [Interfaces](#naming-interfaces)
 - [Comments](#comments)
 - [Imports](#imports)
-- [Example of a Script](#example-of-a-script)
+- [Example Scripts](#example-scripts)
 - [Misc Style](#misc-style)
 - [Testing](#testing)
 <br/>
@@ -339,7 +339,7 @@ import helpers from './helpers';
 ```
 
 
-## Example of a Script <a name="example-of-a-script"></a>
+## Example Scripts <a name="example-scripts"></a>
 - Now that we've gone over the main points, let's look at some example scripts.
 
 - A modular script:
