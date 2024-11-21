@@ -138,9 +138,8 @@ async function foo(): Promise<void> {
   - Passing a large number of arguments between functions
   - Packaging a group of related constant values and functions (i.e. the `export default` from a modular-script).
 - <b>Classes:</b> 
-  - Anytime you have a multiple-instance groups of related functions/data that's not IO.
-- <b>IO data:</b>
- - Just leave them as basic-objects and manage with an interface/modular-script.
+  - Use them anytime you have a multiple-instance groups of related functions/data that's not IO.
+- For **I/O** data use a combination of Modular Scripts and leave the data as basic-objects  
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
 - Use interfaces by default for describing objects and only use type-aliases when you need to, i.e. setting the key/value pairs bases on what other key/values pairs that are there. Note that interfaces can be used to describe objects and classes. 
