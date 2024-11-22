@@ -103,7 +103,7 @@ class Dog {
 }
 ```
 
-### Objects (basic-objects, Classes, and object-literals) <a name="objects"></a>
+### Objects (basic-objects, object-literals, and classes) <a name="objects"></a>
 - `object-literals`, `classes`, and calling functions with `new` are the 3 ways to instantiate new objects.
 - Objects are lists of key/value pairs and they all inherit from the parent `Object` class. We'll use the term <b>basic-object</b> to refer to objects which inherit directly from this class and no other.
 - Just to point out, symbols have single key/value pair and functions also have key/values pairs and inherit from the `Function` class which in turn inherits from the `Object` class. Due to how we use these different features though we'll keep objects, functions, and symbols separate. Also note that in Javascript objects are dynamic (we can append as many properties as we want) but in Typescript the keys are static once the object is instantiated.
