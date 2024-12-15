@@ -15,6 +15,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
       - [Dependency Injection](#dependency-injection)
       - [IO](#io)
       - [When to use Classes](#when-to-use-classes)
+      - [Summary](#classes-summary)
   - [Types](#types)
 - [Naming](#naming)
   - [Files/Folders](#files-folders)
@@ -37,7 +38,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - `Primitives`, `Functions`, `Objects`, and `Types`
 - <b>Primitives</b> - 5 original: `null`, `undefined`, `boolean`, `number`, `string`. Two new ones `symbol` and `bigint`. 
 - <b>Functions</b> - 4 ways to create functions: function-declarations `function functionName() {}`, arrow-functions `() => {}`, placing them directly in object-literals (not counting arrows), and directly inside classes (not counting arrows).
-- <b>Objects</b> - 3 ways to create objects: object-literals, calling functions with `new` (old), and Classes (new).
+- <b>Objects</b> - 3 ways to create objects: object-literals, calling functions with `new` (old), and classes (new).
 - <b>Types</b> - 2 main ways to create types: types-aliases (`type`) and interfaces (`interface`). Note: there's also function overloading for function-declarations. 
 - Note: Functions are technically objects too but for all practical purposes we'll consider them separate.
 <br/>
@@ -104,9 +105,9 @@ class Dog {
 ```
 
 ### Objects (basic-objects, object-literals, and classes) <a name="objects"></a>
-- `object-literals`, `classes`, and calling functions with `new` are the 3 ways to instantiate new objects.
-- Objects are lists of key/value pairs and they all inherit from the parent `Object` class. We'll use the term <b>basic-object</b> to refer to objects which inherit directly from this class and no other.
-- Just to point out, symbols have single key/value pair and functions also have key/values pairs and inherit from the `Function` class which in turn inherits from the `Object` class. Due to how we use these different features though we'll keep objects, functions, and symbols separate. Also note that in Javascript objects are dynamic (we can append as many properties as we want) but in Typescript the keys are static once the object is instantiated.
+- _Objects_ are just lists of key/value pairs and they all inherit from the parent `Object` class. We'll use the term <b>basic-object</b> to refer to objects which inherit directly from this class and no other.
+- `object-literals` and `classes` are two different templates for initializing objects in TypeScript/JavaScript. The third way (in old-school JavaScript) would be to call function with `new` but this is considered obsolete next to classes and leads to more complex code when doing inheritance. 
+- Just to point out, symbols have single key/value pair and functions also have key/values pairs and inherit from the `Function` class which in turn inherits from the `Object` class. Due to how we use these features though, we'll consider objects, functions, and symbols separate datatypes. Also note that in Javascript objects are dynamic (we can append as many properties as we want) but in Typescript the keys are static by default once the object is instantiated.
 
 #### Object-literals <a name="object-literals"></a>
 - `object-literals` are a what's created from doing key/value pairs lists with curly-braces (ie `{ name: 'john' }`) and are a convenient, shorthand way of creating basic-objects. They make it easy to both organize code and pass data around.
@@ -114,8 +115,8 @@ class Dog {
 - We should use object-literals over classes for organizing code for reasons mentioned in the next section. 
 
 #### Classes <a name="classes"></a>
-- **Overview:** As for Classes, the trend in javascript is to move away from object-oriented and now use procedural/functional programming to organize projects. This means the backbone of our applications are simpiler and not having to worry about <b>dependency-injection</b>. Also, another situation where it may be a good idea to avoid classes is when working with IO data. However, despite these points, there are some scenarios where it could still make sense to use classes and we'll cover them. Note that under-the-hood, classes are just syntax sugar for calling functions with `new` (the old es5 way) and should be used instead of the this approach.<br/>
-- **Dependency-Injection:** <a name="dependency-injection"></a> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing the backbone of our code (such as is the case in strictly object-oriented languages like Java), then we need to make sure we use the same instance of that class everywhere. Otherwise, we end up creating unnecessary instances or the internal state between the different instances could get out of sync. To avoid this using classes, we'd have to go through the hassle of marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).<br/>
+- **Overview:** Classes are a template for creating objects. The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our applications are simpler and we don't have to worry about <b>dependency-injection</b>. Also, another situation where it may be a good idea to avoid classes is when working with IO data. There are some scenarios however where it could still make sense to use classes and we'll cover them.
+- **Dependency-Injection:** <a name="dependency-injection"></a> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing the backbone of our code (such as is the case in strictly object-oriented languages like Java), then we need to make sure we use the same instance of that class everywhere. Otherwise, we end up creating unnecessary instances or the internal state between the different instances could get out of sync. To avoid this using classes, we'd have to go through the hassle of marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
 - **IO:** <a name="io"></a> Using classes for IO calls could get a little messy. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, but not the functions themselves. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or call `new User()` for every data item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`. If you need static-values and/or functions specific for that data-item, just wrap them in a readonly object-literal (append with `as const`).<br/>
 What I usually do is a create a modular-script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). I like my data to just "be" things not "do" things.<br/>
 
@@ -133,7 +134,15 @@ async function foo(): Promise<void> {
 ```
 - **When to use classes** <a name="when-to-use-classes"></a> Suppose there's a situation where you have some non-IO dynamic-data and functions closely tied together and you want to call functions specifically for that data (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerous if the state is external) to constantly have to do `const mapData = Map.new(); Map.set(mapData, 'key', 'value'), Map.get(mapData, 'key');`.
 
-> To give a personal example: I sometimes uses classes for libraries if the exported item is an object and I need to let the user pass some settings/data to it and then keep those settings constant throughout the object's lifespan.
+**Summary** <a name="classes-summary"></a>
+
+- When to use classes:
+  - Data-Structures
+  - Whenever you have a set on no IO data initialized multiple times tightly couple with some functions (you feel tempted to use the `new` keyword). 
+ 
+- When not use classes:
+  - Organizing code
+  - IO data
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
 - Use interfaces (`interface`) by default for describing simple structured key/value pair lists. Note that interfaces can be used to describe objects and classes. 
