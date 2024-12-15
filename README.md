@@ -15,7 +15,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
       - [Dependency Injection](#dependency-injection)
       - [IO](#io)
       - [When to use Classes](#when-to-use-classes)
-      - [Summary](#classes-summary)
+      - [Classes Summary](#classes-summary)
   - [Types](#types)
 - [Naming](#naming)
   - [Files/Folders](#files-folders)
@@ -134,7 +134,7 @@ async function foo(): Promise<void> {
 ```
 - **When to use classes** <a name="when-to-use-classes"></a> Suppose there's a situation where you have some non-IO dynamic-data and functions closely tied together and you want to call functions specifically for that data (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerous if the state is external) to constantly have to do `const mapData = Map.new(); Map.set(mapData, 'key', 'value'), Map.get(mapData, 'key');`.
 
-**Summary** <a name="classes-summary"></a>
+**Classes Summary** <a name="classes-summary"></a>
 
 - When to use classes:
   - Data-Structures
