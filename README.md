@@ -104,9 +104,9 @@ class Dog {
 }
 ```
 
-### Objects (basic-objects, object-literals, and classes) <a name="objects"></a>
+### Objects (basic-objects, object-literals, classes, and enums) <a name="objects"></a>
 - _Objects_ are just lists of key/value pairs and they all inherit from the parent `Object` class. We'll use the term <b>basic-object</b> to refer to objects which inherit directly from this class and no other.
-- `object-literals` and `classes` are two different templates for initializing objects in TypeScript/JavaScript. The third way (in old-school JavaScript) would be to call function with `new` but this is considered obsolete next to classes and leads to more complex code when doing inheritance. 
+- `object-literals`, `classes`, and `enums` are templates for initializing objects in TypeScript/JavaScript (although enums only exist in TypeScript). The third way (in old-school JavaScript) would be to call function with `new` but this is considered obsolete next to classes and leads to more complex code when doing inheritance. `instance-objects` are objects created from classes or calling functions with `new`. 
 - Just to point out, symbols have single key/value pair and functions also have key/values pairs and inherit from the `Function` class which in turn inherits from the `Object` class. Due to how we use these features though, we'll consider objects, functions, and symbols separate datatypes. Also note that in Javascript objects are dynamic (we can append as many properties as we want) but in Typescript the keys are static by default once the object is instantiated.
 
 #### Object-literals <a name="object-literals"></a>
@@ -115,11 +115,10 @@ class Dog {
 - We should use object-literals over classes for organizing code for reasons mentioned in the next section. 
 
 #### Classes <a name="classes"></a>
-- **Overview:** Classes are a template for creating objects. The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our applications are simpler and we don't have to worry about <b>dependency-injection</b>. Also, another situation where it may be a good idea to avoid classes is when working with IO data. There are some scenarios however where it could still make sense to use classes and we'll cover them.
+- **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our applications are simpler and we don't have to worry about <b>dependency-injection</b>. Also, another situation where it may be a good idea to avoid classes is when working with IO data. There are some scenarios however where it could still make sense to use classes and we'll cover them.
 - **Dependency-Injection:** <a name="dependency-injection"></a> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing the backbone of our code (such as is the case in strictly object-oriented languages like Java), then we need to make sure we use the same instance of that class everywhere. Otherwise, we end up creating unnecessary instances or the internal state between the different instances could get out of sync. To avoid this using classes, we'd have to go through the hassle of marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
 - **I/O Data:** <a name="io"></a> Using classes for IO calls could get a little messy. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, but not the functions themselves. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or call `new User()` for every data item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`. If you need static-values and/or functions specific for that data-item, just wrap them in a readonly object-literal (append with `as const`).<br/>
 What I usually do is a create a modular-script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). I like my data to just "be" things not "do" things.<br/>
-
 Using a modular-script to handle data:
 ```
 import User, { IUser } from 'models/User';
@@ -135,14 +134,26 @@ async function foo(): Promise<void> {
 - **When to use classes** <a name="when-to-use-classes"></a> Suppose there's a situation where you have some non-IO dynamic-data and functions closely tied together and you want to call functions specifically for that data (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerous if the state is external) to constantly have to do `const mapData = Map.new(); Map.set(mapData, 'key', 'value'), Map.get(mapData, 'key');`.
 
 **Classes Summary** <a name="classes-summary"></a>
-
 - When to use classes:
   - Data-Structures
   - Whenever you have a set on no IO data initialized multiple times tightly couple with some functions (you feel tempted to use the `new` keyword). 
- 
 - When not use classes:
   - Organizing code
   - IO data
+
+#### Enums <a name="enums"></a>
+Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because they can save use code because when we use them as a type. When we do the type for that variable will be restricted to any value on that enum. We can also use an enum's value to index that enum and get the string value of the key. I'll leave it to you to decide whether to use them or not.
+```typescript
+enum Scopes {
+  Public,
+  Private
+}
+
+function printScope(scope: Scopes) {
+  console.log(Scopes[scope]); // => "Public" or "Private"
+}
+```
+
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
 - Use interfaces (`interface`) by default for describing simple structured key/value pair lists. Note that interfaces can be used to describe objects and classes. 
@@ -204,8 +215,9 @@ const Errors = {
 
 ### Objects <a name="naming-objects"></a>
 - Generally, objects initialized outside of functions and directly inside of files with object-literals should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. As mentioned in the <b>Variables</b> section, simple static objects/arrays can be UPPER_SNAKE_CASE. However, large objects which are the `export default` of Declaration or Modular scripts should be PascalCase. 
-- Inside of functions, just like all other variables use camelCase.
-- Outside of functions, objects returned from function calls or constructors (not object-literals) in the **Run** section should be camelCase.
+- `instance-objects` created inside of functions or directly in the file should use camelCase.
+- PascalCase for class names and any `static readonly` properties they have (i.e. Dog.Species).
+- Use PascalCase for the enum name and keys. (i.e. `enum NodeEnvs { Dev = 'development'}`)
 ```typescript
 // **** UserRepo.ts **** //
 
@@ -243,12 +255,6 @@ function login() {
 
 ...
 ```
-
-### Classes <a name="naming-classes"></a>
-- PascalCase for class names and static readonly variables (i.e. Dog.Species), and camelCase for instance-objects and class functions.  
-
-### Enums <a name="naming-enums"></a>
-- Use PascalCase for the enum name and keys. (i.e. `enum NodeEnvs { Dev = 'development'}`)
 
 ### Types Aliases <a name="naming-types"></a>
 - Prepend type aliases with a 'T' (i.e. `type TMouseEvent = React.MouseEvent<HtmlButtonElement>;`)
