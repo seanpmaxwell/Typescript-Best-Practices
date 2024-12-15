@@ -16,6 +16,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
       - [IO](#io)
       - [When to use Classes](#when-to-use-classes)
       - [Classes Summary](#classes-summary)
+    - [Enums](#enums)
   - [Types](#types)
 - [Naming](#naming)
   - [Files/Folders](#files-folders)
