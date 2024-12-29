@@ -54,16 +54,22 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 
 
 ## Script (file) Organization <a name="script-organization"></a>
-- Because of how hoisting works in JavaScript, you should organize a file into these sections. Note that your file may not (and usually won't) have all of them:
+- Because of how hoisting works in JavaScript, you should organize a file into these regions. Note that your file may not (and usually won't) have all of them:
   - Variables
   - Types
-  - Run (Special Note: execute any logic that you need to here. Outside of linear scripts you usually shouldn't need this section, but if you do keep it short).
+  - Run (Special Note: execute any logic that you need to here. Outside of linear scripts you usually shouldn't need this region, but if you do keep it short).
   - Functions
   - Classes (only very small ones, large classes should go in a separate file).
 - Some special notes about organization:
-  - Only constant/readonly variables (primitive and object values) should go directly in files in the `Variables` section (except maybe in linear scripts).
-  - If you are writing a linear script, it might make more since to group your code by the task they are doing instead of by the fundamental-type. Still, if you decide to create some function-declarations in the same script, place your function-declarations in another section at the bottom of the file below the <b>Run</b>.
+  - Only constant/readonly variables (primitive and object values) should go directly in files in the `Variables` region (except maybe in linear scripts).
+  - If you are writing a linear script, it might make more sense to group your code by the task they are doing instead of by the fundamental-feature. Still, if you decide to create some function-declarations in the same script, place your function-declarations in another region at the bottom of the file below the <b>Run</b>.
   - Always put the `export default` at the very bottom of every file. This makes your default export easier to keep track of and apply any wrappers it may need.
+- Organzation overview
+  - Project (application or library)
+  - Directory
+  - File (aka module)
+  - Region
+  - Section
 <br/>
 
 
@@ -220,7 +226,7 @@ const Errors = {
 - PascalCase for class names and any `static readonly` properties they have (i.e. Dog.Species).
 - Use PascalCase for the enum name and keys. (i.e. `enum NodeEnvs { Dev = 'development'}`)
 ```typescript
-// **** UserRepo.ts **** //
+// UserRepo.ts
 
 // camelCase cause dynamic object
 const dbCaller = initializeDatabaseLibrary();
@@ -239,7 +245,7 @@ export default {
 } as const;
 
 
-// **** UserService.ts **** //
+// UserService.ts
 
 // PascalCase
 import UserRepo from './UserRepo.ts'; 
@@ -281,7 +287,7 @@ function foo() {
   return (bar(arg) + bar(arg) + bar(arg));
 }
 ```
-- Separate the major sections of scripts (variables/types/run/functions,export default) by a `// **** "Section Name" **** //`.
+- Separate regions into sections (i.e. shared functions) by a `// **** "Section Name" **** //`.
 - If you need to put comments in an `if else` block put them above the `if` and `else` keywords:
 ```typescript
 // blah
@@ -360,19 +366,25 @@ import helpers from './helpers';
 import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
 
 
-// **** Variables **** //
+/******************************************************************************
+                               Variables
+******************************************************************************/
 
 const SUPPORT_STAFF_EMAIL = 'do_not_reply@example.com';
 
 let mailer; TTransport | null = null;
 
 
-// **** Types **** //
+/******************************************************************************
+                               Types
+******************************************************************************/
 
 type TTransport = Transporter<SMTPTransport.SentMessageInfo>;
 
 
-// **** Run **** //
+/******************************************************************************
+                               Run (Setup)
+******************************************************************************/
 
 const transporter = nodemailer
  .createTransport({ ...settings })
@@ -384,7 +396,9 @@ const transporter = nodemailer
  });
  
 
-// **** Functions **** //
+/******************************************************************************
+                               Functions
+******************************************************************************/
 
 /**
  * Send an email anywhere.
@@ -401,7 +415,9 @@ function sendSupportStaffEmail(from, subject, body): Promise<void> {
 }
 
 
-// **** Export default **** //
+/******************************************************************************
+                               Export default
+******************************************************************************/
 
 export default {
    sendMail,
@@ -412,6 +428,10 @@ export default {
 - An inventory script
 ```.tsx
 // shared-buttons.tsx
+
+/******************************************************************************
+                               Components
+******************************************************************************/
 
 /**
  * Close a html dialog box.
@@ -455,12 +475,16 @@ export default {
 import express from 'express';
 
 
-// **** Variables **** //
+/******************************************************************************
+                                  Variables
+******************************************************************************/
 
 const app = express(); 
 
 
-// **** Run **** //
+/******************************************************************************
+                                 Run (Setup)
+******************************************************************************/
 
 app.use(middleware1);
 app.use(middleware2);
@@ -469,7 +493,9 @@ doSomething();
 doSomethingElse();
 
 
-// **** Export default **** //
+/******************************************************************************
+                               Export default
+******************************************************************************/
 
 export default app;
 ```
