@@ -272,6 +272,13 @@ function login() {
 
 
 ## Comments <a name="comments"></a>
+- Seprate files into region as follows (although this could be overkill for files with only one region, use your own discretion):
+```ts
+/******************************************************************************
+                                RegionName (i.e. Variables)
+******************************************************************************/
+```
+- Separate regions into sections by a `// **** "Section Name" (i.e. Shared Functions)  **** //`.
 - Use `/** Comment */` above each function declaration ALWAYS. This will help the eyes when scrolling through large files. The first word in the comment should be capitalized and the sentence should end with a period.
 - Use `//` for comments inside of functions. The first word in the comment should be capitalized.
 - Capitalize the first letter in a comment and use a '.' at the end of complete sentences.
@@ -287,14 +294,6 @@ function foo() {
   return (bar(arg) + bar(arg) + bar(arg));
 }
 ```
-- Seprate files into region with:
-```ts
-/******************************************************************************
-                                RegionName (i.e. Variables)
-******************************************************************************/
-```
-  - Although this could be overkill for files with only one region (use your own discretion)
-- Separate regions into sections by a `// **** "Section Name" (i.e. Shared Functions)  **** //`.
 - If you need to put comments in an `if else` block put them above the `if` and `else` keywords:
 ```typescript
 // blah
