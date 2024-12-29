@@ -287,7 +287,14 @@ function foo() {
   return (bar(arg) + bar(arg) + bar(arg));
 }
 ```
-- Separate regions into sections (i.e. shared functions) by a `// **** "Section Name" **** //`.
+- Seprate files into region with:
+```ts
+/******************************************************************************
+                                RegionName (i.e. Variables)
+******************************************************************************/
+```
+  - Although this could be overkill for files with only one region (use your own discretion)
+- Separate regions into sections by a `// **** "Section Name" (i.e. Shared Functions)  **** //`.
 - If you need to put comments in an `if else` block put them above the `if` and `else` keywords:
 ```typescript
 // blah
