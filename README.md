@@ -149,15 +149,28 @@ async function foo(): Promise<void> {
   - IO data
 
 #### Enums <a name="enums"></a>
-Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because they can save use code because when we use them as a type. When we do the type for that variable will be restricted to any value on that enum. We can also use an enum's value to index that enum and get the string value of the key. I'll leave it to you to decide whether to use them or not.
+Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because they can save use code because when we use them as a type. When we do the type for that variable will be restricted to any value on that enum. We can also use an enum's value to index that enum and get the string value of the key. Here's what I recommend, don't use enums as storage for static values, use a readonly object for that with `as const`. Use enums for when the value itself doesn't matter but what matters is distinguishing that value from related values. For example, suppose there are different roles for an Admin user for a website. The string value of each role isn't important, just that we can distinguish `Basic` from `SuperAdmin` etc. If we need to display the role in a UI somewhere, we can change the string values for each role without affecting what's saved in a database.
 ```typescript
-enum Scopes {
-  Public,
-  Private
+// Back and front-end
+enum AdminsRoles {
+  Basic,
+  SuperAdmin,
+  FullAccess,
 }
 
-function printScope(scope: Scopes) {
-  console.log(Scopes[scope]); // => "Public" or "Private"
+// Front-end only
+const AdminRolesDisplay = {
+  [AdminRoles.Basic]: 'basic',
+  [AdminRoles.SuperAdmin]: 'superadmin
+  [AdminRoles.FullAccess]: 'full-access'
+} as const;
+
+interface Admin {
+  role: AdminRoles;
+}
+
+function printRole(role: AdminRoles) {
+  console.log(AdminRolesDisplay[role]); // => "Basic", "SuperAdmin", "FullAccess"
 }
 ```
 
