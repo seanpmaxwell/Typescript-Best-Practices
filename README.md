@@ -57,9 +57,10 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - Because of how hoisting works in JavaScript, you should organize a file into these regions. Note that your file may not (and usually won't) have all of them:
   - Variables
   - Types
-  - Run (Special Note: execute any logic that you need to here. Outside of linear scripts you usually shouldn't need this region, but if you do keep it short).
+  - Run/Setup (Special Note: execute any logic that you need to here. Outside of linear scripts you usually shouldn't need this region, but if you do keep it short).
   - Functions
   - Classes (only very small ones, large classes should go in a separate file).
+  - Export
 - Some special notes about organization:
   - Only constant/readonly variables (primitive and object values) should go directly in files in the `Variables` region (except maybe in linear scripts).
   - If you are writing a linear script, it might make more sense to group your code by the task they are doing instead of by the fundamental-feature. Still, if you decide to create some function-declarations in the same script, place your function-declarations in another region at the bottom of the file below the <b>Run</b>.
