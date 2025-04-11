@@ -20,13 +20,10 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
   - [Types](#types)
 - [Naming](#naming)
   - [Files/Folders](#files-folders)
-  - [Variables](#variables)
+  - [General Notes](#general-naming-notes)
   - [Functions](#naming-functions)
   - [Objects](#naming-objects)
-  - [Classes](#naming-classes)
-  - [Enums](#naming-enums)
-  - [Type Aliases](#naming-types)
-  - [Interfaces](#naming-interfaces)
+  - [Types](#naming-types)
 - [Comments](#comments)
 - [Imports](#imports)
 - [Example Scripts](#example-scripts)
@@ -55,14 +52,14 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 
 ## Script (file) Organization <a name="script-organization"></a>
 - Because of how hoisting works in JavaScript, you should organize a file into these regions. Note that your file may not (and usually won't) have all of them:
-  - Variables
+  - Constants
   - Types
   - Run/Setup (Special Note: execute any logic that you need to here. Outside of linear scripts you usually shouldn't need this region, but if you do keep it short).
   - Functions
   - Classes (only very small ones, large classes should go in a separate file).
   - Export
 - Some special notes about organization:
-  - Only constant/readonly variables (primitive and object values) should go directly in files in the `Variables` region (except maybe in linear scripts).
+  - Only constant/readonly variables (primitive and object values) should go directly in files in the `Constants` region (except maybe in linear scripts).
   - If you are writing a linear script, it might make more sense to group your code by the task they are doing instead of by the fundamental-feature. Still, if you decide to create some function-declarations in the same script, place your function-declarations in another region at the bottom of the file below the <b>Run</b>.
   - Always put the `export default` at the very bottom of every file. This makes your default export easier to keep track of and apply any wrappers it may need.
 - Organzation overview
@@ -112,15 +109,43 @@ class Dog {
 }
 ```
 
-### Objects (basic-objects, object-literals, classes, and enums) <a name="objects"></a>
-- _Objects_ are just lists of key/value pairs and they all inherit from the parent `Object` class. We'll use the term <b>basic-object</b> to refer to objects which inherit directly from this class and no other.
-- `object-literals`, `classes`, and `enums` are templates for initializing objects in TypeScript/JavaScript (although enums only exist in TypeScript). The third way (in old-school JavaScript) would be to call function with `new` but this is considered obsolete next to classes and leads to more complex code when doing inheritance. `instance-objects` are objects created from classes or calling functions with `new`. 
+### Objects <a name="objects"></a>
+- _Objects_ are lists of key/value pairs and there are 3 templates for intializing objects, <i>object-literals</i>, <i>enums</i>, and <i>classes</i>.
+- Another way to initialize objects is to call a function with `new` but this is considered obsolete next to classes and leads to more complex code when doing inheritance.
+- `instance-objects` are objects created from classes or calling functions with `new`. 
+- All objects inherit from the parent `Object` class. We'll use the term <b>basic-object</b> to refer to objects which inherit directly from this class and no other.
 - Just to point out, symbols have single key/value pair and functions also have key/values pairs and inherit from the `Function` class which in turn inherits from the `Object` class. Due to how we use these features though, we'll consider objects, functions, and symbols separate datatypes. Also note that in Javascript objects are dynamic (we can append as many properties as we want) but in Typescript the keys are static by default once the object is instantiated.
 
 #### Object-literals <a name="object-literals"></a>
 - `object-literals` are a what's created from doing key/value pairs lists with curly-braces (ie `{ name: 'john' }`) and are a convenient, shorthand way of creating basic-objects. They make it easy to both organize code and pass data around.
 - When we use `export default { func1, func2, etc} as const` at the bottom of modular-script, we are essentially using object-literals to organize our code.
-- We should use object-literals over classes for organizing code for reasons mentioned in the next section. 
+- We should use object-literals over classes for organizing code for reasons mentioned in the next section.
+
+#### Enums <a name="enums"></a>
+Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because they can save use code because when we use them as a type. When we do the type for that variable will be restricted to any value on that enum. We can also use an enum's value to index that enum and get the string value of the key. Here's what I recommend, don't use enums as storage for static values, use a readonly object for that with `as const`. Use enums for when the value itself doesn't matter but what matters is distinguishing that value from related values. For example, suppose there are different roles for an Admin user for a website. The string value of each role isn't important, just that we can distinguish `Basic` from `SuperAdmin` etc. If we need to display the role in a UI somewhere, we can change the string values for each role without affecting what's saved in a database.
+```typescript
+// Back and front-end
+enum AdminsRoles {
+  Basic,
+  SuperAdmin,
+  FullAccess,
+}
+
+// Front-end only
+const AdminRolesDisplay = {
+  [AdminRoles.Basic]: 'basic',
+  [AdminRoles.SuperAdmin]: 'superadmin
+  [AdminRoles.FullAccess]: 'full-access'
+} as const;
+
+interface Admin {
+  role: AdminRoles;
+}
+
+function printRole(role: AdminRoles) {
+  console.log(AdminRolesDisplay[role]); // => "Basic", "SuperAdmin", "FullAccess"
+}
+```
 
 #### Classes <a name="classes"></a>
 - **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our applications are simpler and we don't have to worry about <b>dependency-injection</b>. Also, another situation where it may be a good idea to avoid classes is when working with IO data. There are some scenarios however where it could still make sense to use classes and we'll cover them.
@@ -149,32 +174,6 @@ async function foo(): Promise<void> {
   - Organizing code
   - IO data
 
-#### Enums <a name="enums"></a>
-Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because they can save use code because when we use them as a type. When we do the type for that variable will be restricted to any value on that enum. We can also use an enum's value to index that enum and get the string value of the key. Here's what I recommend, don't use enums as storage for static values, use a readonly object for that with `as const`. Use enums for when the value itself doesn't matter but what matters is distinguishing that value from related values. For example, suppose there are different roles for an Admin user for a website. The string value of each role isn't important, just that we can distinguish `Basic` from `SuperAdmin` etc. If we need to display the role in a UI somewhere, we can change the string values for each role without affecting what's saved in a database.
-```typescript
-// Back and front-end
-enum AdminsRoles {
-  Basic,
-  SuperAdmin,
-  FullAccess,
-}
-
-// Front-end only
-const AdminRolesDisplay = {
-  [AdminRoles.Basic]: 'basic',
-  [AdminRoles.SuperAdmin]: 'superadmin
-  [AdminRoles.FullAccess]: 'full-access'
-} as const;
-
-interface Admin {
-  role: AdminRoles;
-}
-
-function printRole(role: AdminRoles) {
-  console.log(AdminRolesDisplay[role]); // => "Basic", "SuperAdmin", "FullAccess"
-}
-```
-
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
 - Use interfaces (`interface`) by default for describing simple structured key/value pair lists. Note that interfaces can be used to describe objects and classes. 
@@ -192,8 +191,8 @@ function printRole(role: AdminRoles) {
 - Linear: lowercase with hyphens (setup-db.ts)
 - Folders not meant to be committed as part of the final code, but may exists along other source folders, (i.e. a test folder) should start and end with a double underscore `__test-helpers__`
 
-### Variables <a name="variables"></a>
-- Static primitives/arrays should be declared at the top of files at the beginning of the "Variables" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
+### General Notes <a name="general-naming-notes"></a>
+- Static primitives/arrays should be declared at the top of files at the beginning of the "Constants" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
 - Simple arrays and objects (objects don't contain any nested objects) just meant to hold static data and marked with `as const` can also be UPPER_SNAKE_CASE.
 - Variables declared inside functions should be camelCase, always.
 - Boolean values should generally start with an 'is' (i.e. session.isLoggedIn)
@@ -219,10 +218,11 @@ const ERRS = {
 
 ### Functions <a name="naming-functions"></a>
 - camelCase in most situtations but for special exceptions like jsx elements can be PascalCase.
-- Generally, you should name functions in a verb format: (i.e. don't say `name()` say `fetchName()` for an IO call).
+- Generally, you should name functions in a verb format: (i.e. don't say `name()` say `getName()`).
+- For functions that return data, use the `get` word for non-io data and fetch for IO data (i.e. `user.getFullName()` and `UserRepo.fetchUser()`).
 - Simple functions as part of object-literals just meant to return constants don't necessarily need to be in a verb format. Example:
 ```typescript
-const Errors = {
+const ERRORS = {
    SomeError: 'foo',
    EmailNotFound(email: string) {
       return `We're sorry, but a user with the email "${email}" was not found.`;
@@ -232,7 +232,6 @@ const Errors = {
 // Note: Errors in an immutable basic-object because we create it with an object-literal and make it immutable with 'as const'.
 ```
 - Prepend helper functions (function declarations not meant to be used outside of their file) with an underscore (i.e. `function _helperFn() {}`).
-- For functions that return data, use the `get` word for non-io data and fetch for IO data (i.e. `user.getFullName()` and `UserRepo.fetchUser()`).
 
 ### Objects <a name="naming-objects"></a>
 - Generally, objects initialized outside of functions and directly inside of files with object-literals should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. As mentioned in the <b>Variables</b> section, simple static objects/arrays can be UPPER_SNAKE_CASE. However, large objects which are the `export default` of Declaration or Modular scripts should be PascalCase. 
@@ -277,11 +276,9 @@ function login() {
 ...
 ```
 
-### Types Aliases <a name="naming-types"></a>
+### Types <a name="naming-types"></a>
 - Prepend type aliases with a 'T' (i.e. `type TMouseEvent = React.MouseEvent<HtmlButtonElement>;`)
-
-### Interfaces <a name="naming-interfaces"></a>
-- Prepend with an 'I' (i.e. `interface IUser { name: string; email: string; }`)
+- Prepend interfaces with an 'I' (i.e. `interface IUser { name: string; email: string; }`)
 <br/>
 
 
@@ -289,7 +286,7 @@ function login() {
 - Seprate files into region as follows (although this could be overkill for files with only one region, use your own discretion):
 ```ts
 /******************************************************************************
-                                RegionName (i.e. Variables)
+                                RegionName (i.e. Constants)
 ******************************************************************************/
 ```
 - Separate regions into sections by a `// **** "Section Name" (i.e. Shared Functions)  **** //`.
@@ -387,7 +384,7 @@ import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
 
 
 /******************************************************************************
-                               Variables
+                             Constants
 ******************************************************************************/
 
 const SUPPORT_STAFF_EMAIL = 'do_not_reply@example.com';
@@ -491,20 +488,14 @@ export default {
 - A linear script:
 ```typescript
 // server.ts
-
 import express from 'express';
-
-
-/******************************************************************************
-                                  Variables
-******************************************************************************/
-
-const app = express(); 
 
 
 /******************************************************************************
                                  Run (Setup)
 ******************************************************************************/
+
+const app = express(); 
 
 app.use(middleware1);
 app.use(middleware2);
