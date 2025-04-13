@@ -189,7 +189,25 @@ async function foo(): Promise<void> {
 - Modular scripts: PascalCase.
 - Inventory: lowercase with hyphens (shared-types.ts)
 - Linear: lowercase with hyphens (setup-db.ts)
-- Folders not meant to be committed as part of the final code, but may exists along other source folders, (i.e. a test folder) should start and end with a double underscore `__test-helpers__`
+- Folders not meant to be committed as part of the final code, but may exists along other source folders, (i.e. a test folder) should start and end with a double underscore `__test-helpers__`.
+- Avoid creating folders (and files too, although I sometimes do) with names like `misc/`, `shared/`, or `common/`. Folders with these names in large projects often end up becoming grab-n-bags for all kinds of miscellaneous shared content, making your code even more disorganized. What I usually do is place shared items in folders named `constants/` (static items, could be objects, arrays, or primitives), `types/` (for type aliases and interfaces), and `util/` (for functions, modular-scripts, and classes). I'll create these folders in multiple places and only place their content at the highest folder-heirarchy level that they theoretically need to be at. The following snippet is an example of code organization in an express app:
+```
+- spec/
+- src/
+  - constants/
+    - index.ts/
+  - routes/
+    - util/
+      - Authenticator.ts // A modular-script that would never be used outside of routes/
+    - UserRoutes.ts
+    - LoginRoutes.ts 
+  - types/
+    - index.ts
+  - util/
+    - StringUtil.ts
+    - misc.ts // a bunch of standalone functions
+  - server.ts
+```
 
 ### General Notes <a name="general-naming-notes"></a>
 - Static primitives/arrays should be declared at the top of files at the beginning of the "Constants" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
