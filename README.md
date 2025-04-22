@@ -211,7 +211,7 @@ async function foo(): Promise<void> {
   - `utils/`: logic that needs to be executed (i.e. standalone functions, modular-scripts, and classes)
   - `constants/`: static items, could be objects, arrays, or primitives
   - `types/`: for type aliases (i.e. custom utility types) and interfaces
-  - <b>CHEAT</b>: if you have very simple `common/` folder, that only has a single file that's a declaration or modular script, you can have just have that one file in there without creating the `constants/`, `utils/` and `types/` subfolders. Remember to add these though if that `common/` folder grows though.
+  - <b>CHEAT</b>: if you have a very simple `common/` folder, that only has a single file that's a declaration or modular script, you can have just have that one file in there without creating the `constants/`, `utils/` and `types/` subfolders, but remember to add these though if that `common/` folder grows.
 
 ### General Notes <a name="general-naming-notes"></a>
 - Static primitives/arrays should be declared at the top of files at the beginning of the "Constants" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
