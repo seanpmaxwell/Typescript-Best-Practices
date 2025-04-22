@@ -207,10 +207,11 @@ async function foo(): Promise<void> {
     - misc.ts // a bunch of standalone functions
   - server.ts
 ```
-- Trying to avoid naming folders `misc/` or `shared/`. These can quickly become dumping grounds for all kinds of miscellaneous content making your code disorganized. What I usually do is, if a folder has files with shared content, create a subfolder named `common/` which will only ever have these three subfolders `constants/`, `utils/` and `types/`. You can create multiple `common/` folders for different layers/sections of your application and remember to place each one's content only at the highest level that it needs to be. Here's a list of what each `common/` subfolder is for:
+- Try to avoid naming folders `misc/` or `shared/`. These can quickly become dumping grounds for all kinds of miscellaneous content making your code disorganized. What I usually do is, if a folder has files with shared content, create a subfolder named `common/` which will only ever have these three subfolders `constants/`, `utils/` and `types/`. You can create multiple `common/` folders for different layers/sections of your application and remember to place each one's content only at the highest level that it needs to be. Here's a list of what each `common/` subfolder is for:
   - `utils/`: logic that needs to be executed (i.e. standalone functions, modular-scripts, and classes)
   - `constants/`: static items, could be objects, arrays, or primitives
   - `types/`: for type aliases (i.e. custom utility types) and interfaces
+  - <b>CHEAT</b>: if you have very simple `common/` folder, that only has a single file that's a declaration or modular script, you can have just have that one file in there without creating the `constants/`, `utils/` and `types/` subfolders. Remember to add these though if that `common/` folder grows though.
 
 ### General Notes <a name="general-naming-notes"></a>
 - Static primitives/arrays should be declared at the top of files at the beginning of the "Constants" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
