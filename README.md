@@ -402,7 +402,7 @@ import helpers from './helpers';
 - A modular script:
 ```typescript
 // MailUtil.ts
-
+import logger from 'jet-logger';
 import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
 
 
@@ -411,8 +411,6 @@ import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
 ******************************************************************************/
 
 const SUPPORT_STAFF_EMAIL = 'do_not_reply@example.com';
-
-let mailer; TTransport | null = null;
 
 
 /******************************************************************************
@@ -426,12 +424,11 @@ type TTransport = Transporter<SMTPTransport.SentMessageInfo>;
                                Run (Setup)
 ******************************************************************************/
 
-const transporter = nodemailer
+const mailer = nodemailer
  .createTransport({ ...settings })
- .transporter
  .verify((err, success) => {
-   if (success) {
-     mailer = transporter;
+   if (!!err) {
+     logger.err(err);
    }
  });
  
@@ -444,14 +441,14 @@ const transporter = nodemailer
  * Send an email anywhere.
  */
 function sendMail(to: string, from: string, subject: string, body: string): Promise<void> {
-   await mailer?.send({to, from, subject, body});
+   await mailer.send({to, from, subject, body});
 }
 
 /**
  * Send an email to your application's support staff.
  */
 function sendSupportStaffEmail(from, subject, body): Promise<void> {
-   await mailer?.send({to: SUPPORT_STAFF_EMAIL, from, subject, body});
+   await mailer.send({to: SUPPORT_STAFF_EMAIL, from, subject, body});
 }
 
 
@@ -462,7 +459,7 @@ function sendSupportStaffEmail(from, subject, body): Promise<void> {
 export default {
    sendMail,
    sendSupportStaffEmail,
-}
+} as const;
 ```
 
 - An inventory script
