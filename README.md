@@ -306,7 +306,7 @@ function login() {
 
 
 ## Comments <a name="comments"></a>
-- Seprate files into region as follows (although this could be overkill for files with only one region, use your own discretion):
+- Separate files into region as follows (although this could be overkill for files with only one region, use your own discretion):
 ```ts
 /******************************************************************************
                                 RegionName (i.e. Constants)
