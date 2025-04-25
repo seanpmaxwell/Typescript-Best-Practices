@@ -44,7 +44,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 
 ## 4 types of scripts <a name="4-types-of-scripts"></a>
 - <b>Declaration</b>: exports one large declared item (i.e. a file called HttpStatusCodes.ts which exports a single enum containing all the http status codes.
-- <b>Modular</b>: In JavaScript, module is another term for file, so if we use a single object to represent the items available from that file, we'll call it a modular-script. The export default is an `object-literal` containing a bunch of closely related functions/variables (i.e. a file call UserRepo.ts which has a bunch of functions for handling database queries related to user objects, we refer to it as the _UserRepo_ module).
+- <b>Modular-Object</b>: In JavaScript, module is another term for file, so if we use a single object to represent the items available from that file, we'll call it a modular-object script. The export default is an `object-literal` containing a bunch of closely related functions/variables (i.e. a file call UserRepo.ts which has a bunch of functions for handling database queries related to user objects, we refer to it as the _UserRepo_ module).
 - <b>Inventory</b>: for storing a large number of smaller declared items. (i.e. a file called types.ts which stores commonly shared types throughout your application)
 - <b>Linear</b>: executes a series of commands (i.e. a file called `setup-db.ts` which does a bunch of system commands to initialize a database).
 <br/>
@@ -118,7 +118,7 @@ class Dog {
 
 #### Object-literals <a name="object-literals"></a>
 - `object-literals` are a what's created from doing key/value pairs lists with curly-braces (ie `{ name: 'john' }`) and are a convenient, shorthand way of creating basic-objects. They make it easy to both organize code and pass data around.
-- When we use `export default { func1, func2, etc} as const` at the bottom of modular-script, we are essentially using object-literals to organize our code.
+- When we use `export default { func1, func2, etc} as const` at the bottom of a modular-object script, we are essentially using object-literals to organize our code.
 - We should use object-literals over classes for organizing code for reasons mentioned in the next section.
 
 #### Enums <a name="enums"></a>
@@ -151,8 +151,8 @@ function printRole(role: AdminRoles) {
 - **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our applications are simpler and we don't have to worry about <b>dependency-injection</b>. Also, another situation where it may be a good idea to avoid classes is when working with IO data. There are some scenarios however where it could still make sense to use classes and we'll cover them.
 - **Dependency-Injection:** <a name="dependency-injection"></a> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing the backbone of our code (such as is the case in strictly object-oriented languages like Java), then we need to make sure we use the same instance of that class everywhere. Otherwise, we end up creating unnecessary instances or the internal state between the different instances could get out of sync. To avoid this using classes, we'd have to go through the hassle of marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
 - **I/O Data:** <a name="io"></a> Using classes for IO calls could get a little messy. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, but not the functions themselves. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or call `new User()` for every data item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`. If you need static-values and/or functions specific for that data-item, just wrap them in a readonly object-literal (append with `as const`).<br/>
-What I usually do is a create a modular-script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). I like my data to just "be" things not "do" things.<br/>
-Using a modular-script to handle data:
+What I usually do is a create a modular-object script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). I like my data to just "be" things not "do" things.<br/>
+Using a modular-object script to handle data:
 ```
 import User, { IUser } from 'models/User';
 
@@ -186,7 +186,7 @@ async function foo(): Promise<void> {
 ### Files/Folders <a name="files-folders"></a>
 - Folders: Generally use lowercase with hyphens. But can make exceptions for special situations (i.e. a folder in react holding Home.tsx, and Home.test.tsx could be uppercase `Home/`.
 - Declaration scripts: file name should match declaration name. (i.e. if export default is `useSetState` file name should be `useSetState.ts`.
-- Modular scripts: PascalCase.
+- Modular-object scripts: PascalCase.
 - Inventory: lowercase with hyphens (shared-types.ts)
 - Linear: lowercase with hyphens (setup-db.ts)
 - Folders not meant to be committed as part of the final code, but may exists along other source folders, (i.e. a test folder) should start and end with a double underscore `__test-helpers__`.
@@ -197,7 +197,7 @@ async function foo(): Promise<void> {
     - index.ts/
   - routes/
     - util/
-      - Authenticator.ts // A modular-script that would never be used outside of routes/
+      - Authenticator.ts // A modular-object script that would never be used outside of routes/
     - UserRoutes.ts
     - LoginRoutes.ts 
   - types/
@@ -208,10 +208,10 @@ async function foo(): Promise<void> {
   - server.ts
 ```
 - Try to avoid naming folders `misc/` or `shared/`. These can quickly become dumping grounds for all kinds of miscellaneous content making your code disorganized. What I usually do is, if a folder has files with shared content, create a subfolder named `common/` which will only ever have these three subfolders `constants/`, `utils/` and `types/`. You can create multiple `common/` folders for different layers/sections of your application and remember to place each one's content only at the highest level that it needs to be. Here's a list of what each `common/` subfolder is for:
-  - `utils/`: logic that needs to be executed (i.e. standalone functions, modular-scripts, and classes)
+  - `utils/`: logic that needs to be executed (i.e. standalone functions, modular-object scripts, and classes)
   - `constants/`: static items, could be objects, arrays, or primitives
   - `types/`: for type aliases (i.e. custom utility types) and interfaces
-  - <b>CHEAT</b>: if you have a very simple `common/` folder, that only has a single file that's a declaration or modular script, you can have just that one file in there without creating the `constants/`, `utils/` and `types/` subfolders, but remember to add these if that `common/` folder grows though.
+  - <b>CHEAT</b>: if you have a very simple `common/` folder, that only has a single file that's a declaration or modular-object script, you can have just that one file in there without creating the `constants/`, `utils/` and `types/` subfolders, but remember to add these if that `common/` folder grows though.
 - In short `common/` is not a grab-n-bag, `common/` is ONLY for shared types, constants, and util (executable logic) that are used across multiple files, nothing else.
 
 ### General Notes <a name="general-naming-notes"></a>
@@ -257,7 +257,7 @@ const ERRORS = {
 - Prepend helper functions (function declarations not meant to be used outside of their file) with an underscore (i.e. `function _helperFn() {}`).
 
 ### Objects <a name="naming-objects"></a>
-- Generally, objects initialized outside of functions and directly inside of files with object-literals should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. As mentioned in the <b>Variables</b> section, simple static objects/arrays can be UPPER_SNAKE_CASE. However, large objects which are the `export default` of Declaration or Modular scripts should be PascalCase. 
+- Generally, objects initialized outside of functions and directly inside of files with object-literals should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. As mentioned in the <b>Variables</b> section, simple static objects/arrays can be UPPER_SNAKE_CASE. However, large objects which are the `export default` of declaration or modular-object scripts should be PascalCase.
 - `instance-objects` created inside of functions or directly in the file should use camelCase.
 - PascalCase for class names and any `static readonly` properties they have (i.e. Dog.Species).
 - Use PascalCase for the enum name and keys. (i.e. `enum NodeEnvs { Dev = 'development'}`)
@@ -399,7 +399,7 @@ import helpers from './helpers';
 ## Example Scripts <a name="example-scripts"></a>
 - Now that we've gone over the main points, let's look at some example scripts.
 
-- A modular script:
+- A modular-object script:
 ```typescript
 // MailUtil.ts
 import logger from 'jet-logger';
