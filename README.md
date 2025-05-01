@@ -195,7 +195,7 @@ async function foo(): Promise<void> {
   - `constants/`: static items, could be objects, arrays, or primitives
   - `types/`: for type aliases (i.e. custom utility types) and interfaces
   - <b>CHEAT</b>: If you have a very simple `common/` folder, that only has a single file that's a declaration or modular-object script, you can have just that one file in there without creating the `constants/`, `utils/` and `types/` subfolders, but remember to add these if that `common/` folder grows though.
-- In short `common/` is not a grab-n-bag, `common/` is ONLY for shared types, constants, and util (executable logic) that are used across multiple files, nothing else.
+- In short `common/` is not a grab-n-bag, `common/` is ONLY for shared types, constants, and utilities (executable logic) that are used across multiple files, nothing else.
 ```
 - spec/
 - src/
@@ -204,7 +204,7 @@ async function foo(): Promise<void> {
       - index.ts/
     - types/
       - index.ts
-    - util/
+    - utils/
       - StringUtil.ts
       - misc.ts // a bunch of standalone functions
   - routes/
