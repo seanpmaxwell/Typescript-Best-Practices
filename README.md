@@ -29,6 +29,8 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - [Example Scripts](#example-scripts)
 - [Misc Style](#misc-style)
 - [Testing](#testing)
+  - [General Notes](#testing-general-notes)
+  - [Structuring BDD style tests](#testing-bdd-style)
 <br/>
 
 
@@ -586,6 +588,8 @@ function fooBar(beforeMsg: string, person: IPerson, afterMsg: string): void {
 
 
 ## Testing <a name="testing"></a>
+
+### General Notes <a name="testing-general-notes"></a>
 - Anything that changes based on user interaction should be unit-tested.
 - All phases of development should include unit-tests.
 - Developers should write their own unit-tests.
@@ -594,3 +598,66 @@ function fooBar(beforeMsg: string, person: IPerson, afterMsg: string): void {
 - Integration tests should be done by a dedicated integration tester who's fluent with the framework in a separate repository.
 - Another good reasons for tests are they make code more readable.
 - Errors in integration tests should be rare as unit-tests should weed out most of them.
+
+### Structuring BDD style tests <a name="testing-bdd-style"></a>
+- Declare all your variables (except constants) in the `beforeEach`/`beforeAll` callbacks, even ones that don't require asynchronous-initialization. This makes your code cleaner so that everything is declared and initialized in the same place.
+- Static constants should go outside of the top level `describe` hook and should go in the `Constants` region like with other scripts. This saves the test runner from having the reinitialize them everytime.
+- The tests should should go in a new region between the `Setup` and `Functions` regions.
+```ts
+import supertest, { TestAgent } from 'supertest';
+import { IUser } from '@src/modes/User';
+import UserRepo from '@src/repos/UserRepo';
+
+
+/******************************************************************************
+                              Constants
+******************************************************************************/
+
+const FOO_BAR = 'asdfasdf';
+
+
+/******************************************************************************
+                               Tests
+******************************************************************************/
+
+describe(() => {
+
+  // Declare here
+  let testUser: IUser,
+    apiCaller: TestAgent;
+
+  // Initialize here
+  beforeEach(async () => {
+    testUser = User.new();
+    await UserRepo.save(testUser);
+    apiCaller = supertest.agent();
+  });
+
+  describe('Fetch User API', () => {
+
+    it('should return a status of 200 and a user object if the request was ' +
+      'successful', async () => {
+      const resp = await apiCaller.get(`api/users/fetch/${testUser.id}`);
+      expect(resp.status).toBe(200);
+      expect(resp.body.user).toEqual(testUser);
+    });
+
+    it('should return a status of 404 if the user was not found', async () => {
+      const resp = await apiCaller.get(`api/users/fetch/${12341234}`);
+      expect(resp.status).toBe(404);
+    })
+  });
+});
+
+
+/******************************************************************************
+                               Functions
+******************************************************************************/
+
+/**
+ * Send an email anywhere.
+ */
+function _someHelperFn(): void {
+   ...do stuff
+}
+```
