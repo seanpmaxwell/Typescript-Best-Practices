@@ -198,6 +198,7 @@ async function foo(): Promise<void> {
   - `types/`: for type aliases (i.e. custom utility types) and interfaces
   - <b>CHEAT</b>: If you have a very simple `common/` folder, that only has a single file that's a declaration or modular-object script, you can have just that one file in there without creating the `constants/`, `utils/` and `types/` subfolders, but remember to add these if that `common/` folder grows though.
 - In short `common/` is not a grab-n-bag, `common/` is ONLY for shared types, constants, and utilities (executable logic) that are used across multiple files, nothing else.
+- If you have something that isn't shared but you don't want to go in the file that it is called in for whatever reason (i.e. a large function in an express route that generates a PDF) create another subfolder called `support/`and place it there.
 ```
 - spec/
 - src/
@@ -208,10 +209,12 @@ async function foo(): Promise<void> {
       - index.ts
     - utils/
       - StringUtil.ts
-      - misc.ts // a bunch of standalone functions
+      - misc.ts // A bunch of standalone functions
   - routes/
     - common/
-      - Authenticator.ts // A modular-object script that would never be used outside of routes/
+      - Authenticator.ts // See cheat above. Authenticator.ts is a modular-object script that would never be used outside of routes/.
+    - support
+      - generateUserPaymentHistoryPdf.ts // A single function used only in UserRoutes.ts but is large/complex enough to have it's own file. 
     - UserRoutes.ts
     - LoginRoutes.ts 
   - server.ts
