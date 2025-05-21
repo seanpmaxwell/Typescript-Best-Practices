@@ -186,25 +186,32 @@ async function foo(): Promise<void> {
 ## Naming <a name="naming"></a>
 
 ### Files/Folders <a name="files-folders"></a>
+
+#### Misc Notes
 - Folders: Generally use lowercase with hyphens. But can make exceptions for special situations (i.e. a folder in react holding Home.tsx, and Home.test.tsx could be uppercase `Home/`.
 - Declaration scripts: file name should match declaration name. (i.e. if export default is `useSetState` file name should be `useSetState.ts`.
 - Modular-object scripts: PascalCase.
 - Inventory: lowercase with hyphens (shared-types.ts)
 - Linear: lowercase with hyphens (setup-db.ts)
 - Folders not meant to be committed as part of the final code, but may exists along other source folders, (i.e. a test folder) should start and end with a double underscore `__test-helpers__`.
+
+#### The "common/" and "support/" folder
 - Try to avoid naming folders `misc/` or `shared/`. These can quickly become dumping grounds for all kinds of miscellaneous content making your code disorganized. What I usually do is, if a folder has files with shared content, create a subfolder named `common/` which will only ever have these three subfolders `constants/`, `utils/` and `types/`. You can create multiple `common/` folders for different layers/sections of your application and remember to place each one's content only at the highest level that it needs to be. Here's a list of what each `common/` subfolder is for:
   - `utils/`: logic that needs to be executed (i.e. standalone functions, modular-object scripts, and classes)
   - `constants/`: static items, could be objects, arrays, or primitives
   - `types/`: for type aliases (i.e. custom utility types) and interfaces
   - <b>CHEAT</b>: If you have a very simple `common/` folder, that only has a single file that's a declaration or modular-object script, you can have just that one file in there without creating the `constants/`, `utils/` and `types/` subfolders, but remember to add these if that `common/` folder grows though.
 - In short `common/` is not a grab-n-bag, `common/` is ONLY for shared types, constants, and utilities (executable logic) that are used across multiple files, nothing else.
-- If you have something that isn't shared but you don't want to go in the file that it is called in for whatever reason (i.e. a large function in an express route that generates a PDF) create another subfolder called `support/`and place it there.
+- If you have something that isn't shared but you don't want it to go in the file that it is used in for whatever reason (i.e. a large function in an express route that generates a PDF file) create another subfolder called `support/`and place it there.
+
+#### Example of file/folder naming using a basic express server
 ```
-- spec/
 - src/
   - common/
     - constants/
-      - index.ts/
+      - HttpStatusCodes.ts
+      - Paths.ts
+      - index.ts
     - types/
       - index.ts
     - utils/
@@ -213,11 +220,16 @@ async function foo(): Promise<void> {
   - routes/
     - common/
       - Authenticator.ts // See cheat above. Authenticator.ts is a modular-object script that would never be used outside of routes/.
-    - support
+    - support/
       - generateUserPaymentHistoryPdf.ts // A single function used only in UserRoutes.ts but is large/complex enough to have it's own file. 
     - UserRoutes.ts
     - LoginRoutes.ts 
   - server.ts
+- tests/
+  - common/
+    - tests/
+  - user.tests.ts
+  - login.tests.ts
 ```
 
 ### General Notes <a name="general-naming-notes"></a>
