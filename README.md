@@ -195,7 +195,7 @@ async function foo(): Promise<void> {
 - Linear: lowercase with hyphens (setup-db.ts)
 - Folders not meant to be committed as part of the final code, but may exists along other source folders, (i.e. a test folder) should start and end with a double underscore `__test-helpers__`.
 
-#### The "common/" and "support/" folder
+#### The "common/" and "support/" subfolders
 - Try to avoid naming folders `misc/` or `shared/`. These can quickly become dumping grounds for all kinds of miscellaneous content making your code disorganized. What I usually do is, if a folder has files with shared content, create a subfolder named `common/` which will only ever have these three subfolders `constants/`, `utils/` and `types/`. You can create multiple `common/` folders for different layers/sections of your application and remember to place each one's content only at the highest level that it needs to be. Here's a list of what each `common/` subfolder is for:
   - `utils/`: logic that needs to be executed (i.e. standalone functions, modular-object scripts, and classes)
   - `constants/`: static items, could be objects, arrays, or primitives
