@@ -188,8 +188,8 @@ async function foo(): Promise<void> {
 ### Files/Folders <a name="files-folders"></a>
 
 #### Misc Notes
-- Folders: Generally use lowercase with hyphens. But can make exceptions for special situations (i.e. a folder in react holding Home.tsx, and Home.test.tsx could be uppercase `Home/`.
-- Declaration scripts: file name should match declaration name. (i.e. if export default is `useSetState` file name should be `useSetState.ts`.
+- Folders: Generally use lowercase with hyphens, but you can make exceptions for special situations (i.e. a folder in React holding Home.tsx and Home.test.tsx could be named `Home/`.
+- Declaration scripts: filename should match declaration name. (i.e. if the export default is a function `useSetState()`, the filename should be `useSetState.ts`.
 - Modular-object scripts: PascalCase.
 - Inventory: lowercase with hyphens (shared-types.ts)
 - Linear: lowercase with hyphens (setup-db.ts)
