@@ -38,7 +38,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - `Primitives`, `Functions`, `Objects`, and `Types`
 - <b>Primitives</b> - 5 original: `null`, `undefined`, `boolean`, `number`, `string`. Two new ones `symbol` and `bigint`. 
 - <b>Functions</b> - 4 ways to create functions: function-declarations `function functionName() {}`, arrow-functions `() => {}`, placing them directly in object-literals (not counting arrows), and directly inside classes (not counting arrows).
-- <b>Objects</b> - 3 ways to create objects: object-literals, calling functions with `new` (old), and classes (new).
+- <b>Objects</b> - 4 ways to create objects: object-literals, enums, classes, calling functions with `new` (obsolete es5 way).
 - <b>Types</b> - 2 main ways to create types: types-aliases (`type`) and interfaces (`interface`). Note: there's also function overloading for function-declarations. 
 - Note: Functions are technically objects too but for all practical purposes we'll consider them separate.
 <br/>
@@ -66,7 +66,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
   - Always put the `export default` at the very bottom of every file. This makes your default export easier to keep track of and apply any wrappers it may need.
 - Organzation overview
   - Project (application or library)
-  - Directory
+  - Directory (Folder)
   - File (aka module)
   - Region
   - Section
@@ -124,28 +124,28 @@ class Dog {
 - We should use object-literals over classes for organizing code for reasons mentioned in the next section.
 
 #### Enums <a name="enums"></a>
-Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because they can save use code because when we use them as a type. When we do the type for that variable will be restricted to any value on that enum. We can also use an enum's value to index that enum and get the string value of the key. Here's what I recommend, don't use enums as storage for static values, use a readonly object for that with `as const`. Use enums for when the value itself doesn't matter but what matters is distinguishing that value from related values. For example, suppose there are different roles for an Admin user for a website. The string value of each role isn't important, just that we can distinguish `Basic` from `SuperAdmin` etc. If we need to display the role in a UI somewhere, we can change the string values for each role without affecting what's saved in a database.
+Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because because we can use the enum itself as a type which represents and `OR` for each of the values. We can also use an enum's value to index that enum and get the string value of the key. Here's what I recommend, don't use enums as storage for static values, use a readonly object for that with `as const`. Use enums for when the value itself doesn't matter but what matters is distinguishing that value from related values. For example, suppose there are different roles for a user for a website. The string value of each role isn't important, just that we can distinguish `Basic` from `SuperAdmin` etc. If we need to display the role in a UI somewhere, we can change the string values for each role without affecting what's saved in a database.
 ```typescript
 // Back and front-end
-enum AdminsRoles {
+enum UserRoles {
   Basic,
-  SuperAdmin,
-  FullAccess,
+  Admin,
+  Owner,
 }
 
 // Front-end only
-const AdminRolesDisplay = {
-  [AdminRoles.Basic]: 'basic',
-  [AdminRoles.SuperAdmin]: 'superadmin
-  [AdminRoles.FullAccess]: 'full-access'
+const UserRolesDisplay = {
+  [UserRoles.Basic]: 'Basic',
+  [UserRoles.SAdmin]: 'Administrator',
+  [UserRoles.Owner]: 'Owner'
 } as const;
 
-interface Admin {
-  role: AdminRoles;
+interface IUser {
+  role: UserRoles; // Here we use the enum as a type
 }
 
-function printRole(role: AdminRoles) {
-  console.log(AdminRolesDisplay[role]); // => "Basic", "SuperAdmin", "FullAccess"
+function printRole(role: UserRoles) {
+  console.log(UserRolesDisplay[role]); // => "Basic", "Administrator", "Owner"
 }
 ```
 
