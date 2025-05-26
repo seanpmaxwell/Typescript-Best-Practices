@@ -12,10 +12,6 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
   - [Objects](#objects)
     - [Object-literals](#object-literals)  
     - [Classes](#classes)
-      - [Dependency Injection](#dependency-injection)
-      - [IO](#io)
-      - [When to use Classes](#when-to-use-classes)
-      - [Classes Summary](#classes-summary)
     - [Enums](#enums)
   - [Types](#types)
 - [Naming](#naming)
@@ -141,9 +137,9 @@ function printRole(role: UserRoles) {
 
 #### Classes <a name="classes"></a>
 - **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our application is simpler and we don't have to worry about <b>dependency-injection</b> or making constructor calls on every single data item when working with <b>IO data</b>. It's better to organize our code using modular-object instead of classes, this let's our data just "be" things not "do" things. Let's look at this in more detail.
-- **Dependency-Injection:** <a name="dependency-injection"></a> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing portions of our code where multiple instances aren't needed or preferred (i.e. a web servers "Service" layer), we'd have to go through the hassle of marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
-- **I/O Data:** <a name="io"></a> Using classes as templates for IO data could get a little messy as well. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, not the function-logic itself. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static ToString()` in the `User` class and call User.ToString("some data item") or call `new User()` for every data-item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`.<br/>
-- **When to use classes** <a name="when-to-use-classes"></a> The only time I uses classes today is when I need to inherit from something that is implemented with a class (i.e. the `Error` class). And of course I still use built-in classes (i.e. `new Map()`).
+- **Dependency-Injection:** Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing portions of our code where multiple instances aren't needed or preferred (i.e. a web servers "Service" layer), we'd have to go through the hassle of marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
+- **I/O Data:** Using classes as templates for IO data could get a little messy as well. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, not the function-logic itself. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static ToString()` in the `User` class and call User.ToString("some data item") or call `new User()` for every data-item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`.<br/>
+- **When to use classes:** The only time I uses classes today is when I need to inherit from something that is implemented with a class (i.e. the `Error` class). And of course I still use built-in classes (i.e. `new Map()`).
 ```ts
 class RouteError extends Error {
   constructor() {
