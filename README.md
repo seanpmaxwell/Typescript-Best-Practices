@@ -150,9 +150,9 @@ function printRole(role: UserRoles) {
 ```
 
 #### Classes <a name="classes"></a>
-- **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our applications are simpler and we don't have to worry about <b>dependency-injection</b>. Also, another situation where it may be a good idea to avoid classes is when working with IO data. There are some scenarios however where it could still make sense to use classes and we'll cover them.
+- **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our applications are simpler and we don't have to worry about <b>dependency-injection</b>. Also, another situation where it may be a good idea to avoid classes is when working with IO data. However, there are some scenarios however where it could still make sense to use classes and we'll cover them.
 - **Dependency-Injection:** <a name="dependency-injection"></a> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing the backbone of our code (such as is the case in strictly object-oriented languages like Java), then we need to make sure we use the same instance of that class everywhere. Otherwise, we end up creating unnecessary instances or the internal state between the different instances could get out of sync. To avoid this using classes, we'd have to go through the hassle of marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
-- **I/O Data:** <a name="io"></a> Using classes for IO calls could get a little messy. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, but not the functions themselves. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or call `new User()` for every data item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`. If you need static-values and/or functions specific for that data-item, just wrap them in a readonly object-literal (append with `as const`).<br/>
+- **I/O Data:** <a name="io"></a> Using classes as templates for IO data could get a little messy. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, but not the functions themselves. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or call `new User()` for every data item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`. If you need static-values and/or functions specific for that data-item, just wrap them in a readonly object-literal (append with `as const`).<br/>
 What I usually do is a create a modular-object script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). I like my data to just "be" things not "do" things.<br/>
 Using a modular-object script to handle data:
 ```
@@ -166,15 +166,10 @@ async function foo(): Promise<void> {
   }
 }
 ```
-- **When to use classes** <a name="when-to-use-classes"></a> Suppose there's a situation where you have some non-IO dynamic-data and functions closely tied together and you want to call functions specifically for that data (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. It'd be pretty inconvenient (and possibly dangerous if the state is external) to constantly have to do `const mapData = Map.new(); Map.set(mapData, 'key', 'value'), Map.get(mapData, 'key');`.
+- **When to use classes** <a name="when-to-use-classes"></a> Suppose there's a situation where you have some non-IO dynamic-data and functions closely tied together and you want to call functions specifically for that data (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. We could write our data-structures using object-literals instead and access the data in the functions with the `this` keyword, but this could get a little messy for complex data-structures and makes all our data items publicly available. 
 
 **Classes Summary** <a name="classes-summary"></a>
-- When to use classes:
-  - Data-Structures
-  - Whenever you have a set on no IO data initialized multiple times tightly couple with some functions (you feel tempted to use the `new` keyword). 
-- When not use classes:
-  - Organizing code
-  - IO data
+- Use classes whenever you have a set on non-IO data initialized multiple times tightly coupled with some functions (i.e. data-structures). DO NOT uses classes for organizing code or IO data, object-literals in conjunction with interfaces will suffice. 
 
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
