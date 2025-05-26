@@ -110,17 +110,10 @@ const objLiteral = {
 - We should use object-literals over classes for organizing code for reasons mentioned in the next section.
 
 #### Classes <a name="classes"></a>
-- **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our application is simpler and we don't have to worry about <b>dependency-injection</b> or making constructor calls on every single data item when working with <b>IO data</b>. It's better to organize our code using modular-object instead of classes, this let's our data just "be" things not "do" things. Let's look at this in more detail.
+- **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our application is simpler and we don't have to worry about <b>dependency-injection</b> or making constructor calls on every single data item when working with <b>IO data</b>. It's better to organize our code using modular-object instead of classes; however, there are still some scenarios where it might make sense to use classes. Let's look at these points in more detail.
 - **Dependency-Injection:** Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing portions of our code where multiple instances aren't needed or preferred (i.e. a web servers "Service" layer), we'd have to go through the hassle of marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
 - **I/O Data:** Using classes as templates for IO data could get a little messy as well. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, not the function-logic itself. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static ToString()` in the `User` class and call User.ToString("some data item") or call `new User()` for every data-item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`.<br/>
-- **When to use classes:** The only time I uses classes today is when I need to inherit from something that is implemented with a class (i.e. the `Error` class). And of course I still use built-in classes (i.e. `new Map()`).
-```ts
-class RouteError extends Error {
-  constructor() {
-    super("The request failed")
-  }
-}
-```
+- **When to use classes:** We should only uses classes when we have functions/non-io-data tightly coupled together that we are creating multiple instances of (i.e. a data-structure such as `new Map()`). Another scenario could be a library which has a bunch of functions on it but needs to be passed some user settings when being initialized.
 - **Using a modular-object instead of a class to avoid dependency inject and handle IO data**
 What I usually do is a create a modular-object script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). <br/>
 Using a modular-object script to handle data:
