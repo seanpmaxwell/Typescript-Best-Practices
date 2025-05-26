@@ -109,32 +109,6 @@ const objLiteral = {
 - When we use `export default { func1, func2, etc} as const` at the bottom of a modular-object script, we are essentially using object-literals to organize our code.
 - We should use object-literals over classes for organizing code for reasons mentioned in the next section.
 
-#### Enums <a name="enums"></a>
-Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because because we can use the enum itself as a type which represents and `OR` for each of the values. We can also use an enum's value to index that enum and get the string value of the key. Here's what I recommend, don't use enums as storage for static values, use a readonly object for that with `as const`. Use enums for when the value itself doesn't matter but what matters is distinguishing that value from related values. For example, suppose there are different roles for a user for a website. The string value of each role isn't important, just that we can distinguish `Basic` from `SuperAdmin` etc. If we need to display the role in a UI somewhere, we can change the string values for each role without affecting what's saved in a database.
-```typescript
-// Back and front-end
-enum UserRoles {
-  Basic,
-  Admin,
-  Owner,
-}
-
-// Front-end only
-const UserRolesDisplay = {
-  [UserRoles.Basic]: 'Basic',
-  [UserRoles.SAdmin]: 'Administrator',
-  [UserRoles.Owner]: 'Owner'
-} as const;
-
-interface IUser {
-  role: UserRoles; // Here we use the enum as a type
-}
-
-function printRole(role: UserRoles) {
-  console.log(UserRolesDisplay[role]); // => "Basic", "Administrator", "Owner"
-}
-```
-
 #### Classes <a name="classes"></a>
 - **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our application is simpler and we don't have to worry about <b>dependency-injection</b> or making constructor calls on every single data item when working with <b>IO data</b>. It's better to organize our code using modular-object instead of classes, this let's our data just "be" things not "do" things. Let's look at this in more detail.
 - **Dependency-Injection:** Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing portions of our code where multiple instances aren't needed or preferred (i.e. a web servers "Service" layer), we'd have to go through the hassle of marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
@@ -184,6 +158,32 @@ async function fetchAndPrint(): Promise<IUser> {
 export default {
   fetchAndPrint,
 } as const;
+```
+
+#### Enums <a name="enums"></a>
+Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because because we can use the enum itself as a type which represents and `OR` for each of the values. We can also use an enum's value to index that enum and get the string value of the key. Here's what I recommend, don't use enums as storage for static values, use a readonly object for that with `as const`. Use enums for when the value itself doesn't matter but what matters is distinguishing that value from related values. For example, suppose there are different roles for a user for a website. The string value of each role isn't important, just that we can distinguish `Basic` from `SuperAdmin` etc. If we need to display the role in a UI somewhere, we can change the string values for each role without affecting what's saved in a database.
+```typescript
+// Back and front-end
+enum UserRoles {
+  Basic,
+  Admin,
+  Owner,
+}
+
+// Front-end only
+const UserRolesDisplay = {
+  [UserRoles.Basic]: 'Basic',
+  [UserRoles.SAdmin]: 'Administrator',
+  [UserRoles.Owner]: 'Owner'
+} as const;
+
+interface IUser {
+  role: UserRoles; // Here we use the enum as a type
+}
+
+function printRole(role: UserRoles) {
+  console.log(UserRolesDisplay[role]); // => "Basic", "Administrator", "Owner"
+}
 ```
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
