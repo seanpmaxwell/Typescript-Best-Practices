@@ -58,7 +58,6 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
   - Types
   - Run/Setup (Special Note: execute any logic that you need to here. Outside of linear scripts you usually shouldn't need this region, but if you do keep it short).
   - Functions
-  - Classes (only very small ones, large classes should go in a separate file).
   - Export
 - Some special notes about organization:
   - Only constant/readonly variables (primitive and object values) should go directly in files in the `Constants` region (except maybe in linear scripts).
@@ -91,7 +90,7 @@ function ParentFn(param) {
    childFn(val);
 }
 ```
-- Functions can be be placed directly in object literals. I usually do it this way for longer multi-line functions but will use an arrow function for short functions. Note that for `direct-in-object-literal` functions The `this` keyword will refer to properties on the containing object. Although if you need to use the `this` keyword you should probably be using a class instead, see the classes section on when to use classes vs object-literals.
+- Functions can be be placed directly in object literals. I usually do it this way for longer multi-line functions but will use an arrow function for short functions. Note that for `direct-in-object-literal` functions The `this` keyword will refer to properties on the containing object.
 ```
 const objLiteral = {
   helloPre: 'hello ',
@@ -99,15 +98,6 @@ const objLiteral = {
     console.log(this.helloPre + name);
   },
   sayHelloAlt: (name: string) + console.log(...) // Can also use an arrow function but the `this` keyword won't refer to the parent-object literal. 
-}
-```
-- You can create functions inside of classes which allows you to do access modifiers:
-```
-class Dog {
-  public barkAlt: () => console.log() // Like with-object literals can also do arrow-functions.
-  public bark() {
-    console.log('woof woof');
-  }
 }
 ```
 
@@ -150,27 +140,55 @@ function printRole(role: UserRoles) {
 ```
 
 #### Classes <a name="classes"></a>
-- **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our applications are simpler and we don't have to worry about <b>dependency-injection</b>. Also, another situation where it may be a good idea to avoid classes is when working with IO data. However, there are some scenarios however where it could still make sense to use classes and we'll cover them.
-- **Dependency-Injection:** <a name="dependency-injection"></a> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing the backbone of our code (such as is the case in strictly object-oriented languages like Java), then we need to make sure we use the same instance of that class everywhere. Otherwise, we end up creating unnecessary instances or the internal state between the different instances could get out of sync. To avoid this using classes, we'd have to go through the hassle of marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
-- **I/O Data:** <a name="io"></a> Using classes as templates for IO data could get a little messy. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, but not the functions themselves. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or call `new User()` for every data item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`. If you need static-values and/or functions specific for that data-item, just wrap them in a readonly object-literal (append with `as const`).<br/>
-What I usually do is a create a modular-object script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). I like my data to just "be" things not "do" things.<br/>
-Using a modular-object script to handle data:
-```
-import User, { IUser } from 'models/User';
-
-async function foo(): Promise<void> {
-  const resp = await someIoCall();
-  if (User.isValid(resp.data)) {
-     const user: IUser = resp.data;
-     ...some other stuff
+- **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our application is simpler and we don't have to worry about <b>dependency-injection</b> or making constructor calls on every single data item when working with <b>IO data</b>. It's better to organize our code using modular-object instead of classes, this let's our data just "be" things not "do" things. Let's look at this in more detail.
+- **Dependency-Injection:** <a name="dependency-injection"></a> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing portions of our code where multiple instances aren't needed or preferred (i.e. a web servers "Service" layer), we'd have to go through the hassle of marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`).
+- **I/O Data:** <a name="io"></a> Using classes as templates for IO data could get a little messy as well. Reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, not the function-logic itself. In order to use the functions we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our Class (i.e. do `public static ToString()` in the `User` class and call User.ToString("some data item") or call `new User()` for every data-item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`.<br/>
+- **When to use classes** <a name="when-to-use-classes"></a> The only time I uses classes today is when I need to inherit from something that is implemented with a class (i.e. the `Error` class). And of course I still use built-in classes (i.e. `new Map()`).
+```ts
+class RouteError extends Error {
+  constructor() {
+    super("The request failed")
   }
 }
 ```
-- **When to use classes** <a name="when-to-use-classes"></a> Suppose there's a situation where you have some non-IO dynamic-data and functions closely tied together and you want to call functions specifically for that data (i.e. a data-structure). For example, take the `new Map()` object. It has it's own internal state which is a group of key value pairs, and it provides you with all kinds of handy functions `get(), set(), keys(), length etc` to update and access the key/value pairs. We could write our data-structures using object-literals instead and access the data in the functions with the `this` keyword, but this could get a little messy for complex data-structures and makes all our data items publicly available. 
+- **Using a modular-object instead of a class to avoid dependency inject and handle IO data**
+What I usually do is a create a modular-object script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). <br/>
+Using a modular-object script to handle data:
+```ts
+// User.ts
+interface IUser {
+  id: number;
+  name: string;
+}
 
-**Classes Summary** <a name="classes-summary"></a>
-- Use classes whenever you have a set on non-IO data initialized multiple times tightly coupled with some functions (i.e. data-structures). DO NOT uses classes for organizing code or IO data, object-literals in conjunction with interfaces will suffice. 
+function test(arg: unknown): arg is IUser {
+  return typeof arg === 'object' && 'id' in arg && 'name' in arg;
+}
 
+function toString(user: IUser): string {
+  return `Id: ${user.id}, Name: ${user.name}`;
+}
+
+export default {
+  toString,
+} as const;
+
+
+// UserService.ts
+import User, { IUser } from 'models/User';
+
+async function fetchAndPrint(): Promise<IUser> {
+  const resp = await someIoCall(),
+    dataItem = resp.data;
+  if (User.test(dataItem)) {
+    console.log(User.toString(dataItem));
+  }
+}
+
+export default {
+  fetchAndPrint,
+} as const;
+```
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
 - Use interfaces (`interface`) by default for describing simple structured key/value pair lists. Note that interfaces can be used to describe objects and classes. 
