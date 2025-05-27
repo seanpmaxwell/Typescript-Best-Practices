@@ -112,14 +112,14 @@ const objLiteral = {
 #### Classes <a name="classes"></a>
 - **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our application is simpler and we don't have to worry about <b>dependency-injection</b> or making constructor calls on every single data item when working with <b>IO data</b>. It's better to organize our code using modular-object instead of classes; however, there are still some scenarios where it might make sense to use classes. Let's look at these points in more detail.
 - **When not to use classes:**
-  - <b>When only one instance of something is needed:</b> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing the portions of our code where multiple instances aren't needed (i.e. a web servers "Service" layer), we'd have use dependency-injection by marking every function `public static` and using it directly on the class itself OR make sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`) because all exports are singletons. Some applications even go through the process of configuring special dependency-injection libraries. 
+  - <b>When only one instance of something is needed:</b> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing the portions of our code where multiple instances aren't needed (i.e. a web servers "Service" layer), we'd have use dependency-injection by marking every function `public static` and using it directly on the class itself, or making sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`, note that all exports are singletons), and finally another option would be to use a special library for dependency-injection (i.e. `TypeDI`).
   - <b>I/O Data:</b> Using classes as templates for IO data could get a little messy as well. The reason for this is when retrieving objects from an IO call, our key/value pairs are what gets transferred in an IO call, not the functions themselves. In order to use the functions or the `instanceof` keyword, we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or wrap `new User()` around every data-item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`.<br/>
-- **When to use classes:** We should only uses classes when we have functions and non-IO data that needs to be tightly coupled together and we are creating multiple instances of that data (i.e. a data-structure such as `new Map()`). Another scenario could be a library which has a bunch of user settings that need to be passed before its functions can be used.
+- **When to use classes:** We should only use classes when we have functions and non-IO data that needs to be tightly coupled together AND we are creating multiple instances of that data. Some examples of this are data-structures (i.e. `new Map()`) or a library that needs to be passed some settings from a user.
 - **Using a modular-object instead of a class to avoid dependency-injection and handle IO data**
 What I usually do is a create a modular-object script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `isValid()`). <br/>
 Using a modular-object script to handle data:
 ```ts
-// User.ts
+// User.ts (to handle IO data)
 interface IUser {
   id: number;
   name: string;
@@ -134,11 +134,12 @@ function toString(user: IUser): string {
 }
 
 export default {
+  test,
   toString,
 } as const;
 
 
-// UserService.ts
+// UserService.ts (to avoid dependency inject)
 import User, { IUser } from 'models/User';
 
 async function fetchAndPrint(): Promise<IUser> {
