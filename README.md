@@ -135,9 +135,10 @@ export default {
   test,
   toString,
 } as const;
+```
 
-
-// UserService.ts (to avoid dependency inject)
+```ts
+// UserService.ts (to avoid dependency injection)
 import User, { IUser } from 'models/User';
 
 async function fetchAndPrint(): Promise<IUser> {
