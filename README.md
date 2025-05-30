@@ -236,8 +236,8 @@ function printRole(role: UserRoles) {
 ```
 
 ### General Notes <a name="general-naming-notes"></a>
-- Static primitives/arrays should be declared at the top of files at the beginning of the "Constants" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
-- Simple arrays and objects (objects don't contain any nested objects) just meant to hold static data and marked with `as const` can also be UPPER_SNAKE_CASE.
+- Primitives should be declared at the top of files at the beginning of the "Constants" section and use UPPER_SNAKE_CASE (i.e. `const SALT_ROUNDS = 12`).
+- Readonly arrays/objects-literals (marked with `as const`) should also be UPPER_SNAKE_CASE.
 - Variables declared inside functions should be camelCase, always.
 - Boolean values should generally start with an 'is' (i.e. session.isLoggedIn)
 - Use `one-var-scope` declarations for a group of closely related variables. This actually leads to a slight increase in performance during minification. DONT overuse it though. Keep only the closely related stuff together.
