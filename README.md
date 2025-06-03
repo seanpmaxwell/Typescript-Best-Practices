@@ -276,6 +276,16 @@ const ERRORS = {
 // Note: Errors in an immutable basic-object because we create it with an object-literal and make it immutable with 'as const'.
 ```
 - Prepend helper functions (function declarations not meant to be used outside of their file) with an underscore (i.e. `function _helperFn() {}`).
+- If you want to name a function that's already a built-in keyword, pad the name with a double underscore `__`:
+```
+// User.ts
+
+function __new__(): IUser {
+  return ...do stuff
+}
+
+export default { new: __new__ } as const;
+```
 
 ### Objects <a name="naming-objects"></a>
 - Generally, objects initialized outside of functions and directly inside of files with object-literals should be immutable (i.e. an single large `export default {...etc}` inside of a Colors.ts file) and should be appended with `as const` so that they cannot be changed. As mentioned in the <b>Variables</b> section, simple static objects/arrays can be UPPER_SNAKE_CASE. However, large objects which are the `export default` of declaration or modular-object scripts should be PascalCase.
