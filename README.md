@@ -115,7 +115,7 @@ const objLiteral = {
   - <b>When only one instance of something is needed:</b> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing the portions of our code where multiple instances aren't needed (i.e. a web servers "Service" layer), we'd have use dependency-injection by marking every function `public static` and using it directly on the class itself, or making sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`, note that all exports are singletons), and finally another option would be to use a special library for dependency-injection (i.e. `TypeDI`).
   - <b>Serializable Data:</b> Using classes as templates for serializable data could get a little messy as well. The reason for this is when retrieving objects from any kind of IO call, our key/value pairs are what gets transferred in that call, not the functions themselves or the prototype pointers. In order to use the functions or the `instanceof` keyword, we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or wrap `new User()` around every data-item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`.<br/>
 - **When to use classes:** We should only use classes when we have functions and non-serializable data that needs to be tightly coupled together AND we are creating multiple instances of that data. Some examples of this are data-structures (i.e. `new Map()`) or a library that needs to be passed some settings from a user. In general, try to follow the <b>"M.I.N.T."</b> principle, which stands for <b>Multiple Instances, Not-Serialized, and Tightly-Coupled (data coupled with functions)</b>.
-- **Example of use modular-objects instead of classes to follow the MINT principle:** What I usually do is a create a modular-object script for that data item (i.e. User.ts) and in there I'll have the interface  and an `export default`, which is an object-literal that holds all the functions related to it (i.e. `new()` and `test()`).<br/>
+- **Decoupling data from classes to follow the MINT principle:** For a serializable data-item, what I usually do is a create a modular-object script to represent just that data-item (i.e. User.ts) and in there I'll have the interface (to describe the data) and functions to handle logic related to it (i.e. `new()` and `test()`).<br/>
 ```ts
 // User.ts (to handle IO data)
 interface IUser {
@@ -128,7 +128,7 @@ function test(arg: unknown): arg is IUser {
 }
 
 function toString(user: IUser): string {
-  return `|Id: "${user.id}", Name: "${user.name}"|`;
+  return `Id: "${user.id}", Name: "${user.name}"`;
 }
 
 export default {
@@ -240,7 +240,7 @@ function printRole(role: UserRoles) {
 - Readonly arrays/objects-literals (marked with `as const`) should also be UPPER_SNAKE_CASE.
 - Variables declared inside functions should be camelCase, always.
 - Boolean values should generally start with an 'is' (i.e. session.isLoggedIn)
-- Use `one-var-scope` declarations for a group of closely related variables. This actually leads to a slight increase in performance during minification. DONT overuse it though. Keep only the closely related stuff together.
+- Use `one-var-scope` declarations for a group of closely related variables. This actually leads to a slight increase in performance during minification. DON'T overuse it though. Keep only the closely related stuff together.
 ```typescript
 // One block
 const FOO_BAR = 'asdf',
@@ -251,9 +251,9 @@ const FOO_BAR = 'asdf',
 const AUTH_PATHS = [
   '/login',
   '/signup',
- ];
+ ] as const;
 
-// Errors, don't merge this with above
+// Errors, don't merge this with AUTH_PATHS
 const ERRS = {
    Foo: 'foo',
    Bar: 'bar',
