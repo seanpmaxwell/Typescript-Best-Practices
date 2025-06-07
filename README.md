@@ -107,7 +107,7 @@ const objLiteral = {
 #### Object-literals <a name="object-literals"></a>
 - `object-literals` are a what's created from doing key/value pairs lists with curly-braces (ie `{ name: 'john' }`) and are a convenient, shorthand way of creating basic-objects. They make it easy to both organize code and pass data around.
 - When we use `export default { func1, func2, etc} as const` at the bottom of a modular-object script, we are essentially using object-literals to organize our code.
-- We should use object-literals over classes for organizing code for reasons mentioned in the next section.
+- We should generally (but not always) use object-literals over classes for organizing code for the reasons mentioned in the next section.
 
 #### Classes <a name="classes"></a>
 - **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our application is simpler and we don't have to worry about <b>dependency-injection</b> or making constructor calls on every single data item when working with <b>IO data</b>. It's better to organize our code using modular-object instead of classes; however, there are still some scenarios where it might make sense to use classes. Let's look at these points in more detail.
