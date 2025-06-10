@@ -142,7 +142,7 @@ function printRole(role: UserRoles) {
 ```
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
-- Use interfaces (`interface`) by default for describing simple structured key/value pair lists. Note that interfaces can be used to describe objects and classes. 
+- Use interfaces (`interface`) by default for describing simple structured key/value pair lists. Note that interfaces can be used to describe object-literals and classes. 
 - Use type-aliases (`type`) for everything else.
 <br/>
 
