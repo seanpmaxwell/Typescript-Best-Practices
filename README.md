@@ -110,8 +110,7 @@ const objLiteral = {
 - We should generally (but not always) use object-literals over classes for organizing code for the reasons mentioned in the next section.
 
 #### Classes <a name="classes"></a>
-- Try to follow the <b>"M.I.N.T."</b> principle (<i>Multiple Instances, Not-Serialized, and Tightly-Coupled</i>) when deciding whether or not to use classes. This Medium article here explains the MINT principle in more detail.
-
+- Try to follow the <b>"M.I.N.T."</b> principle (<i>Multiple Instances, Not-Serialized, and Tightly-Coupled</i>) when deciding whether or not to use classes. This Medium article here explains the MINT principle in more detail:
 <a target="_blank" href="https://github-readme-medium-recent-article.vercel.app/medium/@seanpmaxwell1/0">
   <img src="https://github-readme-medium-recent-article.vercel.app/medium/@seanpmaxwell1/0" alt="Recent Article 0"/>
 </a>
