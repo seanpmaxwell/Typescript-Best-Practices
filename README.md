@@ -110,7 +110,11 @@ const objLiteral = {
 - We should generally (but not always) use object-literals over classes for organizing code for the reasons mentioned in the next section.
 
 #### Classes <a name="classes"></a>
-- Try to follow the <b>"M.I.N.T."</b> principle (<i>Multiple Instances, Not-Serialized, and Tightly-Coupled</i>) when deciding whether or not to use classes. This Medium article here explains the MINT principle in more detail. <a target="_blank" href="https://github-readme-medium-recent-article.vercel.app/medium/@imantumorang/0"><img src="https://github-readme-medium-recent-article.vercel.app/medium/@seanpmaxwell1/0" alt="Recent Article 0"></a>
+- Try to follow the <b>"M.I.N.T."</b> principle (<i>Multiple Instances, Not-Serialized, and Tightly-Coupled</i>) when deciding whether or not to use classes. This Medium article here explains the MINT principle in more detail.
+
+<a target="_blank" href="https://github-readme-medium-recent-article.vercel.app/medium/@seanpmaxwell1/0">
+  <img src="https://github-readme-medium-recent-article.vercel.app/medium/@seanpmaxwell1/0" alt="Recent Article 0"/>
+</a>
 
 #### Enums <a name="enums"></a>
 Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because because we can use the enum itself as a type which represents and `OR` for each of the values. We can also use an enum's value to index that enum and get the string value of the key. Here's what I recommend, don't use enums as storage for static values, use a readonly object for that with `as const`. Use enums for when the value itself doesn't matter but what matters is distinguishing that value from related values. For example, suppose there are different roles for a user for a website. The string value of each role isn't important, just that we can distinguish `Basic` from `SuperAdmin` etc. If we need to display the role in a UI somewhere, we can change the string values for each role without affecting what's saved in a database.
