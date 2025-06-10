@@ -110,49 +110,7 @@ const objLiteral = {
 - We should generally (but not always) use object-literals over classes for organizing code for the reasons mentioned in the next section.
 
 #### Classes <a name="classes"></a>
-- **Overview:** The trend in JavaScript nowadays is to move away from classes to organize our code and switch to procedural/functional programming. This means the backbone of our application is simpler and we don't have to worry about <b>dependency-injection</b> or making constructor calls on every single data item when working with <b>IO data</b>. It's better to organize our code using modular-object instead of classes; however, there are still some scenarios where it might make sense to use classes. Let's look at these points in more detail.
-- **When not to use classes:**
-  - <b>When only one instance of something is needed:</b> Dependency-injection is what we mean when we're trying to use the same instance of an object in several places. If we use classes for organizing the portions of our code where multiple instances aren't needed (i.e. a web servers "Service" layer), we'd have use dependency-injection by marking every function `public static` and using it directly on the class itself, or making sure to instantiate the class before we export it (i.e. `export default new UserServiceLayer()`, note that all exports are singletons), and finally another option would be to use a special library for dependency-injection (i.e. `TypeDI`).
-  - <b>Serializable Data:</b> Using classes as templates for serializable data could get a little messy as well. The reason for this is when retrieving objects from any kind of IO call, our key/value pairs are what gets transferred in that call, not the functions themselves or the prototype pointers. In order to use the functions or the `instanceof` keyword, we'd have to pass all our data-instances through a constructor or declare the functions static and use them directly from our class (i.e. do `public static toString()` in the `User` class and call User.toString("some data item") or wrap `new User()` around every data-item). It'd be better just to leave the data-item as a basic-object and describe it with an `interface`.<br/>
-- **When to use classes:** We should only use classes when we have functions and non-serializable data that needs to be tightly coupled together AND we are creating multiple instances of that data. Some examples of this are data-structures (i.e. `new Map()`) or a library that needs to be passed some settings from a user. In general, try to follow the <b>"M.I.N.T."</b> principle, which stands for <b>Multiple Instances, Not-Serialized, and Tightly-Coupled (data coupled with functions)</b>.
-- **Decoupling data from classes to follow the MINT principle:** For a serializable data-item, what I usually do is a create a modular-object script to represent just that data-item (i.e. User.ts) and in there I'll have the interface (to describe the data) and functions to handle logic related to it (i.e. `new()` and `test()`).<br/>
-```ts
-// User.ts (to handle IO data)
-interface IUser {
-  id: number;
-  name: string;
-}
-
-function test(arg: unknown): arg is IUser {
-  return typeof arg === 'object' && 'id' in arg && 'name' in arg;
-}
-
-function toString(user: IUser): string {
-  return `Id: "${user.id}", Name: "${user.name}"`;
-}
-
-export default {
-  test,
-  toString,
-} as const;
-```
-
-```ts
-// UserService.ts (to avoid dependency injection)
-import User, { IUser } from 'models/User';
-
-async function fetchAndPrint(): Promise<IUser> {
-  const resp = await someIoCall(),
-    dataItem = resp.data;
-  if (User.test(dataItem)) {
-    console.log(User.toString(dataItem));
-  }
-}
-
-export default {
-  fetchAndPrint,
-} as const;
-```
+- Try to follow the <b>"M.I.N.T."</b> principle (<i>Multiple Instances, Not-Serialized, and Tightly-Coupled</i>) when deciding whether or not to use classes. This Medium article <a target="_blank" href="https://github-readme-medium-recent-article.vercel.app/medium/@imantumorang/0"><img src="https://github-readme-medium-recent-article.vercel.app/medium/@seanpmaxwell1/0" alt="Recent Article 0">here</a> explains the MINT principle in more detail. 
 
 #### Enums <a name="enums"></a>
 Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because because we can use the enum itself as a type which represents and `OR` for each of the values. We can also use an enum's value to index that enum and get the string value of the key. Here's what I recommend, don't use enums as storage for static values, use a readonly object for that with `as const`. Use enums for when the value itself doesn't matter but what matters is distinguishing that value from related values. For example, suppose there are different roles for a user for a website. The string value of each role isn't important, just that we can distinguish `Basic` from `SuperAdmin` etc. If we need to display the role in a UI somewhere, we can change the string values for each role without affecting what's saved in a database.
