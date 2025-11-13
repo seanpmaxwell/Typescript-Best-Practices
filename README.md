@@ -72,7 +72,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 
 ### Primitives <a name="primitives"></a>
 - To repeat: the 5 original are: `null`, `undefined`, `boolean`, `number`, `string` and the two new ones added recently are `symbol` and `bigint`.
-- `symbol` is not nearly as prevalent as the others but is useful for creating unique keys on objects used in libraries. Since libraries in objects are passed around a lot, with symbols we don't have to worry about our key/value pairs getting overridden. 
+- `symbol` is not nearly as prevalent as the others but is useful for creating unique keys on objects exported from libraries. Since objects from libraries are passed around a lot to other unknown applications, with symbols we don't have to worry about the key/value pairs in the library object getting overridden. 
 - In addition to knowing what the primitives are you should know how coercion works. Coercion is when we try to call a function on a primtive and JavaScript (under the hood) wraps its object counterpart (`Boolean`, `Number`, or `String`) around it so we can make the function call, since primitives by themselves don't have functions.
 
 ### Functions <a name="functions"></a>
@@ -164,7 +164,7 @@ function printRole(role: UserRoles) {
   - `utils/`: logic that needs to be executed (i.e. standalone functions, modular-object scripts, and classes)
   - `constants/`: static items, could be objects, arrays, or primitives
   - `types/`: for type aliases (i.e. custom utility types) and interfaces
-  - <b>CHEAT</b>: If you have a very simple `common/` folder, that only has a single file that's a declaration or modular-object script, you can have just that one file in there without creating the `constants/`, `utils/` and `types/` subfolders, but remember to add these if that `common/` folder grows though. If you have an extremely small number of shared items, you can create a `common.ts/.tsx` file instead of folder.
+  - <b>CHEAT</b>: If you have a very simple `common/` folder, that only has a single file that's a declaration or modular-object script, you can have just that one file in there without creating the `constants/`, `utils/` and `types/` subfolders, but remember to add these if that `common/` folder grows though. If you have an extremely small number of shared items, you can create a `common.ts/index.tsx` file instead of folder.
 - In short `common/` is not a grab-n-bag, `common/` is ONLY for shared types, constants, and utilities (executable logic) that are used across multiple files, nothing else.
 - If you have something that isn't shared but you don't want it to go in the file that it is used in for whatever reason (i.e. a large function in an express route that generates a PDF file) create another subfolder called `support/`and place it there.
 
