@@ -128,7 +128,7 @@ enum UserRoles {
 // Front-end only
 const UserRolesDisplay = {
   [UserRoles.Basic]: 'Basic',
-  [UserRoles.SAdmin]: 'Administrator',
+  [UserRoles.Admin]: 'Administrator',
   [UserRoles.Owner]: 'Owner'
 } as const;
 
