@@ -43,7 +43,7 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 ## 4 types of scripts <a name="4-types-of-scripts"></a>
 - <b>Declaration</b>: exports one large declared item (i.e. a file called HttpStatusCodes.ts which exports a single enum containing all the http status codes.
 - <b>Modular-Object</b>: In JavaScript, module is another term for file, so if we use a single object to represent the items available from that file, we'll call it a modular-object script. The export default is an `object-literal` containing a bunch of closely related functions/variables (i.e. a file call UserRepo.ts which has a bunch of functions for handling database queries related to user objects, we refer to it as the _UserRepo_ module).
-- <b>Inventory</b>: for storing a large number of smaller declared items. (i.e. a file called types.ts which stores commonly shared types throughout your application)
+- <b>Inventory</b>: for storing a large number of declared items that are individually exported (i.e. a file called types.ts which stores commonly shared types throughout your application).
 - <b>Linear</b>: executes a series of commands (i.e. a file called `setup-db.ts` which does a bunch of system commands to initialize a database).
 <br/>
 
@@ -52,12 +52,13 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - Because of how hoisting works in JavaScript, you should organize a file into these regions. Note that your file may not (and usually won't) have all of them:
   - Constants
   - Types
-  - Run/Setup (Special Note: execute any logic that you need to here. Outside of linear scripts you usually shouldn't need this region, but if you do keep it short).
+  - Run/Setup
+  - Components (for .jsx/.tsx files)
   - Functions
   - Export
 - Some special notes about organization:
   - Only constant/readonly variables (primitive and object values) should go directly in files in the `Constants` region (except maybe in linear scripts).
-  - If you are writing a linear script, it might make more sense to group your code by the task they are doing instead of by the fundamental-feature. Still, if you decide to create some function-declarations in the same script, place your function-declarations in another region at the bottom of the file below the <b>Run</b>.
+  - If you are writing a linear script, it might make more sense to group your code by the task they are doing instead of by the fundamental-feature. Still, if you decide to create some function-declarations in the same script, place your function-declarations in another region at the bottom of the file below the <b>Run/Setup</b> section.
   - Always put the `export default` at the very bottom of every file. This makes your default export easier to keep track of and apply any wrappers it may need.
 - Organzation overview
   - Project (application or library)
