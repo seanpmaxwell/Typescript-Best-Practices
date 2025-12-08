@@ -153,6 +153,12 @@ const USER_ROLES = {
 
 type ValueOf<T extends object> = T[keyof T]; 
 type UserRoles = ValueOf<typeof UserRoles>; // '0 | 1 | 2'
+
+interface IUser {
+  id: number;
+  name: string;
+  role: UserRoles;
+}
 ```
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
