@@ -142,6 +142,19 @@ function printRole(role: UserRoles) {
 }
 ```
 
+#### Enum Alternative
+<b>UPDATE 12/7/2025:</b> The TypeScript team is now discouraging the use of enums with the `--erasableSyntaxOnly` flag. A clean alternative to enums when you need both a static object and a tuple-type of its keys is to use an `as const` object with some type of utility type which returns all the values for that object.
+```ts
+const USER_ROLES = {
+  Basic: 0,
+  Admin: 1,
+  Owner: 2,
+} as const;
+
+type ValueOf<T extends object> = T[keyof T]; 
+type UserRoles = ValueOf<typeof UserRoles>; // '0 | 1 | 2'
+```
+
 ### Types (type-aliases and interfaces) <a name="types"></a>
 - Use interfaces (`interface`) by default for describing simple structured key/value pair lists. Note that interfaces can be used to describe object-literals and classes. 
 - Use type-aliases (`type`) for everything else.
