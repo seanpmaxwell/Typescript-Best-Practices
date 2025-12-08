@@ -153,11 +153,11 @@ function printRole(role: UserRoles) {
 ### Files/Folders <a name="files-folders"></a>
 
 #### Misc Notes
-- Folders: Generally use lowercase with hyphens, but you can make exceptions for special situations (i.e. a folder in React holding Home.tsx and Home.test.tsx could be named `Home/`.
+- Folders: Generally use lowercase with hyphens (Kebab case), but you can make exceptions for special situations (i.e. a folder in React holding Home.tsx and Home.test.tsx could be named `Home/`.
 - Declaration scripts: filename should match declaration name. (i.e. if the export default is a function `useSetState()`, the filename should be `useSetState.ts`.
 - Modular-object scripts: PascalCase.
-- Inventory: lowercase with hyphens (shared-types.ts)
-- Linear: lowercase with hyphens (setup-db.ts)
+- Inventory: Kebab case (shared-types.ts)
+- Linear: Kebab case (setup-db.ts)
 - Folders not meant to be committed as part of the final code, but may exists along other source folders, (i.e. a test folder) should start and end with a double underscore `__test-helpers__`.
 
 #### The "common/" and "support/" subfolders
