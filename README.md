@@ -330,8 +330,8 @@ function login() {
 - Prepend interfaces with an 'I' (i.e. `interface IUser { name: string; email: string; }`)
 - There's no standard naming convention for type-aliases. However, I like to use PascalCase for utility-types and PascalCase prepended with a `T` for standard type-aliases.
 ```ts
-  type TISOString = `${string}Z`;
-  const isoString: TISOString = "2024-01-01T00:00:00.000Z";
+  type TISOString = `${string}Z`; // standard type-alias
+  type ExtractKeys<T extends object> = keyof T; // utility-type alias
 ```
 <br/>
 
