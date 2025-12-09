@@ -35,7 +35,9 @@ Patterns and Best Practices for procedural Typescript/JavaScript development fol
 - <b>Primitives</b> - 5 original: `null`, `undefined`, `boolean`, `number`, `string`. Two new ones `symbol` and `bigint`. 
 - <b>Functions</b> - 4 ways to create functions: function-declarations `function functionName() {}`, arrow-functions `() => {}`, placing them directly in object-literals (not counting arrows), and directly inside classes (not counting arrows).
 - <b>Objects</b> - 4 ways to create objects: object-literals, enums, classes, calling functions with `new` (obsolete es5 way).
-- <b>Types</b> - 2 main ways to create types: types-aliases (`type`) and interfaces (`interface`). Note: there's also function overloading for function-declarations. 
+- <b>Types</b> - 2 main ways to create types:
+  - types-aliases (created with `type`): This also includes includes utility-types which create new types with generics. 
+  - interfaces (`interface`): Note: there's also function-overloading for function-declarations. 
 - Note: Functions are technically objects too but for all practical purposes we'll consider them separate.
 <br/>
 
@@ -143,7 +145,7 @@ function printRole(role: UserRoles) {
 ```
 
 #### Enum Alternative
-<b>UPDATE 12/7/2025:</b> The TypeScript team is now discouraging the use of enums with the `--erasableSyntaxOnly` flag. A clean alternative to enums when you need both a static object and a tuple-type of its keys is to use an `as const` object with some type of utility type which returns all the values for that object.
+<b>UPDATE 12/7/2025:</b> The TypeScript team is now discouraging the use of enums with the `--erasableSyntaxOnly` flag. A alternative to enums you can use in an object appended with `as const`. If you need a tuple of it's values, a simple utility-type can help.
 ```ts
 const USER_ROLES = {
   Basic: 0,
@@ -152,18 +154,31 @@ const USER_ROLES = {
 } as const;
 
 type ValueOf<T extends object> = T[keyof T]; 
-type UserRoles = ValueOf<typeof UserRoles>; // '0 | 1 | 2'
+type TUserRoles = ValueOf<typeof UserRoles>; // '0 | 1 | 2'
 
 interface IUser {
   id: number;
   name: string;
-  role: UserRoles;
+  role: TUserRoles;
 }
 ```
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
-- Use interfaces (`interface`) by default for describing simple structured key/value pair lists. Note that interfaces can be used to describe object-literals and classes. 
-- Use type-aliases (`type`) for everything else.
+- Use interfaces (`interface`) by default for describing object-literals as they are a bit cleaner for implenting/extending. Note that interfaces can also describe classes. 
+- Use type-aliases (`type`) for everything else. I like to separate type-aliases into standard type-aliases and utility-types which use generics for construction standard types.
+- I generally like to places type-aliases above interfaces in the `Types` region of my files.
+```
+type TRoles = 'basic' | 'admin'; // standard type-alias
+type ModelKeys<T extends Model> = keyof T; // utility-type
+type TUserKeys = ModelKeys<IUser>; // standard type-alias constructed from utility-type
+
+
+interface IUser {
+  id: number;
+  name: string;
+  role: TRoles;
+}
+```
 <br/>
 
 
@@ -183,7 +198,7 @@ interface IUser {
 - Try to avoid naming folders `misc/` or `shared/`. These can quickly become dumping grounds for all kinds of miscellaneous content making your code disorganized. What I usually do is, if a folder has files with shared content, create a subfolder named `common/` which will only ever have these three subfolders `constants/`, `utils/` and `types/`. You can create multiple `common/` folders for different layers/sections of your application and remember to place each one's content only at the highest level that it needs to be. Here's a list of what each `common/` subfolder is for:
   - `utils/`: logic that needs to be executed (i.e. standalone functions, modular-object scripts, and classes)
   - `constants/`: static items, could be objects, arrays, or primitives
-  - `types/`: for type aliases (i.e. custom utility types) and interfaces
+  - `types/`: for type only storage (type aliases, utility-types, and interfaces)
   - <b>CHEAT</b>: If you have a very simple `common/` folder, that only has a single file that's a declaration or modular-object script, you can have just that one file in there without creating the `constants/`, `utils/` and `types/` subfolders, but remember to add these if that `common/` folder grows though. If you have an extremely small number of shared items, you can create a `common.ts/index.tsx` file instead of folder.
 - In short `common/` is not a grab-n-bag, `common/` is ONLY for shared types, constants, and utilities (executable logic) that are used across multiple files, nothing else.
 - If you have something that isn't shared but you don't want it to go in the file that it is used in for whatever reason (i.e. a large function in an express route that generates a PDF file) create another subfolder called `support/`and place it there.
@@ -313,10 +328,10 @@ function login() {
 
 ### Types <a name="naming-types"></a>
 - Prepend interfaces with an 'I' (i.e. `interface IUser { name: string; email: string; }`)
-- There's no standard naming convention for type-aliases. You should at least use PascalCase to distinguish them from values though.
+- There's no standard naming convention for type-aliases. However, I like to use PascalCase for utility-types and PascalCase prepended with a `T` for standard type-aliases.
 ```ts
-  type IsoString = `${string}Z`;
-  const isoString: IsoString = "2024-01-01T00:00:00.000Z";
+  type TISOString = `${string}Z`;
+  const isoString: TISOString = "2024-01-01T00:00:00.000Z";
 ```
 <br/>
 
@@ -433,14 +448,14 @@ const SUPPORT_STAFF_EMAIL = 'do_not_reply@example.com';
                                Types
 ******************************************************************************/
 
-type Mailer = Transporter<SMTPTransport.SentMessageInfo>;
+type TMailer = Transporter<SMTPTransport.SentMessageInfo>;
 
 
 /******************************************************************************
                                Run (Setup)
 ******************************************************************************/
 
-let mailer: Mailer | null = null;
+let mailer: TMailer | null = null;
 
 (async () => {
   try {
