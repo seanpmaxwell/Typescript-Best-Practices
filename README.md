@@ -313,7 +313,11 @@ function login() {
 
 ### Types <a name="naming-types"></a>
 - Prepend interfaces with an 'I' (i.e. `interface IUser { name: string; email: string; }`)
-- There's no major convention for naming type-aliases. You can prepend type aliases with a 'T' if it helps you in your project though.
+- There's no standard naming convention for type-aliases. You should at least use PascalCase to distinguish them from values though.
+```ts
+  type IsoString = `${string}Z`;
+  const isoString: IsoString = "2024-01-01T00:00:00.000Z";
+```
 <br/>
 
 
