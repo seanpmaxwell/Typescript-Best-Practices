@@ -312,8 +312,8 @@ function login() {
 ```
 
 ### Types <a name="naming-types"></a>
-- Prepend type aliases with a 'T' (i.e. `type TMouseEvent = React.MouseEvent<HtmlButtonElement>;`)
 - Prepend interfaces with an 'I' (i.e. `interface IUser { name: string; email: string; }`)
+- There's no major convention for naming type-aliases. You can prepend type aliases with a 'T' if it helps you in your project though.
 <br/>
 
 
@@ -429,21 +429,25 @@ const SUPPORT_STAFF_EMAIL = 'do_not_reply@example.com';
                                Types
 ******************************************************************************/
 
-type TTransport = Transporter<SMTPTransport.SentMessageInfo>;
+type Mailer = Transporter<SMTPTransport.SentMessageInfo>;
 
 
 /******************************************************************************
                                Run (Setup)
 ******************************************************************************/
 
-const mailer = nodemailer
- .createTransport({ ...settings })
- .verify((err, success) => {
-   if (!!err) {
-     logger.err(err);
-   }
- });
- 
+let mailer: Mailer | null = null;
+
+(async () => {
+  try {
+    const transporter = nodemailer.createTransport({ ...settings });
+    await transporter.verify();
+    mailer = transporter;
+  } catch (err) {
+    console.error(err);
+  }
+})();
+
 
 /******************************************************************************
                                Functions
