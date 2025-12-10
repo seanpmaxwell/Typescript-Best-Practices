@@ -328,10 +328,11 @@ function login() {
 
 ### Types <a name="naming-types"></a>
 - Prepend interfaces with an 'I' (i.e. `interface IUser { name: string; email: string; }`)
-- There's no standard naming convention for type-aliases. However, I like to use PascalCase for utility-types and PascalCase prepended with a `T` for standard type-aliases.
+- There's no standard naming convention for type-aliases. However, I like to use PascalCase for all type-aliases and prepend standard type-aliases with a `T`.
 ```ts
-  type TISOString = `${string}Z`; // standard type-alias
-  type ExtractKeys<T extends object> = keyof T; // utility-type alias
+  type TBasicUser = MyCustomUtilityType<IUser>; // standard type-alias
+  type ISOString = `${string}Z`; // template-literal type-alias
+  type ExtractKeys<T extends object> = keyof T; // utility type-alias
 ```
 <br/>
 
