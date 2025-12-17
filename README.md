@@ -118,7 +118,6 @@ Understand **type coercion**: when calling methods on primitives, JavaScript tem
 
 - Prefer **function declarations** at the file level to take advantage of hoisting.
 - Use **arrow functions** for callbacks and inline logic.
-- Avoid parentheses around single arrow-function parameters.
 
 ```ts
 function parentFn(param: string) {
