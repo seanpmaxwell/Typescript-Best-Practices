@@ -155,7 +155,7 @@ const greeter = {
     console.log(name);
   },
 } as const;
-
+```
 
 ⸻
 
