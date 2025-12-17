@@ -77,6 +77,27 @@ Files should generally be organized into clearly defined regions:
 
 Place `export default` at the **very bottom** of the file to make the public API immediately obvious.
 
+Separate regions with:
+
+```ts
+/******************************************************************************
+                        RegionName (i.e. Constants)
+******************************************************************************/
+```
+
+Regions can be divided further into sections:
+
+```ts
+
+function getUserName(userId: number) { isValidUser(id) ...do stuff }
+function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
+
+// **** Share Helper Functions **** //
+
+function isValidUser(id: number) { ...do stuff }
+
+```
+
 ---
 
 ## Core Language Features
@@ -191,7 +212,7 @@ interface IUser {
 
 ## Comments
 
-- Use JSDoc for all function declarations.
+- Place `/** */` above all function declarations.
 - Use `//` for inline explanations.
 - Capitalize and punctuate comments.
 - Separate logical regions clearly.
@@ -201,7 +222,6 @@ interface IUser {
 ## Imports
 
 - Group imports by origin: libraries → application → local.
-- Use spacing generously.
 - Split long import lists across multiple lines.
 
 ---
@@ -211,6 +231,16 @@ interface IUser {
 ### Modular Object
 
 ```ts
+const mailer = someThirdPartyMailerLib("your settings");
+
+function sendMail(options: MailerOptions): Promise<void> {
+   await mailer.send(options);
+}
+
+function sendSupportStaffEmail(options: MailerOptions): Promise<void> {
+   await mailer.send({ ...options, to: process.env.SUPPORT_STAFF_EMAIL });
+}
+
 export default {
   sendMail,
   sendSupportStaffEmail,
@@ -220,28 +250,48 @@ export default {
 ### Inventory
 
 ```tsx
+export function SubmitButton() {
+  return <button>Submit</button>;
+}
+
+export function CancelButton() {
+  return <button color="red">Submit</button>;
+}
+
 export function CloseButton() {
-  return <button>Close</button>;
+  return <button color="grey">Close</button>;
 }
 ```
 
 ### Linear Script
 
 ```ts
-const app = express();
-app.listen(3000);
+import express from 'express';
+
+const app = express(); 
+
+app.use(middleware1);
+app.use(middleware2);
+
+doSomething();
+doSomethingElse();
 
 export default app;
 ```
 
----
 
-## Style Guidelines
+### Declaration
 
-- Prefer optional chaining (`?.`) and nullish coalescing (`??`).
-- Place variables on the left side of comparisons.
-- Format complex boolean expressions vertically.
-- Keep object literals compact when passed as arguments.
+```typescript
+// ENV_VARS.ts
+
+export default {
+    port: process.env.PORT,
+    host: process.env.Host,
+    databaseUsername: process.env.DB_USERNAME,
+    ...etc,
+} as const;
+```
 
 ---
 
@@ -251,6 +301,30 @@ export default app;
 - Developers should write their own tests.
 - Integration tests should be focused and minimal early on.
 - Tests improve readability as well as correctness.
+
+---
+
+## Organizing shared code
+- In a directory with shared content create a subfolder named `common/`.
+- Add the following files as needed
+  - `utils.ts`: logic that needs to be executed
+  - `constants.ts`: static items
+  - `types.ts`: types only no values
+- If any of these files becomes too large, create a folder of the same name, rename the file to `index.ts` and place it there along with its adjacent content:
+  - `common/
+    - `constants.ts`
+    - `utils/` <-- `utils.ts` grew too large so we separated it into `index.ts` and `StringUtils.ts`
+      - `index.ts`
+      - `StringUtils.ts`
+    - `types.ts`
+- If you have something that isn't shared but you don't want it to go in the file that it is used in for whatever reason create another subfolder called `aux/`and place it there.
+  - `routes/`
+    - `aux/`
+      - `postToPdf.ts` <-- Only used in the `PostRoutes.ts` file but large enough to separate out.
+    - `support/`
+    - `PostRoutes.ts`
+    - `UserRoutes.ts`
+- Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
 
 ---
 
