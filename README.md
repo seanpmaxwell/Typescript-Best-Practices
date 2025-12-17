@@ -1,17 +1,4 @@
-Below is a ready-to-paste README.md that follows GitHub README best practices, with:
-	•	✅ Proper Markdown structure
-	•	✅ Working internal anchor links
-	•	✅ Shields.io badges (stars, license, CI)
-	•	✅ Clean, professional formatting
-	•	✅ No HTML hacks (<br/>) needed
-	•	✅ Compatible with GitHub’s automatic TOC + anchors
-
-You can paste this directly into README.md.
-
-⸻
-
-
-# TypeScript Best Practices
+# TypeScript Best Practices 📋
 
 [![GitHub stars](https://img.shields.io/github/stars/seanpmaxwell/Typescript-Best-Practices?style=flat-square)](https://github.com/seanpmaxwell/Typescript-Best-Practices/stargazers)
 [![License](https://img.shields.io/github/license/seanpmaxwell/Typescript-Best-Practices?style=flat-square)](LICENSE)
