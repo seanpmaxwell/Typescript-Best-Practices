@@ -1,19 +1,20 @@
-# TypeScript Best Practices 📋
+# TypeScript Best Practices
 
 [![GitHub stars](https://img.shields.io/github/stars/seanpmaxwell/Typescript-Best-Practices?style=flat-square)](https://github.com/seanpmaxwell/Typescript-Best-Practices/stargazers)
+[![License](https://img.shields.io/github/license/seanpmaxwell/Typescript-Best-Practices?style=flat-square)](LICENSE)
 
-Patterns and best practices for **procedural TypeScript / JavaScript development**, following the **Rule of 4** principle.
+Patterns and best practices for **procedural TypeScript / JavaScript development**, guided by the **Rule of 4** principle.
 
-> Opinionated, practical guidance focused on clarity, maintainability, and long-term scalability.
+> This guide is intentionally opinionated. It prioritizes clarity, consistency, and long-term maintainability over abstraction or novelty.
 
 ---
 
 ## Table of Contents
 
-- [4 Fundamental Features](#4-fundamental-features)
-- [4 Types of Scripts](#4-types-of-scripts)
-- [Script (File) Organization](#script-file-organization)
-- [4 Fundamental Features in Detail](#4-fundamental-features-in-detail)
+- [Fundamental Concepts](#fundamental-concepts)
+- [Script Types](#script-types)
+- [File Organization](#file-organization)
+- [Core Language Features](#core-language-features)
   - [Primitives](#primitives)
   - [Functions](#functions)
   - [Objects](#objects)
@@ -21,179 +22,130 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
     - [Classes](#classes)
     - [Enums](#enums)
   - [Types](#types)
-- [Naming](#naming)
-  - [Files & Folders](#files--folders)
-  - [General Notes](#general-notes)
-  - [Functions](#functions-1)
-  - [Objects](#objects-1)
-  - [Types](#types-1)
+- [Naming Conventions](#naming-conventions)
 - [Comments](#comments)
 - [Imports](#imports)
-- [Example Scripts](#example-scripts)
-- [Miscellaneous Style](#miscellaneous-style)
+- [Examples](#examples)
+- [Style Guidelines](#style-guidelines)
 - [Testing](#testing)
-  - [General Notes](#general-notes-1)
-  - [Structuring BDD-Style Tests](#structuring-bdd-style-tests)
+- [Philosophy](#philosophy)
+- [License](#license)
 
 ---
 
-## 4 Fundamental Features
+## Fundamental Concepts
 
-The language is built around four fundamental features:
+This guide revolves around four fundamental language features:
 
 - **Primitives**
 - **Functions**
 - **Objects**
 - **Types**
 
-### Overview
-
-- **Primitives**  
-  `null`, `undefined`, `boolean`, `number`, `string`, plus `symbol` and `bigint`.
-
-- **Functions**  
-  Created via:
-  - Function declarations
-  - Arrow functions
-  - Object-literal methods
-  - Class methods
-
-- **Objects**  
-  Created via:
-  - Object literals
-  - Enums
-  - Classes
-  - Legacy constructor functions (`new Fn()`)
-
-- **Types**  
-  Defined using:
-  - **Type aliases** (`type`)
-  - **Interfaces** (`interface`)
-
-> Although functions are technically objects, they are treated as a separate category for practical clarity.
+These concepts form the foundation of all JavaScript and TypeScript programs. Mastering them—and using them consistently—results in code that is easier to read, reason about, and maintain.
 
 ---
 
-## 4 Types of Scripts
+## Script Types
 
-Scripts (files) typically fall into one of these categories:
+Every file should have a clear purpose. Most scripts fall into one of the following categories:
 
 - **Declaration**  
-  Exports a single declared value (e.g., `HttpStatusCodes.ts`).
+  Exports a single declared item (e.g., a constant, enum, or configuration object).
 
 - **Modular Object**  
-  Exports a default object literal grouping related logic  
-  (e.g., `UserRepo.ts`).
+  Exports a default object literal that groups closely related logic.
 
 - **Inventory**  
-  Exports many independent declarations  
-  (e.g., shared `types.ts`).
+  Exports multiple independent declarations, such as shared types or utilities.
 
 - **Linear**  
-  Executes a sequence of commands  
-  (e.g., `setup-db.ts`).
+  Executes a series of commands, often for setup or initialization.
 
 ---
 
-## Script (File) Organization
+## File Organization
 
-Due to JavaScript hoisting behavior, files should generally be organized into the following regions (not all files need all regions):
+Files should generally be organized into clearly defined regions:
 
 1. Constants  
 2. Types  
-3. Run / Setup  
+3. Setup / Execution  
 4. Components (`.jsx` / `.tsx`)  
 5. Functions  
-6. Export  
+6. Exports  
 
-### Notes
-
-- Only constants or readonly values belong in **Constants**.
-- Linear scripts may group code by task, but function declarations should still appear below **Run / Setup**.
-- Always place `export default` at the **very bottom** of the file.
-
-### Organizational Hierarchy
-
-- Project  
-- Directory  
-- File (module)  
-- Region  
-- Section  
+Place `export default` at the **very bottom** of the file to make the public API immediately obvious.
 
 ---
 
-## 4 Fundamental Features in Detail
+## Core Language Features
 
 ### Primitives
 
-Understand **type coercion**: JavaScript temporarily wraps primitives in their object counterparts (`String`, `Number`, `Boolean`) when invoking methods.
+JavaScript primitives include:
 
-`symbol` is particularly useful for defining unique object keys in libraries.
+`null`, `undefined`, `boolean`, `number`, `string`, `symbol`, and `bigint`.
+
+Understand **type coercion**: when calling methods on primitives, JavaScript temporarily wraps them in their object counterparts (`String`, `Number`, `Boolean`).
+
+`symbol` is particularly useful for defining unique object keys in shared or library code.
 
 ---
 
 ### Functions
 
-- Prefer **function declarations** at the file level (hoisting).
-- Use **arrow functions** for callbacks and inner functions.
-- Avoid parentheses around single arrow parameters.
+- Prefer **function declarations** at the file level to take advantage of hoisting.
+- Use **arrow functions** for callbacks and inline logic.
+- Avoid parentheses around single arrow-function parameters.
 
 ```ts
-function parentFn(param) {
+function parentFn(param: string) {
   const childFn = value => doSomething(value);
   const childFn2 = (a, b) => doSomethingElse(a, b);
 }
-
-Object-literal methods preserve this, arrow functions do not:
-
-const greeter = {
-  prefix: "Hello ",
-  sayHello(name: string) {
-    console.log(this.prefix + name);
-  },
-  sayHelloAlt: (name: string) => {
-    console.log(name);
-  },
-} as const;
 ```
 
-⸻
+Use object-literal methods when `this` should refer to the object itself.
 
-Objects
+---
+
+### Objects
 
 Objects are collections of key/value pairs created via:
-	•	Object literals
-	•	Enums
-	•	Classes
 
-Constructor functions (new Fn()) are discouraged in favor of classes.
+- Object literals
+- Classes
+- Enums
 
-⸻
+Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
 
-Object Literals
-Object literals are ideal for organizing related logic and are often preferred over classes.
+#### Object Literals
 
+Object literals are ideal for organizing related logic and are often preferable to classes.
+
+```ts
 export default {
   foo,
   bar,
 } as const;
+```
 
+#### Classes
 
-⸻
+Use classes only when they satisfy the **M.I.N.T. principle**:
 
-Classes
-Use classes only when they satisfy the M.I.N.T. principle:
-	•	Multiple instances
-	•	Not serialized
-	•	Tightly coupled data and behavior
+- **Multiple instances**
+- **Not serialized**
+- **Tightly coupled data and behavior**
 
 Avoid classes used solely as namespaces.
 
-⸻
+#### Enums
 
-Enums
-Enums emit runtime JavaScript and are discouraged with --erasableSyntaxOnly. Prefer bi-directional objects instead:
+Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations. Prefer bi-directional objects instead:
 
+```ts
 const USER_ROLES = {
   Basic: 0,
   Admin: 1,
@@ -202,15 +154,17 @@ const USER_ROLES = {
   1: "Administrator",
   2: "Owner",
 } as const;
+```
 
+---
 
-⸻
+### Types
 
-Types
-	•	Prefer interface for object shapes.
-	•	Use type for unions, primitives, and utility types.
-	•	Place type aliases above interfaces.
+- Prefer `interface` for object shapes.
+- Use `type` for unions, primitives, and utility types.
+- Place type aliases above interfaces.
 
+```ts
 type TRole = "basic" | "admin";
 
 interface IUser {
@@ -218,132 +172,100 @@ interface IUser {
   name: string;
   role: TRole;
 }
+```
 
+---
 
-⸻
+## Naming Conventions
 
-Naming
+- **Folders**: `kebab-case`
+- **Files**: match the primary export
+- **Constants**: `UPPER_SNAKE_CASE`
+- **Variables**: `camelCase`
+- **Classes / Types**: `PascalCase`
+  - **Interfaces**: prefix with an `I`
+  - **Type Aliases (that are not utility types)**: prefix with a `T`
+- **Booleans**: prefix with `is` or `has`
 
-Files & Folders
-	•	Folders: kebab-case
-	•	Declaration scripts: filename matches export
-	•	Modular-object scripts: PascalCase
-	•	Inventory / Linear scripts: kebab-case
-	•	Non-committed folders: __double_underscores__
+---
 
-⸻
+## Comments
 
-General Notes
-	•	Constants: UPPER_SNAKE_CASE
-	•	Local variables: camelCase
-	•	Booleans: isX, hasY
-	•	Group related constants when appropriate
+- Use JSDoc for all function declarations.
+- Use `//` for inline explanations.
+- Capitalize and punctuate comments.
+- Separate logical regions clearly.
 
-⸻
+---
 
-Functions
-	•	Use verbs: getUser, fetchUser
-	•	Prefix file-local helpers with _
-	•	Escape reserved keywords using __name__
+## Imports
 
-⸻
+- Group imports by origin: libraries → application → local.
+- Use spacing generously.
+- Split long import lists across multiple lines.
 
-Objects
-	•	Immutable top-level objects: PascalCase or UPPER_SNAKE_CASE
-	•	Instance objects: camelCase
-	•	Classes and enums: PascalCase
+---
 
-⸻
+## Examples
 
-Types
-	•	Interfaces prefixed with I
-	•	Type aliases in PascalCase
-	•	Optional T prefix for standard aliases
+### Modular Object
 
-⸻
-
-Comments
-	•	Use JSDoc for all function declarations
-	•	Use // for inline logic
-	•	Capitalize and punctuate comments
-	•	Clearly separate regions and sections
-
-⸻
-
-Imports
-	•	Group by origin (libraries → app → local)
-	•	Use spacing generously
-	•	Split long imports across multiple lines
-
-⸻
-
-Example Scripts
-
-Modular Object
-
+```ts
 export default {
   sendMail,
   sendSupportStaffEmail,
 } as const;
+```
 
-Inventory
+### Inventory
 
-export function CloseBtn() {
+```tsx
+export function CloseButton() {
   return <button>Close</button>;
 }
+```
 
-Declaration
+### Linear Script
 
-export default {
-  port: process.env.PORT,
-} as const;
-
-Linear
-
+```ts
 const app = express();
 app.listen(3000);
 
 export default app;
+```
 
+---
 
-⸻
+## Style Guidelines
 
-Miscellaneous Style
-	•	Prefer optional chaining and nullish coalescing
-	•	Put variables on the left side of comparisons
-	•	Format long boolean expressions vertically
-	•	Keep object literals compact when passed as arguments
+- Prefer optional chaining (`?.`) and nullish coalescing (`??`).
+- Place variables on the left side of comparisons.
+- Format complex boolean expressions vertically.
+- Keep object literals compact when passed as arguments.
 
-⸻
+---
 
-Testing
+## Testing
 
-General Notes
-	•	Test all user-driven behavior
-	•	Developers write their own unit tests
-	•	Integration tests should be limited early on
-	•	Tests improve readability as well as correctness
+- Unit-test all user-driven behavior.
+- Developers should write their own tests.
+- Integration tests should be focused and minimal early on.
+- Tests improve readability as well as correctness.
 
-⸻
+---
 
-Structuring BDD-Style Tests
-	•	Declare variables in beforeEach / beforeAll
-	•	Keep constants outside describe
-	•	Separate helpers from test logic
-
-⸻
-
-Philosophy
+## Philosophy
 
 This guide favors:
-	•	Explicitness over cleverness
-	•	Simplicity over abstraction
-	•	Consistency over novelty
 
-It is intentionally opinionated and designed to scale with real-world TypeScript applications.
+- Explicitness over cleverness  
+- Simplicity over abstraction  
+- Consistency over novelty  
 
-⸻
+It is designed to scale with real-world TypeScript applications.
 
-License
+---
+
+## License
 
 MIT © Sean Maxwell
