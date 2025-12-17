@@ -113,54 +113,60 @@ const objLiteral = {
 - We should generally (but not always) use object-literals over classes for organizing code for the reasons mentioned in the next section.
 
 #### Classes <a name="classes"></a>
-- Try to follow the <b>"M.I.N.T."</b> principle (<i>Multiple Instances, Not-Serialized, and Tightly-Coupled</i>) when deciding whether or not to use classes. This Medium article here explains the MINT principle in more detail:
-<a target="_blank" href="https://github-readme-medium-recent-article.vercel.app/medium/@seanpmaxwell1/0">
-  <img src="https://github-readme-medium-recent-article.vercel.app/medium/@seanpmaxwell1/0" alt="Recent Article 0"/>
-</a>
+- Follow the <b>"M.I.N.T."</b> principle (<i>Multiple Instances, Not-Serialized, and Tightly-Coupled</i>) when deciding whether or not to use classes. Here's a break down of each reason in the <b>MINT</b> principle. 
 
-#### Enums <a name="enums"></a>
-Enums are somewhat controversial, I've heard a lot of developers say they do and don't like them. I like enums because because we can use the enum itself as a type which represents and `OR` for each of the values. We can also use an enum's value to index that enum and get the string value of the key. Here's what I recommend, don't use enums as storage for static values, use a readonly object for that with `as const`. Use enums for when the value itself doesn't matter but what matters is distinguishing that value from related values. For example, suppose there are different roles for a user for a website. The string value of each role isn't important, just that we can distinguish `Basic` from `SuperAdmin` etc. If we need to display the role in a UI somewhere, we can change the string values for each role without affecting what's saved in a database.
-```typescript
-// Back and front-end
-enum UserRoles {
-  Basic,
-  Admin,
-  Owner,
-}
+##### Multiple Instances
+- Do not use classes just for organizing a bunch of functions in a file. I know this is hard for those coming from a strict Object Oriented background, but if it doesn't make sense to call `new ClassName()` multiple times, there's no reason to use a class. To use those functions you're going to either going to have to make an un-neccessary constructor call OR prepend each function with `public static`. To keep things simple, and object literal with `as const` works just fine.
+```ts
+function foo() { ...do stuff }
+function bar() { ...do stuff }
 
-// Front-end only
-const UserRolesDisplay = {
-  [UserRoles.Basic]: 'Basic',
-  [UserRoles.Admin]: 'Administrator',
-  [UserRoles.Owner]: 'Owner'
+export default {
+  foo,
+  bar,
 } as const;
-
-interface IUser {
-  role: UserRoles; // Here we use the enum as a type
-}
-
-function printRole(role: UserRoles) {
-  console.log(UserRolesDisplay[role]); // => "Basic", "Administrator", "Owner"
-}
 ```
 
-#### Enum Alternative
-<b>UPDATE 12/7/2025:</b> The TypeScript team is now discouraging the use of enums with the `--erasableSyntaxOnly` flag. A alternative to enums you can use in an object appended with `as const`. If you need a tuple of it's values, a simple utility-type can help.
+##### Not serialized
+- When objects go through serialization (converted to string or bytes) the functions aren't going to be sent only the key/value pairs. If we use a class for managing a data item (i.e. a User record from a database) then we'll lose the functions on that class when it gets serialized. To use the functions we'll have to rewrap those data items in a constructor call everytime.
+- A good example is a Redux slice: it serialzes data when sending it to a React component. If we used a class like `Map` as a Redux value, we could end up with `not a function` errors if we try call `.set`/`.get` in our react components.
+
+##### Tightly coupled
+- Do not uses classes if you have an object with only functions or only data items: an object literal works just fine and requires less code to implement. If you do have a data and functions that are dependent on a each other, and it makes sense to call `new` multiple times because you have different types of data to send (i.e. a data structure like `Map`) then use a class.
+
+
+#### Enums <a name="enums"></a>
+The TypeScript team is now discouraging the use of enums with the `--erasableSyntaxOnly` flag. Reason is that they produce extra code in JavaScript and are not just a type that can be stripped. A alternative to enums you can use is a bi-directional object appended with `as const`. The forward direction holds the values and the reverse direction holds the string to display to the user (`labels`) based on the value. You can access values with the forward direction keys, and get a label by indexing the object with a forward direction key.
 ```ts
 const USER_ROLES = {
+  // Forward
   Basic: 0,
   Admin: 1,
   Owner: 2,
+  // Reverse
+  0: 'Basic',
+  1: 'Administrator',
+  2: 'Owner',
 } as const;
 
-type ValueOf<T extends object> = T[keyof T]; 
-type TUserRoles = ValueOf<typeof UserRoles>; // '0 | 1 | 2'
+// NOTE: The following two utility types will only work for numeric
+// bi-directional objects. You can't use strings as values in the forward
+// direction.
 
-interface IUser {
-  id: number;
-  name: string;
-  role: TUserRoles;
-}
+// Union of the values: 0 | 1 | 2
+type BdirValues<T extends BdirBase> = {
+  [K in keyof T]: T[K] extends number ? T[K] : never;
+}[keyof T];
+
+// Union of the labels: 'Basic' | 'Administrator' | 'Owner'
+type BdirLabels<T extends BdirBase> = {
+  [K in keyof T]: T[K] extends string ? T[K] : never;
+}[keyof T];
+
+// Usage
+if ("some value" === USER_ROLES.Basic) { ...do stuff }
+console.log(USER_ROLES[USER_ROLES.Admin]) // "Administrator"
+BdirValues<typeof USER_ROLES> // 0 | 1 | 2
 ```
 
 ### Types (type-aliases and interfaces) <a name="types"></a>
