@@ -1,8 +1,6 @@
 # TypeScript Best Practices 📋
 
 [![GitHub stars](https://img.shields.io/github/stars/seanpmaxwell/Typescript-Best-Practices?style=flat-square)](https://github.com/seanpmaxwell/Typescript-Best-Practices/stargazers)
-[![License](https://img.shields.io/github/license/seanpmaxwell/Typescript-Best-Practices?style=flat-square)](LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/seanpmaxwell/Typescript-Best-Practices/ci.yml?style=flat-square)](https://github.com/seanpmaxwell/Typescript-Best-Practices/actions)
 
 Patterns and best practices for **procedural TypeScript / JavaScript development**, following the **Rule of 4** principle.
 
@@ -349,15 +347,3 @@ It is intentionally opinionated and designed to scale with real-world TypeScript
 License
 
 MIT © Sean Maxwell
-
----
-
-### Notes / Optional Enhancements
-If you want, I can also:
-- Add **GitHub Pages–friendly TOC**
-- Generate a **CONTRIBUTING.md**
-- Add **code-style badges**
-- Split this into `/docs` with navigation
-- Add a **“Why Procedural TS?”** section
-
-Just tell me what you want next.
