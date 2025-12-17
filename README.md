@@ -1,7 +1,6 @@
 # TypeScript Best Practices
 
 [![GitHub stars](https://img.shields.io/github/stars/seanpmaxwell/Typescript-Best-Practices?style=flat-square)](https://github.com/seanpmaxwell/Typescript-Best-Practices/stargazers)
-[![License](https://img.shields.io/github/license/seanpmaxwell/Typescript-Best-Practices?style=flat-square)](LICENSE)
 
 Patterns and best practices for **procedural TypeScript / JavaScript development**, guided by the **Rule of 4** principle.
 
@@ -29,7 +28,6 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Style Guidelines](#style-guidelines)
 - [Testing](#testing)
 - [Philosophy](#philosophy)
-- [License](#license)
 
 ---
 
@@ -342,7 +340,3 @@ This guide favors:
 It is designed to scale with real-world TypeScript applications.
 
 ---
-
-## License
-
-MIT © Sean Maxwell
