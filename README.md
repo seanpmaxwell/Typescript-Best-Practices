@@ -199,12 +199,16 @@ interface IUser {
 ## Naming Conventions
 
 - **Folders**: `kebab-case`
-- **Files**: match the primary export
+- **Files**:
+  - **Inventory / Linear scripts**: `kebab-case`
+  - **Modular object / Declaration scripts**: name after the item being exported
 - **Constants**: `UPPER_SNAKE_CASE`
 - **Variables**: `camelCase`
 - **Classes / Types**: `PascalCase`
   - **Interfaces**: prefix with an `I`
-  - **Type Aliases (that are not utility types)**: prefix with a `T`
+  - **Type Aliases**:
+    - **Utility types**: `PascalCase`
+    - **All others**: prefix with a `T`
 - **Booleans**: prefix with `is` or `has`
 
 ---
