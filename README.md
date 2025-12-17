@@ -92,7 +92,7 @@ Regions can be divided further into sections:
 function getUserName(userId: number) { isValidUser(id) ...do stuff }
 function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
 
-// **** Share Helper Functions **** //
+// **** Shared Helper Functions **** //
 
 function isValidUser(id: number) { ...do stuff }
 
