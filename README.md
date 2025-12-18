@@ -316,7 +316,7 @@ export default {
     - `components/`
     - `hooks/`
 - If any of these files becomes too large, create a folder of the same name, rename the file to `index.ts` and place it there along with its adjacent content:
-  - `common/
+  - `common/`
     - `constants.ts`
     - `utils/` <-- `utils.ts` grew too large so we separated it into `index.ts` and `StringUtils.ts`
       - `index.ts`
