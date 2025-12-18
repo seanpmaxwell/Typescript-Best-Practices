@@ -93,7 +93,6 @@ function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
 // **** Shared Helper Functions **** //
 
 function isValidUser(id: number) { ...do stuff }
-
 ```
 
 Comments in functions:
