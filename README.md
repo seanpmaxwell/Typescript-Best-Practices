@@ -87,7 +87,6 @@ Separate regions with:
 Regions can be divided further into sections:
 
 ```ts
-
 function getUserName(userId: number) { isValidUser(id) ...do stuff }
 function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
 
@@ -95,6 +94,43 @@ function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
 
 function isValidUser(id: number) { ...do stuff }
 
+```
+
+Comments in functions:
+- Generally you should not put spaces in functions and separate chunks of logic with a single inline comment.
+- If you have a really large function that can't can't be broken up (i.e. React Component or a linear script with a bunch of async/await line) the you can further separate functions with a space and `// ** "Info" ** //`
+
+```ts
+/**
+ * Normal everyday javascript function.
+ */
+function normalFunction() {
+  // Do stuff
+  foo();
+  bar();
+  // Do more stuff
+  blah();
+  whatever();
+}
+
+// Self executing startup script that needs to be wrapped
+// in and async function so we use away
+(async () => {
+  try {
+    // ** Do stuff ** //
+    foo();
+    bar();
+    ...several more lines of code
+
+    // ** Do more stuff **//
+    blah();
+    whatever();
+    ...several more lines of code
+
+  } catch (err) {
+    handleErrorObject(err);
+  }
+})()
 ```
 
 ---
