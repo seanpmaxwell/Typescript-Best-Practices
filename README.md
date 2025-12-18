@@ -27,6 +27,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Examples](#examples)
 - [Style Guidelines](#style-guidelines)
 - [Testing](#testing)
+- [Organize Shared Code](#organize-shared-code)
 - [Philosophy](#philosophy)
 
 ---
