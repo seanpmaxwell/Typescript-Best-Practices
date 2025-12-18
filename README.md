@@ -307,10 +307,13 @@ export default {
 
 ## Organizing shared code
 - In a directory with shared content create a subfolder named `common/`.
-- Add the following files as needed
-  - `utils.ts`: logic that needs to be executed
+- Start off by adding the following files as needed
+  - `utils.ts`: logic that needs to be executed (standalone functions or modular-objects)
   - `constants.ts`: static items
   - `types.ts`: types only no values
+  - Depending on the nature of your project you could have more. A react app for example could also include:
+    - `components/`
+    - `hooks/`
 - If any of these files becomes too large, create a folder of the same name, rename the file to `index.ts` and place it there along with its adjacent content:
   - `common/
     - `constants.ts`
@@ -326,7 +329,7 @@ export default {
     - `PostRoutes.ts`
     - `UserRoutes.ts`
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
-
+  
 ---
 
 ## Philosophy
