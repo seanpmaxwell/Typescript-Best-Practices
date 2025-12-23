@@ -239,10 +239,7 @@ interface IUser {
 - **Constants**: `UPPER_SNAKE_CASE`
 - **Variables**: `camelCase`
 - **Classes / Types**: `PascalCase`
-  - **Interfaces**: prefix with an `I`
-  - **Type Aliases**:
-    - **Utility types**: `PascalCase`
-    - **All others**: prefix with a `T`
+  - If you have an interface specially meant for implementing a class, you can prefix that interface with an `I` to distinguish it from the class type: ie. `class Dog implements IDog`.
 - **Booleans**: prefix with `is` or `has`
 
 ---
