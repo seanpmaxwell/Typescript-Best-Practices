@@ -239,7 +239,7 @@ interface IUser {
 - **Constants**: `UPPER_SNAKE_CASE`
 - **Variables**: `camelCase`
 - **Classes / Types**: `PascalCase`
-  - If you have an interface for describing a class, and you want to distinguish the interface from the class, you can prefix that interface with an `I`: ie. `class Dog implements IDog`.
+  - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
 - **Booleans**: prefix with `is` or `has`
 
 ---
