@@ -192,6 +192,7 @@ export default {
 Use classes only when they satisfy the **M.I.N.T. principle**:
 
 - **Multiple instances**
+- **Inheritance required**
 - **Not serialized**
 - **Tightly coupled data and behavior**
 
