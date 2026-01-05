@@ -71,7 +71,7 @@ Files should generally be organized into clearly defined regions:
 2. Types  
 3. Setup / Execution  
 4. Components (`.jsx` / `.tsx`)  
-5. Functions  
+5. Functions
 6. Exports  
 
 Place `export default` at the **very bottom** of the file to make the public API immediately obvious.
@@ -87,12 +87,14 @@ Separate regions with:
 Regions can be divided further into sections:
 
 ```ts
+// **** Configured Functions **** //
+
+const someConfiguredFn = createAsyncThunk(...do stuff);
+
+// **** Function Declarations **** //
+
 function getUserName(userId: number) { isValidUser(id) ...do stuff }
 function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
-
-// **** Shared Helper Functions **** //
-
-function isValidUser(id: number) { ...do stuff }
 ```
 
 Comments in functions:
