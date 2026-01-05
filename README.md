@@ -196,7 +196,7 @@ Use classes only when they satisfy the **M.I.N.T. principle**:
 - **Not serialized**
 - **Tightly coupled data and behavior**
 
-Avoid classes used solely as namespaces.
+Avoid classes used solely as namespaces. Factory functions can handle most cases where one may feel tempted to use classes, but inheritance is where classes really shine.
 
 #### Enums
 
