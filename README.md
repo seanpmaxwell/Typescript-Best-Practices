@@ -200,16 +200,13 @@ Avoid classes used solely as namespaces. Factory functions can handle most cases
 
 #### Enums
 
-Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations. Prefer bi-directional objects instead:
+Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations. Prefer static objects instead:
 
 ```ts
 const USER_ROLES = {
   Basic: 0,
   Admin: 1,
   Owner: 2,
-  0: "Basic",
-  1: "Administrator",
-  2: "Owner",
 } as const;
 ```
 
