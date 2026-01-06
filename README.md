@@ -28,6 +28,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Testing](#testing)
 - [Organizing Shared Code](#organizing-shared-code)
 - [Food for thought](#food-for-thought)
+<br/>
 
 ## Philosophy
 
@@ -38,6 +39,7 @@ This guide favors:
 - Consistency over novelty  
 
 It is designed to scale with real-world TypeScript applications.
+<br/>
 
 ## Fundamental Concepts
 
@@ -49,6 +51,7 @@ This guide revolves around four fundamental language features:
 - **Types**
 
 These concepts form the foundation of all JavaScript and TypeScript programs. Mastering them—and using them consistently—results in code that is easier to read, reason about, and maintain.
+<br/>
 
 ## Script Types
 
@@ -65,6 +68,7 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 
 - **Linear**  
   Executes a series of commands, often for setup or initialization.
+<br/>
 
 ## File Organization
 
@@ -136,6 +140,8 @@ function normalFunction() {
   }
 })()
 ```
+<br/>
+
 
 ## Core Language Features
 
@@ -224,6 +230,8 @@ interface IUser {
   role: Role;
 }
 ```
+<br/>
+
 
 ## Naming Conventions
 
@@ -236,6 +244,8 @@ interface IUser {
 - **Classes / Types**: `PascalCase`
   - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
 - **Booleans**: prefix with `is` or `has`
+<br/>
+
 
 ## Comments
 
@@ -243,11 +253,14 @@ interface IUser {
 - Use `//` for inline explanations.
 - Capitalize and punctuate comments.
 - Separate logical regions clearly.
+<br/>
+
 
 ## Imports
 
 - Group imports by origin: libraries → application → local.
 - Split long import lists across multiple lines.
+<br/>
 
 
 ## Examples
@@ -316,6 +329,8 @@ export default {
     ...etc,
 } as const;
 ```
+<br/>
+
 
 ## Testing
 
@@ -348,6 +363,8 @@ export default {
     - `PostRoutes.ts`
     - `UserRoutes.ts`
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
+<br/>
+
 
 ## Food for thought
 
