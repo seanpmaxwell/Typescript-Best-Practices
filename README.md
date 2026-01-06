@@ -189,14 +189,18 @@ export default {
 
 #### Classes
 
-Use classes only when they satisfy the **M.I.N.T. principle**:
+People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
 
-- **Multiple instances**
-- **Inheritance required**
-- **Not serialized**
-- **Tightly coupled data and behavior**
+- **Use a class** when you need an **identity (instance)** that persists over time and you need to do **mutations** on that data.  
+  Avoid classes used solely as **namespaces**.
+- **Use a factory function** when you’re **assembling and returning an object whose behavior is fully determined at creation time**, often via **closures**, with no meaningful **lifecycle** or need for `this`.
+- **NOTE:**  
+ - I also would recommend avoiding **classes for handling IO data** (even when OOP makes sense), because this often leads to:
+  - Many unnecessary **constructor calls** to support dynamic behavior, or
+  - A large number of identical `public static` functions
 
-Avoid classes used solely as namespaces. Factory functions can handle most cases where one may feel tempted to use classes, but inheritance is where classes really shine.
+A simpler approach is to handle IO data using **modular object scripts** and describing them with **interfaces**.
+
 
 #### Enums
 
