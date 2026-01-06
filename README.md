@@ -340,6 +340,8 @@ export default {
 - Developers should write their own tests.
 - Integration tests should be focused and minimal early on.
 - Tests improve readability as well as correctness.
+<br/>
+
 
 ## Organizing shared code
 - In a directory with shared content create a subfolder named `common/`.
