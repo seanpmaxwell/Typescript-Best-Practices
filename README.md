@@ -200,8 +200,8 @@ export default {
 
 People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
 
-- **Use a class** when you need an **identity (instance)** that persists over time and you need to do **mutations** on that data.  
-- **Don't use a class** soley as a namespace or when you’re **assembling and returning an object whose behavior is fully determined at creation time** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
+- **Use a class** when you need an **identity (instance)** that persists over time and you need to do **mutations** on that instance.  
+- **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at creation time** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
 
 #### Enums
 
