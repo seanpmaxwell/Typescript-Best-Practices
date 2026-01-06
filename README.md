@@ -380,85 +380,53 @@ I would also recommend avoiding **classes for handling IO data** (even when OOP 
     - For example, in `user.created` _created_ could be in the database not by the `user.setCreated()` function.
 A simpler approach is to handle IO data using **modular object scripts** and describing them with **interfaces**.
 
-```ts
-interface IUser {
-  name: string;
-}
+--- 
 
-// UserClass.ts, using a class
-class User implements IUser {
-  private name = '';
-  printName() { console.log(this.name); }
-}
-export class User;
+### Design Rules Summary for Handling Objects: Class vs Factory vs Module
 
-// UserScript.ts, using a modular-object script
-function printName(user: IUser): void {
-  console.log(user.name ?? '');
-}
+#### ✅ Use a **class** when **all (or most)** of these are true
 
-export {
-  printName,
-} as const;
+- The object represents a **specific instance** (a “thing”)
+- That instance has **internal state that evolves over time**
+- Methods **act on and mutate** that state
+- Recreating the object would **lose meaningful information**
+- The object has a **lifecycle** (setup → use → change → teardown)
+- You would naturally say **“this instance”** in conversation
 
-
-// Http.ts
-import User from 'UserScript.ts';
-
-function fetch1000Users(): Promise<void> {
-    const 1000UsersArray = await someIoCall();
-    1000UsersArray.forEach((user) => {
-      user.printName() // <-- If we used a class won't work without a constructor call or a duplicate
-        // `public static PrintName` function.
-      User.printName(user) // <-- modular-object-script has the function is ready for us
-    })
-} 
-
-
-```
+**Examples**
+- Data structures (tree index, cache, graph)
+- Connections (DB, socket, session)
+- Stateful services
 
 ---
 
-### Classes aren't technically necessary for inheritance but inheritance is really what makes them shine.
-```ts
-class Dog extends Animal {
-  public static final species: 'Canis familiaris`,
-  constructor() {}
+#### ✅ Use a **factory function** when **all (or most)** of these are true
 
-  bark() {
-    console.log('woof woof')
-  }
-}
-```
+- Behavior is **fully determined at creation time**
+- Configuration is captured via **closures**
+- The returned object is **immediately valid**
+- There is **no meaningful lifecycle**
+- Recreating it produces an **equivalent result**
+- There is no real need for `this`, inheritance, or `instanceof`
 
-- Without classes and just factory-functions inheritance would look something like this (assuming we want to avoid using a function-declaration with the `new` keyword):
-```ts
-const kDog = Symbol('is-dog');
+**Examples**
+- Loggers
+- Configured clients
+- Validators / formatters
+- Feature-flag evaluators
 
-interface IDog extends IAnimal;
+---
 
-interface DogFn extends AnimalFn {
-  (): IDog;
-  instanceOf(value: unknown): value is IDog;
-}
+#### ✅ Use a **modular-object script** (plain functions + types) when
 
-const Dog = Object.assign(DogFn, { instanceOf });
+- The code is primarily **IO or data transformation**
+- Operations are **stateless or procedural**
+- There is **no instance identity** at all
+- Classes would act as **namespaces**
+- Data is described with **interfaces/types**, not behavior
 
-// Dog is a factory-function
-fn DogFn(name: string): IDog {
- const secretData = data;
- const bark = () => console.log('woof woof');
-
- return {
-   ...Animal();
-   species: 'Canis familiaris`,
- } as const;
-}
-
-fn instanceOf(arg: unknown): IDog {
-  return typeof arg === 'object' && arg[kDog] === true;
-}
-
-// Elsewhere
-const fido = new Dog();
-```
+**Examples**
+- File utilities
+- HTTP helpers
+- Parsing / serialization
+- Environment variable loading
