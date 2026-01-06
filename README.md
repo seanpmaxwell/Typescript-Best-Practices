@@ -23,7 +23,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Naming Conventions](#naming-conventions)
 - [Comments](#comments)
 - [Imports](#imports)
-- [Examples](#examples)
+- [Script Examples](#script-examples)
 - [Testing](#testing)
 - [Organizing Shared Code](#organizing-shared-code)
 - [Food for thought](#food-for-thought)
@@ -265,7 +265,7 @@ interface IUser {
 <br/>
 
 
-## Examples
+## Script Examples
 
 ### Modular Object
 
