@@ -376,6 +376,8 @@ export default {
 I would also recommend avoiding **classes for handling IO data** (even when OOP makes sense), because this often leads to:
   - Many unnecessary **constructor calls** to support dynamic behavior, or
   - A large number of identical `public static` functions
+  - It doesn't fit the mental model for classes because values on a data item could be set outside the class used to handle it. 
+    - For example, in `user.created` _created_ could be in the database not by the `user.setCreated()` function.
 A simpler approach is to handle IO data using **modular object scripts** and describing them with **interfaces**.
 
 ```ts
