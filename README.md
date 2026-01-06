@@ -96,7 +96,8 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
   Executes a series of commands, often for setup or initialization.
 
 You can see a full list of script examples [here](Script-Examples.md). 
-<br/>
+<br/><br/>
+
 
 <a id="file-organization"></a>
 ## File Organization 🗂️
