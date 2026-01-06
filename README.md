@@ -186,14 +186,7 @@ Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
 
 #### Object Literals
 
-Object literals are ideal for organizing related logic and are often preferable to classes.
-
-```ts
-export default {
-  foo,
-  bar,
-} as const;
-```
+Object literals are ideal for organizing related logic/values and are often preferable to classes.
 
 #### Classes
 
