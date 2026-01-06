@@ -415,6 +415,8 @@ function fetch1000Users(): Promise<void> {
 
 ```
 
+---
+
 ### Classes aren't technically necessary for inheritance but inheritance is really what makes them shine.
 ```
 class Dog extends Animal {
