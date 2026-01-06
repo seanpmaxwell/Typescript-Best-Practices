@@ -50,13 +50,13 @@ These concepts form the foundation of all JavaScript and TypeScript programs. Ma
 Every file should have a clear purpose. Most scripts fall into one of the following categories:
 
 - **Declaration**  
-  Exports a single declared item (e.g., a constant, enum, or configuration object).
+  Exports a single declared item (e.g., a large function, enum, or configuration object).
 
 - **Modular Object**  
-  Exports a default object literal that groups closely related logic.
+  Exports a default object literal that groups closely related logic. Very handy as a namespace for stateless data/functions.
 
 - **Inventory**  
-  Exports multiple independent declarations, such as shared types or utilities.
+  Exports multiple independent declarations, such as shared types or small utility functions.
 
 - **Linear**  
   Executes a series of commands, often for setup or initialization.
@@ -192,19 +192,17 @@ export default {
 People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
 
 - **Use a class** when you need an **identity (instance)** that persists over time and you need to do **mutations** on that data.  
-  Avoid classes used solely as **namespaces**.
-- **Use a factory function** when you’re **assembling and returning an object whose behavior is fully determined at creation time**, often via **closures**, with no meaningful **lifecycle** or need for `this`.
+- **Don't use a class** soley as a namespace or when you’re **assembling and returning an object whose behavior is fully determined at creation time** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
 - **NOTE:**  
- - I also would recommend avoiding **classes for handling IO data** (even when OOP makes sense), because this often leads to:
-  - Many unnecessary **constructor calls** to support dynamic behavior, or
-  - A large number of identical `public static` functions
-
-A simpler approach is to handle IO data using **modular object scripts** and describing them with **interfaces**.
+  - I would also recommend avoiding **classes for handling IO data** (even when OOP makes sense), because this often leads to:
+    - Many unnecessary **constructor calls** to support dynamic behavior, or
+    - A large number of identical `public static` functions
+  - A simpler approach is to handle IO data using **modular object scripts** and describing them with **interfaces**.
 
 
 #### Enums
 
-Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations. Prefer static objects instead:
+Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer static objects instead:
 
 ```ts
 const USER_ROLES = {
@@ -223,12 +221,12 @@ const USER_ROLES = {
 - Place type aliases above interfaces.
 
 ```ts
-type TRole = "basic" | "admin";
+type Role = "basic" | "admin";
 
 interface IUser {
   id: number;
   name: string;
-  role: TRole;
+  role: Role;
 }
 ```
 
