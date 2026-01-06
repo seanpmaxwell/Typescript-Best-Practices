@@ -30,6 +30,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Food for thought](#food-for-thought)
 <br/>
 
+
 ## Philosophy
 
 This guide favors:
@@ -40,6 +41,7 @@ This guide favors:
 
 It is designed to scale with real-world TypeScript applications.
 <br/>
+
 
 ## Fundamental Concepts
 
@@ -52,6 +54,7 @@ This guide revolves around four fundamental language features:
 
 These concepts form the foundation of all JavaScript and TypeScript programs. Mastering them—and using them consistently—results in code that is easier to read, reason about, and maintain.
 <br/>
+
 
 ## Script Types
 
