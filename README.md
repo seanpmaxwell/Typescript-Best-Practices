@@ -10,7 +10,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 
 - [Philosophy 🧭](#philosophy)
 - [Terminology 🔠](#terminology)
-- [Fundamental Concepts 🔑](#fundamental-concepts)
+- [Fundamental Concepts 💡](#fundamental-concepts)
 - [Script Types 📄](#script-types)
 - [File Organization 🗂️](#file-organization)
 - [Core Language Features 🛠️](#core-language-features)
@@ -65,7 +65,7 @@ So things are more clear down the line let's first clarify some terminology.
 
 
 <a id="fundamental-concepts"></a>
-## Fundamental Concepts 🔑
+## Fundamental Concepts 💡
 
 This guide revolves around four fundamental language features:
 
@@ -151,7 +151,7 @@ function normalFunction() {
   whatever();
 }
 
-// Self executing startup script that needs to be wrapped
+// Lage self executing startup script that needs to be wrapped
 // in and async function so we use away
 (async () => {
   try {
