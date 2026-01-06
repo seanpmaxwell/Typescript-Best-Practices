@@ -26,7 +26,6 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Script Examples](#script-examples)
 - [Testing](#testing)
 - [Organizing Shared Code](#organizing-shared-code)
-- [Food for thought](#food-for-thought)
 <br/>
 
 ## Philosophy
@@ -201,7 +200,12 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
 
 - **Use a class** when you need instances with methods that act on an evolving internal state tied to that instance.
 - **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at creation time** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
-- See the <a href="#food-for-thought">Food for thought</a> section at the bottom for more notes about classes.
+- **Note:** I would also recommend avoiding **classes for handling IO data** (even when OOP makes sense), because this often leads to:
+  - Many unnecessary **constructor calls** to support dynamic behavior, or
+  - A large number of identical `public static` functions
+  - It doesn't fit the mental model for classes because values on a data item could be set outside the class used to handle it. 
+    - For example, in `user.created` _created_ could be in the database not by the `user.setCreated()` function.
+A simpler approach is to handle IO data using **modular object scripts** and describing data items with **interfaces**.
 
 #### Enums
 
@@ -367,66 +371,3 @@ export default {
     - `PostRoutes.ts`
     - `UserRoutes.ts`
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
-<br/>
-
-
-## Food for thought
-
-### ❌ Avoid using classes for IO data
-I would also recommend avoiding **classes for handling IO data** (even when OOP makes sense), because this often leads to:
-  - Many unnecessary **constructor calls** to support dynamic behavior, or
-  - A large number of identical `public static` functions
-  - It doesn't fit the mental model for classes because values on a data item could be set outside the class used to handle it. 
-    - For example, in `user.created` _created_ could be in the database not by the `user.setCreated()` function.
-A simpler approach is to handle IO data using **modular object scripts** and describing them with **interfaces**.
-
---- 
-
-### Design Rules Summary for Handling Objects: Class vs Factory vs Module
-
-#### ✅ Use a **class** when **all (or most)** of these are true
-
-- The object represents a **specific instance** (a “thing”)
-- That instance has **internal state that evolves over time**
-- Methods **act on and mutate** that state
-- Recreating the object would **lose meaningful information**
-- The object has a **lifecycle** (setup → use → change → teardown)
-- You would naturally say **“this instance”** in conversation
-
-**Examples**
-- Data structures (tree index, cache, graph)
-- Connections (DB, socket, session)
-- Stateful services
-
----
-
-#### ✅ Use a **factory function** when **all (or most)** of these are true
-
-- Behavior is **fully determined at creation time**
-- Configuration is captured via **closures**
-- The returned object is **immediately valid**
-- There is **no meaningful lifecycle**
-- Recreating it produces an **equivalent result**
-- There is no real need for `this`, inheritance, or `instanceof`
-
-**Examples**
-- Loggers
-- Configured clients
-- Validators / formatters
-- Feature-flag evaluators
-
----
-
-#### ✅ Use a **modular-object script** (plain functions + types) when
-
-- The code is primarily **IO or data transformation**
-- Operations are **stateless or procedural**
-- There is **no instance identity** at all
-- Classes would act as **namespaces**
-- Data is described with **interfaces/types**, not behavior
-
-**Examples**
-- File utilities
-- HTTP helpers
-- Parsing / serialization
-- Environment variable loading
