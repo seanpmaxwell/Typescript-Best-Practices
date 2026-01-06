@@ -30,7 +30,6 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Food for thought](#food-for-thought)
 <br/>
 
-
 ## Philosophy
 
 This guide favors:
