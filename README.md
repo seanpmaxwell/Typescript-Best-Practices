@@ -24,7 +24,6 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Comments](#comments)
 - [Imports](#imports)
 - [Examples](#examples)
-- [Style Guidelines](#style-guidelines)
 - [Testing](#testing)
 - [Organizing Shared Code](#organizing-shared-code)
 - [Food for thought](#food-for-thought)
@@ -200,8 +199,9 @@ export default {
 
 People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
 
-- **Use a class** when you need an **identity (instance)** that persists over time and you need to do **mutations** on that instance.  
+- **Use a class** when you need an **identity (instance)** with methods that act on an evolving internal state and the instance owns that state.  
 - **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at creation time** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
+- See the <a href="#food-for-thought">Food for thought</a> section at the bottom for more notes about classes.
 
 #### Enums
 
