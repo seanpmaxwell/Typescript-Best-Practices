@@ -223,8 +223,8 @@ Readonly object-literals are ideal for organizing related logic and are often pr
 
 ```ts
 export default {
-  foo,
-  bar,
+  someFunction,
+  someOtherFunction,
 } as const;
 ```
 

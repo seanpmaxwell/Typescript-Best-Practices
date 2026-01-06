@@ -3,6 +3,7 @@
 ### Modular Object
 
 ```ts
+// After we initialize the mailer, no further changes are needed
 const mailer = someThirdPartyMailerLib("your settings");
 
 function sendMail(options: MailerOptions): Promise<void> {
