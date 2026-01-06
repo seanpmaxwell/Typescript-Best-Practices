@@ -23,7 +23,6 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Naming Conventions](#naming-conventions)
 - [Comments](#comments)
 - [Imports](#imports)
-- [Script Examples](#script-examples)
 - [Testing](#testing)
 - [Organizing Shared Code](#organizing-shared-code)
 <br/>
@@ -68,6 +67,8 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 
 - **Linear**  
   Executes a series of commands, often for setup or initialization.
+
+You can see a full list of script examples [here](Script-Examples.md). 
 <br/>
 
 ## File Organization
@@ -205,7 +206,9 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
   - A large number of identical `public static` functions
   - It doesn't fit the mental model for classes because values on a data item could be set outside the class used to handle it. 
     - For example, in `user.created` _created_ could be in the database not by the `user.setCreated()` function.
-A simpler approach is to handle IO data using **modular object scripts** and describing data items with **interfaces**.
+  - A simpler approach is to handle IO data using **modular object scripts** and describing data items with **interfaces**.
+
+You can see a more thorough list of object design rules [here](Design-Rules.md). 
 
 #### Enums
 
@@ -266,75 +269,6 @@ interface IUser {
 
 - Group imports by origin: libraries → application → local.
 - Split long import lists across multiple lines.
-<br/>
-
-
-## Script Examples
-
-### Modular Object
-
-```ts
-const mailer = someThirdPartyMailerLib("your settings");
-
-function sendMail(options: MailerOptions): Promise<void> {
-   await mailer.send(options);
-}
-
-function sendSupportStaffEmail(options: MailerOptions): Promise<void> {
-   await mailer.send({ ...options, to: process.env.SUPPORT_STAFF_EMAIL });
-}
-
-export default {
-  sendMail,
-  sendSupportStaffEmail,
-} as const;
-```
-
-### Inventory
-
-```tsx
-export function SubmitButton() {
-  return <button>Submit</button>;
-}
-
-export function CancelButton() {
-  return <button color="red">Submit</button>;
-}
-
-export function CloseButton() {
-  return <button color="grey">Close</button>;
-}
-```
-
-### Linear Script
-
-```ts
-import express from 'express';
-
-const app = express(); 
-
-app.use(middleware1);
-app.use(middleware2);
-
-doSomething();
-doSomethingElse();
-
-export default app;
-```
-
-
-### Declaration
-
-```typescript
-// ENV_VARS.ts
-
-export default {
-    port: process.env.PORT,
-    host: process.env.Host,
-    databaseUsername: process.env.DB_USERNAME,
-    ...etc,
-} as const;
-```
 <br/>
 
 
