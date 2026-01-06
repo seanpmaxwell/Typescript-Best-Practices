@@ -6,8 +6,6 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 
 > This guide is intentionally opinionated. It prioritizes clarity, consistency, and long-term maintainability over abstraction or novelty.
 
----
-
 ## Table of Contents
 
 - [Philosophy](#philosophy)
@@ -31,8 +29,6 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Organizing Shared Code](#organizing-shared-code)
 - [Food for thought](#food-for-thought)
 
----
-
 ## Philosophy
 
 This guide favors:
@@ -42,8 +38,6 @@ This guide favors:
 - Consistency over novelty  
 
 It is designed to scale with real-world TypeScript applications.
-
----
 
 ## Fundamental Concepts
 
@@ -55,8 +49,6 @@ This guide revolves around four fundamental language features:
 - **Types**
 
 These concepts form the foundation of all JavaScript and TypeScript programs. Mastering them—and using them consistently—results in code that is easier to read, reason about, and maintain.
-
----
 
 ## Script Types
 
@@ -73,8 +65,6 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 
 - **Linear**  
   Executes a series of commands, often for setup or initialization.
-
----
 
 ## File Organization
 
@@ -146,8 +136,6 @@ function normalFunction() {
   }
 })()
 ```
-
----
 
 ## Core Language Features
 
@@ -237,8 +225,6 @@ interface IUser {
 }
 ```
 
----
-
 ## Naming Conventions
 
 - **Folders**: `kebab-case`
@@ -251,8 +237,6 @@ interface IUser {
   - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
 - **Booleans**: prefix with `is` or `has`
 
----
-
 ## Comments
 
 - Place `/** */` above all function declarations.
@@ -260,14 +244,11 @@ interface IUser {
 - Capitalize and punctuate comments.
 - Separate logical regions clearly.
 
----
-
 ## Imports
 
 - Group imports by origin: libraries → application → local.
 - Split long import lists across multiple lines.
 
----
 
 ## Examples
 
@@ -336,16 +317,12 @@ export default {
 } as const;
 ```
 
----
-
 ## Testing
 
 - Unit-test all user-driven behavior.
 - Developers should write their own tests.
 - Integration tests should be focused and minimal early on.
 - Tests improve readability as well as correctness.
-
----
 
 ## Organizing shared code
 - In a directory with shared content create a subfolder named `common/`.
@@ -371,8 +348,6 @@ export default {
     - `PostRoutes.ts`
     - `UserRoutes.ts`
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
-
----
 
 ## Food for thought
 
