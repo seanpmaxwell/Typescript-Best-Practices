@@ -10,6 +10,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 
 ## Table of Contents
 
+- [Philosophy](#philosophy)
 - [Fundamental Concepts](#fundamental-concepts)
 - [Script Types](#script-types)
 - [File Organization](#file-organization)
@@ -28,7 +29,19 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Style Guidelines](#style-guidelines)
 - [Testing](#testing)
 - [Organizing Shared Code](#organizing-shared-code)
-- [Philosophy](#philosophy)
+- [Food for thought](#food-for-thought)
+
+---
+
+## Philosophy
+
+This guide favors:
+
+- Explicitness over cleverness  
+- Simplicity over abstraction  
+- Consistency over novelty  
+
+It is designed to scale with real-world TypeScript applications.
 
 ---
 
@@ -193,12 +206,6 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
 
 - **Use a class** when you need an **identity (instance)** that persists over time and you need to do **mutations** on that data.  
 - **Don't use a class** soley as a namespace or when you’re **assembling and returning an object whose behavior is fully determined at creation time** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
-- **NOTE:**  
-  - I would also recommend avoiding **classes for handling IO data** (even when OOP makes sense), because this often leads to:
-    - Many unnecessary **constructor calls** to support dynamic behavior, or
-    - A large number of identical `public static` functions
-  - A simpler approach is to handle IO data using **modular object scripts** and describing them with **interfaces**.
-
 
 #### Enums
 
@@ -364,17 +371,93 @@ export default {
     - `PostRoutes.ts`
     - `UserRoutes.ts`
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
-  
----
-
-## Philosophy
-
-This guide favors:
-
-- Explicitness over cleverness  
-- Simplicity over abstraction  
-- Consistency over novelty  
-
-It is designed to scale with real-world TypeScript applications.
 
 ---
+
+## Food for thought
+
+### Avoid using classes for IO data
+I would also recommend avoiding **classes for handling IO data** (even when OOP makes sense), because this often leads to:
+  - Many unnecessary **constructor calls** to support dynamic behavior, or
+  - A large number of identical `public static` functions
+A simpler approach is to handle IO data using **modular object scripts** and describing them with **interfaces**.
+
+```ts
+interface IUser {
+  name: string;
+}
+
+// UserClass.ts, using a class
+class User implements IUser {
+  private name = '';
+  printName() { console.log(this.name); }
+}
+export class User;
+
+// UserScript.ts, using a modular-object script
+function printName(user: IUser): void {
+  console.log(user.name ?? '');
+}
+
+export {
+  printName,
+} as const;
+
+
+// Http.ts
+import User from 'UserScript.ts';
+
+function fetch1000Users(): Promise<void> {
+    const 1000UsersArray = await someIoCall();
+    1000UsersArray.forEach((user) => {
+      user.printName() <-- If we used a class won't work without a constructor call or a duplicate `public static PrintName` function.
+      User.printName(user) <-- modular-object-script has the function is ready for us
+    })
+} 
+
+
+```
+
+### Classes aren't technically necessary for inheritance but inheritance is really what makes them shine.
+```
+class Dog extends Animal {
+  public static final species: 'Canis familiaris`,
+  constructor() {}
+
+  bark() {
+    console.log('woof woof')
+  }
+}
+```
+
+- Without classes and just factory-functions inheritance would look something like this (assuming we want to avoid using a function-declaration with the `new` keyword):
+```
+const kDog = Symbol('is-dog');
+
+interface IDog extends IAnimal;
+
+interface DogFn extends AnimalFn {
+  (): IDog;
+  instanceOf(value: unknown): value is IDog;
+}
+
+const Dog = Object.assign(DogFn, { instanceOf });
+
+// Dog is a factory-function
+fn DogFn(name: string): IDog {
+ const secretData = data;
+ const bark = () => console.log('woof woof');
+
+ return {
+   ...Animal();
+   species: 'Canis familiaris`,
+ } as const;
+}
+
+fn instanceOf(arg: unknown): IDog {
+  return typeof arg === 'object' && arg[kDog] === true;
+}
+
+// Elsewhere
+const fido = new Dog();
+```
