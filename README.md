@@ -410,8 +410,9 @@ import User from 'UserScript.ts';
 function fetch1000Users(): Promise<void> {
     const 1000UsersArray = await someIoCall();
     1000UsersArray.forEach((user) => {
-      user.printName() <-- If we used a class won't work without a constructor call or a duplicate `public static PrintName` function.
-      User.printName(user) <-- modular-object-script has the function is ready for us
+      user.printName() // <-- If we used a class won't work without a constructor call or a duplicate
+        // `public static PrintName` function.
+      User.printName(user) // <-- modular-object-script has the function is ready for us
     })
 } 
 
