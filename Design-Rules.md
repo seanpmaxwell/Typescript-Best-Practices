@@ -1,14 +1,18 @@
 ## Design Rules: Class vs Factory vs Module
 
+> While there are multiple approaches to doing OOP in TypeScript, to keep things simple and consistent, use procedural programming by default (and in most situations) and use classes for OOP. The following sections explain scenarios about when to use each with examples.
 
-### ✅ Use a **class** when **all (or most)** of these are true
+> **Note:** there is a sub-paradigm of procedural programming called **procedural-modular** programming which means grouping functions together into some kinda of container (i.e. `namespace` keyword in C). Most large procedural applcations will use this as well. 
 
-- The object represents a **specific instance** (a “thing”)
+
+### ✅ Use a **class (OOP)** when **all (or most)** of these are true
+
+- The object represents a **specific instance** (a "thing")
 - That instance has **internal state that evolves over time**
 - Methods **act on and mutate** that state
 - Recreating the object would **lose meaningful information**
 - The object has a **lifecycle** (setup → use → change → teardown)
-- You would naturally say **“this instance”** in conversation
+- You would naturally say **"this instance"** in conversation
 
 **Example**
 ```ts
@@ -33,7 +37,7 @@ class Cache<K, V> {
 
 ---
 
-### ✅ Use a factory function when all (or most) of these are true
+### ✅ Use a factory function (procedural) when all (or most) of these are true
 
 - Behavior is fully determined at creation time
 - Configuration is captured via closures
@@ -41,6 +45,7 @@ class Cache<K, V> {
 - There is no meaningful lifecycle
 - Recreating it produces an equivalent result
 - There is no real need for `this`, *inheritance*, or `instanceof`
+- Useful for libraries which have a single initialization step
 
 **Example**
 ```ts
@@ -65,7 +70,7 @@ function createLogger(level: "info" | "debug") {
 
 ---
 
-### ✅ Use a modular-object script (plain functions + types) when
+### ✅ Use a modular-object script (procedural-modular) when
 - The code is primarily IO or data transformation
 - Operations are stateless or procedural
 - There is no instance identity at all
@@ -74,18 +79,23 @@ function createLogger(level: "info" | "debug") {
 
 **Example**
 ```ts
+// User.ts
+
 export interface IUser {
   id: string;
-  name: string;
+  name?: string;
 }
 
-export function parseUser(json: string): IUser {
-  return JSON.parse(json) as IUser;
+function printName(user: IUser): void {
+  console.log(user.name ?? '--');
 }
+
+export {
+  printName,
+} as const;
 ```
 
 **Typical use cases**
 - File utilities
 - HTTP helpers
 - Parsing / serialization
-- Environment variable loading
