@@ -1,4 +1,4 @@
-# TypeScript Best Practices
+# TypeScript Best Practices 🚀
 
 [![GitHub stars](https://img.shields.io/github/stars/seanpmaxwell/Typescript-Best-Practices?style=flat-square)](https://github.com/seanpmaxwell/Typescript-Best-Practices/stargazers)
 
@@ -6,28 +6,30 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 
 > This guide is intentionally opinionated. It prioritizes clarity, consistency, and long-term maintainability over abstraction or novelty.
 
-## Table of Contents
+## Table of Contents 📚
 
-- [Philosophy](#philosophy)
-- [Fundamental Concepts](#fundamental-concepts)
-- [Script Types](#script-types)
-- [File Organization](#file-organization)
-- [Core Language Features](#core-language-features)
-  - [Primitives](#primitives)
-  - [Functions](#functions)
-  - [Objects](#objects)
-    - [Object Literals](#object-literals)
-    - [Classes](#classes)
-    - [Enums](#enums)
-  - [Types](#types)
-- [Naming Conventions](#naming-conventions)
-- [Comments](#comments)
-- [Imports](#imports)
-- [Testing](#testing)
-- [Organizing Shared Code](#organizing-shared-code)
+- [Philosophy 🧭](#philosophy)
+- [Terminology 🔠](#terminology)
+- [Fundamental Concepts 🔑](#fundamental-concepts)
+- [Script Types 📄](#script-types)
+- [File Organization 🗂️](#file-organization)
+- [Core Language Features 🛠️](#core-language-features)
+  - [Primitives 🔤](#primitives)
+  - [Functions 🧮](#functions)
+  - [Objects 📦](#objects)
+    - [Object Literals 📝](#object-literals)
+    - [Classes 🏛️](#classes)
+    - [Enums 🔢](#enums)
+  - [Types 🧾](#types)
+- [Naming Conventions 🏷️](#naming-conventions)
+- [Comments 💬](#comments)
+- [Imports 📥](#imports)
+- [Testing 🧪](#testing)
+- [Organizing Shared Code 🤝](#organizing-shared-code)
 <br/>
 
-## Philosophy
+<a id="philosophy"></a>
+## Philosophy 🧭
 
 This guide favors:
 
@@ -39,7 +41,31 @@ It is designed to scale with real-world TypeScript applications.
 <br/><br/>
 
 
-## Fundamental Concepts
+<a id="terminology"></a>
+## Terminology 🔠
+
+So things are more clear down the line let's first clarify some terminology.
+
+### Objects states
+- Objects can be **static**, **readonly**, or **dynamic**.
+  - **static:** values can change but not keys (default for TypeScript)
+  - **dynamic:** keys and values can change (default for JavaScript)
+  - **readonly:** neither keys or values can change (typically done with `as const`)
+
+### Programming Paradigms
+- I've heard TypeScript referred to as a object-oriented, functional, and procedural language.
+- To be clear, **OOP (Object-Oriented-Programming)** is a set of design principles not a specific language feature.
+  - The four design principles are: **Inheritence**, **Polymorphism**, **Abstraction**, and **Encapsulation**
+- The term **functional programming** has been used interchangeably between **procedural-programming** and **strict functional-programming** (stateless, i.e. Haskell).
+- TypeScript supports OOP and is clearly not strictly stateless, so to avoid confusion, let's refer to TypeScript as a procedural programming language which supports OOP.
+- Projects don't have to strictly adhere to one paradigm or the other, use procedural where procedural makes the most sense and likewise for OOP.
+- OOP can be achieved either through **classes** or **factory-functions** although I prefer the former. 
+- You can see a more thorough list of design rules [here](Design-Rules.md) to help you decided what feature/paradigm to use and when.
+<br/><br/>
+
+
+<a id="fundamental-concepts"></a>
+## Fundamental Concepts 🔑
 
 This guide revolves around four fundamental language features:
 
@@ -52,15 +78,16 @@ These concepts form the foundation of all JavaScript and TypeScript programs. Ma
 <br/><br/>
 
 
-## Script Types
+<a id="script-types"></a>
+## Script Types 📄
 
 Every file should have a clear purpose. Most scripts fall into one of the following categories:
 
 - **Declaration**  
   Exports a single declared item (e.g., a large function, enum, or configuration object).
 
-- **Modular Object**  
-  Exports a default object literal that groups closely related logic. Very handy as a namespace for stateless data/functions.
+- **Modular-Object**  
+  Exports a default object literal that groups closely related logic/readonly-values. Very handy as a namespace for stateless data/functions.
 
 - **Inventory**  
   Exports multiple independent declarations, such as shared types or small utility functions.
@@ -71,7 +98,8 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 You can see a full list of script examples [here](Script-Examples.md). 
 <br/>
 
-## File Organization
+<a id="file-organization"></a>
+## File Organization 🗂️
 
 Files should generally be organized into clearly defined regions:
 
@@ -144,9 +172,11 @@ function normalFunction() {
 <br/><br/>
 
 
-## Core Language Features
+<a id="core-language-features"></a>
+## Core Language Features 🛠️
 
-### Primitives
+<a id="primitives"></a>
+### Primitives 🔤
 
 JavaScript primitives include:
 
@@ -158,7 +188,8 @@ Understand **type coercion**: when calling methods on primitives, JavaScript tem
 
 ---
 
-### Functions
+<a id="functions"></a>
+### Functions 🧮
 
 - Prefer **function declarations** at the file level to take advantage of hoisting.
 - Use **arrow functions** for callbacks and inline logic.
@@ -174,7 +205,8 @@ Use object-literal methods when `this` should refer to the object itself.
 
 ---
 
-### Objects
+<a id="objects"></a>
+### Objects 📦
 
 Objects are collections of key/value pairs created via:
 
@@ -184,28 +216,40 @@ Objects are collections of key/value pairs created via:
 
 Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
 
-#### Object Literals
+<a id="object-literals"></a>
+#### Object Literals 📝
 
-Object literals are ideal for organizing related logic/values and are often preferable to classes.
+Readonly object-literals are ideal for organizing related logic and are often preferable to classes.
 
-#### Classes
+```ts
+export default {
+  someFunction,
+  someOtherFunction,
+} as const;
+```
+
+<a id="classes"></a>
+#### Classes 🏛️
+
+OOP can be achieved in TypeScript/JavaScript with classes or factory-functions.
 
 People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
 
 - **Use a class** when you need instances with methods that act on an evolving internal state tied to that instance.
 - **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at creation time** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
-- **Note:** I would also recommend avoiding **classes for handling IO data** (even when OOP makes sense), because this often leads to:
+- **Note:** I would also recommend avoiding **classes for handling IO data** (even when you feel tempted to use OOP), because this often leads to:
   - Many unnecessary **constructor calls** to support dynamic behavior, or
   - A large number of identical `public static` functions
-  - It doesn't fit the mental model for classes because values on a data item could be set outside the class used to handle it. 
-    - For example, in `user.created` _created_ could be in the database not by the `user.setCreated()` function.
-  - A simpler approach is to handle IO data using **modular object scripts** and describing data items with **interfaces**.
+  - It doesn't fit the mental model for classes because values on a data item could be handled outside the class representing it. 
+    - For example, in `user.id` _id_ is probably set in the database not by the `user.setId()` function (unless copying it).
+  - A simpler approach is to handle IO data using **modular-object scripts** and describing data items with **interfaces**.
 
-You can see a more thorough list of object design rules [here](Design-Rules.md). 
+You can see a more thorough list of design rules [here](Design-Rules.md). 
 
-#### Enums
+<a id="enums"></a>
+#### Enums 🔢
 
-Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer static objects instead:
+Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **readonly objects** instead:
 
 ```ts
 const USER_ROLES = {
@@ -217,7 +261,8 @@ const USER_ROLES = {
 
 ---
 
-### Types
+<a id="types"></a>
+### Types 🧾
 
 - Prefer `interface` for object shapes.
 - Use `type` for unions, primitives, and utility types.
@@ -235,7 +280,8 @@ interface IUser {
 <br/><br/>
 
 
-## Naming Conventions
+<a id="naming-conventions"></a>
+## Naming Conventions 🏷️
 
 - **Folders**: `kebab-case`
 - **Files**:
@@ -249,7 +295,8 @@ interface IUser {
 <br/>
 
 
-## Comments
+<a id="comments"></a>
+## Comments 💬
 
 - Place `/** */` above all function declarations.
 - Use `//` for inline explanations.
@@ -258,14 +305,16 @@ interface IUser {
 <br/>
 
 
-## Imports
+<a id="imports"></a>
+## Imports 📥
 
 - Group imports by origin: libraries → application → local.
 - Split long import lists across multiple lines.
 <br/>
 
 
-## Testing
+<a id="testing"></a>
+## Testing 🧪
 
 - Unit-test all user-driven behavior.
 - Developers should write their own tests.
@@ -274,11 +323,12 @@ interface IUser {
 <br/>
 
 
-## Organizing shared code
+<a id="organizing-shared-code"></a>
+## Organizing shared code 🤝
 - In a directory with shared content create a subfolder named `common/`.
 - Start off by adding the following files as needed
   - `utils.ts`: logic that needs to be executed (standalone functions or modular-objects)
-  - `constants.ts`: static items
+  - `constants.ts`: readonly items
   - `types.ts`: types only no values
   - Depending on the nature of your project you could have more. A react app for example could also include:
     - `components/`
