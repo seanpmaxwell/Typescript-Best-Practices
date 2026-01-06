@@ -430,7 +430,7 @@ class Dog extends Animal {
 ```
 
 - Without classes and just factory-functions inheritance would look something like this (assuming we want to avoid using a function-declaration with the `new` keyword):
-```
+```ts
 const kDog = Symbol('is-dog');
 
 interface IDog extends IAnimal;
