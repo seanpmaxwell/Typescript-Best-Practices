@@ -372,7 +372,7 @@ export default {
 
 ## Food for thought
 
-### Avoid using classes for IO data
+### ❌ Avoid using classes for IO data
 I would also recommend avoiding **classes for handling IO data** (even when OOP makes sense), because this often leads to:
   - Many unnecessary **constructor calls** to support dynamic behavior, or
   - A large number of identical `public static` functions
