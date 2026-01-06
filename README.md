@@ -39,7 +39,7 @@ This guide favors:
 - Consistency over novelty  
 
 It is designed to scale with real-world TypeScript applications.
-<br/>
+<br/><br/>
 
 
 ## Fundamental Concepts
@@ -52,7 +52,7 @@ This guide revolves around four fundamental language features:
 - **Types**
 
 These concepts form the foundation of all JavaScript and TypeScript programs. Mastering them—and using them consistently—results in code that is easier to read, reason about, and maintain.
-<br/>
+<br/><br/>
 
 
 ## Script Types
@@ -142,7 +142,7 @@ function normalFunction() {
   }
 })()
 ```
-<br/>
+<br/><br/>
 
 
 ## Core Language Features
@@ -232,7 +232,7 @@ interface IUser {
   role: Role;
 }
 ```
-<br/>
+<br/><br/>
 
 
 ## Naming Conventions
