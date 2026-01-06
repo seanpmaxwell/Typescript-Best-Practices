@@ -60,7 +60,7 @@ So things are more clear down the line let's first clarify some terminology.
 - TypeScript supports OOP and is clearly not strictly stateless, so to avoid confusion, let's refer to TypeScript as a procedural programming language which supports OOP.
 - Projects don't have to strictly adhere to one paradigm or the other, use procedural where procedural makes the most sense and likewise for OOP.
 - OOP can be achieved either through **classes** or **factory-functions** although I prefer the former. 
-- You can see a more thorough list of design rules [here](Design-Rules.md) to help you decided what feature/paradigm to use and when.
+- You can see a more thorough list of design rules [here](Design-Rules.md) to help you decide what feature/paradigm to use and when.
 <br/><br/>
 
 
