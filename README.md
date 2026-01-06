@@ -418,7 +418,7 @@ function fetch1000Users(): Promise<void> {
 ---
 
 ### Classes aren't technically necessary for inheritance but inheritance is really what makes them shine.
-```
+```ts
 class Dog extends Animal {
   public static final species: 'Canis familiaris`,
   constructor() {}
