@@ -236,8 +236,8 @@ OOP can be achieved in TypeScript/JavaScript with classes or factory-functions.
 
 People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
 
-- **Use a class** when you need instances with methods that act on an evolving internal state tied to that instance.
-- **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at creation time** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
+- **Use a class** when you have an object with an internal state that needs to be modified after instantiation.
+- **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at instantiation** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
 - **Note:** I would also recommend avoiding **classes for handling IO data** (even when you feel tempted to use OOP), because this often leads to:
   - Many unnecessary **constructor calls** to support dynamic behavior, or
   - A large number of identical `public static` functions
