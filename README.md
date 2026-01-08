@@ -53,7 +53,6 @@ So things are more clear down the line let's first clarify some terminology.
   - **readonly:** neither keys or values can change (typically done with `as const`)
 
 ### Programming Paradigms
-- I've heard TypeScript referred to as a object-oriented, functional, and procedural language.
 - To be clear, **OOP (Object-Oriented-Programming)** is a set of design principles not a specific language feature.
   - The four design principles are: **Inheritence**, **Polymorphism**, **Abstraction**, and **Encapsulation**
 - The term **functional programming** has been used interchangeably between **procedural-programming** and **strict functional-programming** (stateless, i.e. Haskell).
