@@ -78,7 +78,7 @@ function createLogger(level: "info" | "debug") {
 - The code is primarily IO or data transformation
 - Operations are stateless or procedural
 - There is no instance identity at all
-- Classes would act as namespaces
+- Classes would just end up acting as namespaces
 - Data is described with interfaces/types, not behavior
 
 **Example**
