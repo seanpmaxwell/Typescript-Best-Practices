@@ -12,7 +12,6 @@
 - That instance has **internal state that evolves over time**
 - Methods **act on and mutate** that state
 - Recreating the object would **lose meaningful information**
-- The object has a **lifecycle** (setup → use → change → teardown)
 - You would naturally say **"this instance"** in conversation
 
 **Example**
