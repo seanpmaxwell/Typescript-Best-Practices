@@ -310,6 +310,7 @@ interface IUser {
 
 - Group imports by origin: libraries → application → local.
 - Split long import lists across multiple lines.
+- For those your using prettier this can be configured automatically.
 <br/>
 
 
