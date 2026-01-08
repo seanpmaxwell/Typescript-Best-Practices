@@ -102,7 +102,7 @@ You can see a full list of script examples [here](Script-Examples.md).
 <a id="file-organization"></a>
 ## File Organization 🗂️
 
-Files should generally be organized into clearly defined regions:
+I would generally recommend breaking large files into `index.ts`, `types.t`s, and `constant.ts` files and group them together in a folder. This isn't always practical and probably is unnecessary for smaller files; however, they should still be organized into clearly defined regions:
 
 1. Constants  
 2. Types  
