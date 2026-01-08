@@ -99,6 +99,6 @@ export {
 ```
 
 **Typical use cases**
-- File utilities
-- HTTP helpers
-- Parsing / serialization
+- Shared utility functions
+- Handling IO data
+- Forming the layers of a micro-services application.
