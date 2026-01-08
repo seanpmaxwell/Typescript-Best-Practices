@@ -252,10 +252,10 @@ You can see a more thorough list of design rules [here](Design-Rules.md).
 Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **readonly objects** instead:
 
 ```ts
-const USER_ROLES = {
-  Basic: 0,
-  Admin: 1,
-  Owner: 2,
+const UserRoles = {
+  BASIC: 0,
+  ADMIN: 1,
+  OWNER: 2,
 } as const;
 ```
 
