@@ -287,7 +287,9 @@ interface IUser {
 - **Files**:
   - **Inventory / Linear scripts**: `kebab-case`
   - **Modular object / Declaration scripts**: name it after the item being exported
-- **Readonly**: `UPPER_SNAKE_CASE`
+- **Readonly**:
+  - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
+  - **Object**: `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys.
 - **Variables**: `camelCase`
 - **Classes / Types**: `PascalCase`
   - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
