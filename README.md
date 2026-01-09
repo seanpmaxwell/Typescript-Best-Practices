@@ -289,8 +289,9 @@ interface IUser {
   - **Modular object / Declaration scripts**: name it after the item being exported
 - **Readonly**:
   - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
-  - **Object**: `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys.
-    - **Exception:** If your entire object is a value being passed (i.e. it's hard coded for a test) and you can't choose the keys, UPPER_SNAKE_CASE is okay for the name. 
+  - **Objects**:
+    - For object-literals used as a namespace for a collection of readonly values `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys.
+    - If the entire object is a value being passed (it's not simply a namespace) and you can't choose the keys, UPPER_SNAKE_CASE is okay for the name. 
 - **Variables**: `camelCase`
 - **Classes / Types**: `PascalCase`
   - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
