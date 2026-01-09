@@ -290,6 +290,7 @@ interface IUser {
 - **Readonly**:
   - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
   - **Object**: `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys.
+    - **Exception:** If your entire object is a value being passed (i.e. it's hard coded for a test) and you can't choose the keys, UPPER_SNAKE_CASE is okay for the name. 
 - **Variables**: `camelCase`
 - **Classes / Types**: `PascalCase`
   - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
