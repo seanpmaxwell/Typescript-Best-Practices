@@ -35,7 +35,6 @@ class Cache<K, V> {
 - Stateful services
 
 ---
-<br/>
 
 ### ✅ Use a factory function (procedural) when all (or most) of these are true
 
@@ -69,7 +68,6 @@ function createLogger(level: "info" | "debug") {
 - Feature-flag evaluators
 
 ---
-<br/>
 
 ### ✅ Use a modular-object script (procedural-modular) when
 - The code is primarily IO or data transformation
