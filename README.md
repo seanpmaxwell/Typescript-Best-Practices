@@ -1,36 +1,38 @@
-# TypeScript Best Practices 🚀
+# 🚀 TypeScript Best Practices
 
 [![GitHub stars](https://img.shields.io/github/stars/seanpmaxwell/Typescript-Best-Practices?style=flat-square)](https://github.com/seanpmaxwell/Typescript-Best-Practices/stargazers)
 
 Patterns and best practices for **procedural TypeScript / JavaScript development**, guided by the **Rule of 4** principle.
 
 > This guide is intentionally opinionated. It prioritizes clarity, consistency, and long-term maintainability over abstraction or novelty.
-
-## Table of Contents 📚
-
-- [Philosophy 🧭](#philosophy)
-- [Terminology 🔠](#terminology)
-- [Fundamental Concepts 💡](#fundamental-concepts)
-- [Script Types 📄](#script-types)
-- [File Organization 🗂️](#file-organization)
-- [Core Language Features 🛠️](#core-language-features)
-  - [Primitives 🔤](#primitives)
-  - [Functions 🧮](#functions)
-  - [Objects 📦](#objects)
-    - [Object Literals 📝](#object-literals)
-    - [Classes 🏛️](#classes)
-    - [Enums 🔢](#enums)
-  - [Types 🧾](#types)
-- [Naming Conventions 🏷️](#naming-conventions)
-- [Comments 💬](#comments)
-- [Imports 📥](#imports)
-- [Testing 🧪](#testing)
-- [Organizing Shared Code 🤝](#organizing-shared-code)
-- [Food for Thought 🍽️](#food-for-thought)
 <br/>
 
+## 📚 Table of Contents
+
+- [Philosophy](#philosophy)
+- [Terminology](#terminology)
+- [Fundamental Concepts](#fundamental-concepts)
+- [Script Types](#script-types)
+- [File Organization](#file-organization)
+- [Core Language Features](#core-language-features)
+  - [Primitives](#primitives)
+  - [Functions](#functions)
+  - [Objects](#objects)
+    - [Object Literals](#object-literals)
+    - [Classes](#classes)
+    - [Enums](#enums)
+  - [Types](#types)
+- [Naming Conventions](#naming-conventions)
+- [Comments](#comments)
+- [Imports](#imports)
+- [Testing](#testing)
+- [Organizing Shared Code](#organizing-shared-code)
+- [Food for Thought(#food-for-thought)
+
+<br/>***<br/>
+
 <a id="philosophy"></a>
-## Philosophy 🧭
+## 🧭 Philosophy 
 
 This guide favors:
 
@@ -39,11 +41,11 @@ This guide favors:
 - Consistency over novelty  
 
 It is designed to scale with real-world TypeScript applications.
-<br/><br/>
 
+<br/>***<br/>
 
 <a id="terminology"></a>
-## Terminology 🔠
+## 🔠 Terminology
 
 So things are more clear down the line let's first clarify some terminology.
 
@@ -56,11 +58,11 @@ So things are more clear down the line let's first clarify some terminology.
 ### Functions
 - **embedded-functions:** functions declared in object literals
 - **validator-functions:** accept and unknown variable and return a type-predicate
-<br/><br/>
 
+<br/>***<br/>
 
 <a id="fundamental-concepts"></a>
-## Fundamental Concepts 💡
+## 💡 Fundamental Concepts
 
 This guide revolves around four fundamental language features:
 
@@ -70,11 +72,11 @@ This guide revolves around four fundamental language features:
 - **Types**
 
 These concepts form the foundation of all JavaScript and TypeScript programs. Mastering them—and using them consistently—results in code that is easier to read, reason about, and maintain.
-<br/><br/>
 
+<br/>***<br/>
 
 <a id="script-types"></a>
-## Script Types 📄
+## 📄 Script Types
 
 Every file should have a clear purpose. Most scripts fall into one of the following categories:
 
@@ -91,11 +93,11 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
   Executes a series of commands, often for setup or initialization.
 
 You can see a full list of script examples [here](Script-Examples.md). 
-<br/><br/>
 
+<br/>***<br/>
 
 <a id="file-organization"></a>
-## File Organization 🗂️
+## 🗂️ File Organization
 
 I would generally recommend breaking large files into `index.ts`, `types.ts`, and `constant.ts` files and group them together in a folder. This isn't always practical and probably is unnecessary for smaller files; however, all files large and small should still be organized into clearly defined regions:
 
@@ -165,14 +167,14 @@ function normalFunction() {
   }
 })()
 ```
-<br/><br/>
 
+<br/>***<br/>
 
 <a id="core-language-features"></a>
-## Core Language Features 🛠️
+## 🛠️ Core Language Features
 
 <a id="primitives"></a>
-### Primitives 🔤
+### Primitives 
 
 JavaScript primitives include:
 
@@ -185,7 +187,7 @@ Understand **type coercion**: when calling methods on primitives, JavaScript tem
 ---
 
 <a id="functions"></a>
-### Functions 🧮
+### Functions
 
 - Prefer **function declarations** at the file level to take advantage of hoisting.
 - Use **arrow functions** for callbacks and inline logic.
@@ -202,7 +204,7 @@ Use object-literal methods when `this` should refer to the object itself.
 ---
 
 <a id="objects"></a>
-### Objects 📦
+### Objects
 
 Objects are collections of key/value pairs created via:
 
@@ -213,7 +215,7 @@ Objects are collections of key/value pairs created via:
 Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
 
 <a id="object-literals"></a>
-#### `Object Literals` 📝
+#### `Object Literals`
 
 Readonly object-literals are ideal for organizing related logic and are often preferable to classes.
 
@@ -225,7 +227,7 @@ export default {
 ```
 
 <a id="classes"></a>
-#### `Classes` 🏛️
+#### `Classes`
 
 OOP can be achieved in TypeScript/JavaScript with classes or factory-functions.
 
@@ -243,7 +245,7 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
 You can see a more thorough list of design rules [here](Design-Rules.md). 
 
 <a id="enums"></a>
-#### `Enums` 🔢
+#### `Enums`
 
 Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **readonly objects** instead with **declaration-merging** intead:
 
@@ -262,7 +264,7 @@ const basic: UserRoles = UserRoles.BASIC;
 ---
 
 <a id="types"></a>
-### Types 🧾
+### Types
 
 - Prefer `interface` for object shapes.
 - Use `type` for unions, primitives, and utility types.
@@ -277,11 +279,11 @@ interface IUser {
   role: Role;
 }
 ```
-<br/><br/>
 
+<br/>***<br/>
 
 <a id="naming-conventions"></a>
-## Naming Conventions 🏷️
+## 🏷️ Naming Conventions
 
 - **Folders**: `kebab-case`
 - **Files**:
@@ -310,40 +312,39 @@ Notes for all:
 
 > The modular-object script [User.ts](User.ts) has some good examples on standard naming conventions.
 
-<br/>
-
+<br/>***<br/>
 
 <a id="comments"></a>
-## Comments 💬
+## 💬 Comments
 
 - Place `/** */` above all function declarations.
 - Use `//` for inline explanations.
 - Capitalize and punctuate comments.
 - Separate logical regions clearly.
-<br/>
 
+<br/>***<br/>
 
 <a id="imports"></a>
-## Imports 📥
+## 📥 Imports
 
 - Group imports by origin: libraries → application → local.
 - Split long import lists across multiple lines.
 - For those your using prettier this can be configured automatically.
-<br/>
 
+<br/>***<br/>
 
 <a id="testing"></a>
-## Testing 🧪
+## 🧪 Testing
 
 - Unit-test all user-driven behavior.
 - Developers should write their own tests.
 - Integration tests should be focused and minimal early on.
 - Tests improve readability as well as correctness.
-<br/>
 
+<br/>***<br/>
 
 <a id="organizing-shared-code"></a>
-## Organizing shared code 🤝
+## 🤝 Organizing shared code
 - In a directory with shared content create a subfolder named `common/`.
 - Start off by adding the following files as needed
   - `utils.ts`: logic that needs to be executed (standalone functions or modular-objects)
@@ -368,10 +369,11 @@ Notes for all:
     - `UserRoutes.ts`
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
 - If `common/` or `aux/` are in a folder with a bunch of other folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend them with an `underscore` (i.e. `_common/`). 
-<br/>
+
+<br/>***<br/>
 
 <a id="food-for-thought"></a>
-## Food for Thought 🍽️
+## 🍽️ Food for Thought
 
 ### Programming Paradigms
 - To be clear, **OOP (Object-Oriented-Programming)** is a set of design principles not a specific language feature.
