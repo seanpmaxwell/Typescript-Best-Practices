@@ -29,7 +29,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Organizing Shared Code](#organizing-shared-code)
 - [Food for Thought(#food-for-thought)
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="philosophy"></a>
 ## 🧭 Philosophy 
@@ -42,7 +42,7 @@ This guide favors:
 
 It is designed to scale with real-world TypeScript applications.
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="terminology"></a>
 ## 🔠 Terminology
@@ -59,7 +59,7 @@ So things are more clear down the line let's first clarify some terminology.
 - **embedded-functions:** functions declared in object literals
 - **validator-functions:** accept and unknown variable and return a type-predicate
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="fundamental-concepts"></a>
 ## 💡 Fundamental Concepts
@@ -73,7 +73,7 @@ This guide revolves around four fundamental language features:
 
 These concepts form the foundation of all JavaScript and TypeScript programs. Mastering them—and using them consistently—results in code that is easier to read, reason about, and maintain.
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="script-types"></a>
 ## 📄 Script Types
@@ -94,7 +94,7 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 
 You can see a full list of script examples [here](Script-Examples.md). 
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="file-organization"></a>
 ## 🗂️ File Organization
@@ -168,7 +168,7 @@ function normalFunction() {
 })()
 ```
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="core-language-features"></a>
 ## 🛠️ Core Language Features
@@ -280,7 +280,7 @@ interface IUser {
 }
 ```
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="naming-conventions"></a>
 ## 🏷️ Naming Conventions
@@ -312,7 +312,7 @@ Notes for all:
 
 > The modular-object script [User.ts](User.ts) has some good examples on standard naming conventions.
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="comments"></a>
 ## 💬 Comments
@@ -322,7 +322,7 @@ Notes for all:
 - Capitalize and punctuate comments.
 - Separate logical regions clearly.
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="imports"></a>
 ## 📥 Imports
@@ -331,7 +331,7 @@ Notes for all:
 - Split long import lists across multiple lines.
 - For those your using prettier this can be configured automatically.
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="testing"></a>
 ## 🧪 Testing
@@ -341,7 +341,7 @@ Notes for all:
 - Integration tests should be focused and minimal early on.
 - Tests improve readability as well as correctness.
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="organizing-shared-code"></a>
 ## 🤝 Organizing shared code
@@ -370,7 +370,7 @@ Notes for all:
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
 - If `common/` or `aux/` are in a folder with a bunch of other folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend them with an `underscore` (i.e. `_common/`). 
 
-<br/>***<br/>
+<br/><b>***</b><br/>
 
 <a id="food-for-thought"></a>
 ## 🍽️ Food for Thought
