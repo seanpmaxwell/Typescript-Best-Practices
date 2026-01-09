@@ -26,6 +26,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Imports 📥](#imports)
 - [Testing 🧪](#testing)
 - [Organizing Shared Code 🤝](#organizing-shared-code)
+- [Food for Thought 🤝](#food-for-thought) 🍽️
 <br/>
 
 <a id="philosophy"></a>
@@ -51,15 +52,9 @@ So things are more clear down the line let's first clarify some terminology.
   - **static:** values can change but not keys (default for TypeScript)
   - **dynamic:** keys and values can change (default for JavaScript)
   - **readonly:** neither keys or values can change (typically done with `as const`)
-
-### Programming Paradigms
-- To be clear, **OOP (Object-Oriented-Programming)** is a set of design principles not a specific language feature.
-  - The four design principles are: **Inheritence**, **Polymorphism**, **Abstraction**, and **Encapsulation**
-- The term **functional programming** has been used interchangeably between **procedural-programming** and **strict functional-programming** (stateless, i.e. Haskell).
-- TypeScript supports OOP and is clearly not strictly stateless, so to avoid confusion, let's refer to TypeScript as a procedural programming language which supports OOP.
-- Projects don't have to strictly adhere to one paradigm or the other, use procedural where procedural makes the most sense and likewise for OOP.
-- OOP can be achieved either through **classes** or **factory-functions** although I prefer the former. 
-- You can see a more thorough list of design rules [here](Design-Rules.md) to help you decide what feature/paradigm to use and when.
+ 
+### Functions
+- embedded-functions: functions declared in object literals
 <br/><br/>
 
 
@@ -293,6 +288,11 @@ interface IUser {
     - For object-literals used as a namespace for a collection of readonly values `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys.
     - If the entire object is a value being passed (it's not simply a namespace) and you can't choose the keys, UPPER_SNAKE_CASE is okay for the name. 
 - **Variables**: `camelCase`
+- **Functions**:
+  - `camelCase`: most of the time
+  - `PascalCase`: for certain situations
+    - JSX Elements
+    - Functions directly in a file or embedded-functions just meant to return static data or make 
 - **Classes / Types**: `PascalCase`
   - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
 - **Booleans**: prefix with `is` or `has`
@@ -354,3 +354,17 @@ interface IUser {
     - `UserRoutes.ts`
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
 - If `common/` or `aux/` are in a folder with a bunch of other folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend them with an `underscore` (i.e. `_common/`). 
+<br/>
+
+<a id="food-for-thought"></a>
+## Food for Thought 🍽️
+
+### Programming Paradigms
+- To be clear, **OOP (Object-Oriented-Programming)** is a set of design principles not a specific language feature.
+  - The four design principles are: **Inheritence**, **Polymorphism**, **Abstraction**, and **Encapsulation**
+- The term **functional programming** has been used interchangeably between **procedural-programming** and **strict functional-programming** (stateless, i.e. Haskell).
+- TypeScript supports OOP and is clearly not strictly stateless, so to avoid confusion, let's refer to TypeScript as a procedural programming language which supports OOP.
+- Projects don't have to strictly adhere to one paradigm or the other, use procedural where procedural makes the most sense and likewise for OOP.
+- OOP can be achieved either through **classes** or **factory-functions** although I prefer the former.
+- 
+- You can see a more thorough list of design rules [here](Design-Rules.md) to help you decide what feature/paradigm to use and when.
