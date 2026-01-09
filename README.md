@@ -54,7 +54,7 @@ So things are more clear down the line let's first clarify some terminology.
   - **readonly:** neither keys or values can change (typically done with `as const`)
  
 ### Functions
-- embedded-functions: functions declared in object literals
+- **embedded-functions:** functions declared in object literals
 <br/><br/>
 
 
