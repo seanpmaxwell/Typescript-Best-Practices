@@ -292,7 +292,7 @@ interface IUser {
   - `camelCase`: most of the time
   - `PascalCase`: for certain situations
     - JSX Elements
-    - Functions directly in a file or embedded-functions just meant to return static data or make 
+    - Functions just meant to return static data or make simple insertions to static data (i.e. put a value in a string) can be `PascalCase`.
 - **Classes / Types**: `PascalCase`
   - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
 - **Booleans**: prefix with `is` or `has`
