@@ -212,7 +212,7 @@ Objects are collections of key/value pairs created via:
 Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
 
 <a id="object-literals"></a>
-#### Object Literals 📝
+#### `Object Literals` 📝
 
 Readonly object-literals are ideal for organizing related logic and are often preferable to classes.
 
@@ -224,7 +224,7 @@ export default {
 ```
 
 <a id="classes"></a>
-#### Classes 🏛️
+#### `Classes` 🏛️
 
 OOP can be achieved in TypeScript/JavaScript with classes or factory-functions.
 
@@ -242,7 +242,7 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
 You can see a more thorough list of design rules [here](Design-Rules.md). 
 
 <a id="enums"></a>
-#### Enums 🔢
+#### `Enums` 🔢
 
 Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **readonly objects** instead:
 
