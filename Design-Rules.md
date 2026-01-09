@@ -3,8 +3,8 @@
 > While there are multiple approaches to doing OOP in TypeScript, to keep things simple and consistent, use procedural programming by default (and in most situations) and use classes for OOP. The following sections explain scenarios about when to use each with examples.
 
 > **Note:** there is a sub-paradigm of procedural programming called **procedural-modular** programming which means grouping functions together into some kinda of container (i.e. `namespace` keyword in C). Most large procedural applcations will use this as well. 
-<br/>
 
+<br/>***<br/>
 
 ### ✅ Use a **class (OOP)** when **all (or most)** of these are true
 
@@ -35,8 +35,8 @@ class Cache<K, V> {
 - Stateful services
 
 ---
-<br/>
 
+<br/>***<br/>
 
 ### ✅ Use a factory function (procedural) when all (or most) of these are true
 
@@ -70,8 +70,8 @@ function createLogger(level: "info" | "debug") {
 - Feature-flag evaluators
 
 ---
-<br/>
 
+<br/>***<br/>
 
 ### ✅ Use a modular-object script (procedural-modular) when
 - The code is primarily IO or data transformation
