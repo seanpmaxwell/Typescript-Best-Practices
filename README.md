@@ -303,7 +303,10 @@ interface IUser {
 - **Classes / Types**: `PascalCase`
   - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
 - **Booleans**: prefix with `is`
-- **Acronyms**: for files, folders, and any variable names in code, use **ALL CAPS** when using acronyms: i.e `insertIntoURL()`.
+
+Notes for all:
+- **Acronyms**: use **ALL CAPS** when using acronyms: i.e `insertIntoURL()`.
+- **Abbreviations:** abbreviations should generally be avoided for clarity BUT can be used if you end up with a really long variable name that could be cumbersome to use. However, never use abbreviations when doing `UPPER_SNAKE_CASE`.
 
 > The modular-object script [User.ts](User.ts) has some good examples on standard naming conventions.
 
