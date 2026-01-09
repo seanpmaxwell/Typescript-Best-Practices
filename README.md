@@ -55,6 +55,7 @@ So things are more clear down the line let's first clarify some terminology.
  
 ### Functions
 - **embedded-functions:** functions declared in object literals
+- **validator-functions:** accept and unknown variable and return a type-predicate
 <br/><br/>
 
 
@@ -244,7 +245,7 @@ You can see a more thorough list of design rules [here](Design-Rules.md).
 <a id="enums"></a>
 #### `Enums` 🔢
 
-Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **readonly objects** instead:
+Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **readonly objects** instead with **declaration-merging** intead:
 
 ```ts
 const UserRoles = {
@@ -252,6 +253,10 @@ const UserRoles = {
   ADMIN: 1,
   OWNER: 2,
 } as const;
+
+type UserRoles = typeof UserRoles[typeof UserRoles]; // 0 | 1 | 2
+
+const basic: UserRoles = UserRoles.BASIC;
 ```
 
 ---
@@ -293,9 +298,15 @@ interface IUser {
   - `PascalCase`: for certain situations
     - JSX Elements
     - Functions just meant to return static data or make simple insertions to static data (i.e. put a value in a string) can be `PascalCase`.
+  - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch` (i.e. `fetchUsers()`).
+  - Prepend **validator-functions** with an `is`.
 - **Classes / Types**: `PascalCase`
   - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
-- **Booleans**: prefix with `is` or `has`
+- **Booleans**: prefix with `is`
+- **Acronyms**: for files, folders, and any variable names in code, use **ALL CAPS** when using acronyms: i.e `insertIntoURL()`.
+
+> The modular-object script [User.ts](User.ts) has some good examples on standard naming conventions.
+
 <br/>
 
 
@@ -366,5 +377,4 @@ interface IUser {
 - TypeScript supports OOP and is clearly not strictly stateless, so to avoid confusion, let's refer to TypeScript as a procedural programming language which supports OOP.
 - Projects don't have to strictly adhere to one paradigm or the other, use procedural where procedural makes the most sense and likewise for OOP.
 - OOP can be achieved either through **classes** or **factory-functions** although I prefer the former.
-- 
 - You can see a more thorough list of design rules [here](Design-Rules.md) to help you decide what feature/paradigm to use and when.
