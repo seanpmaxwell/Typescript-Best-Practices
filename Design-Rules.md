@@ -34,8 +34,6 @@ class Cache<K, V> {
 - Connections (DB, socket, session)
 - Stateful services
 
----
-
 <br/>***<br/>
 
 ### ✅ Use a factory function (procedural) when all (or most) of these are true
@@ -68,8 +66,6 @@ function createLogger(level: "info" | "debug") {
 - Configured clients
 - Validators / formatters
 - Feature-flag evaluators
-
----
 
 <br/>***<br/>
 
