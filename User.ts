@@ -10,7 +10,7 @@
 // Because this is a "readonly" string primitive, we use "UPPER_SNAKE_CASE".
 const INVALID_USER_ERROR = 'Not a valid user object';
 
-// For "namespace" object-literals (i.e. "like lookup tables below") use 
+// For "namespace" object-literals (i.e. "like the lookup table below") use 
 // "PascalCase" for the variable name and "UPPER_SNAKE_CASE" for the keys. 
 const UserRoles = {
   NONE: 0,
@@ -19,7 +19,7 @@ const UserRoles = {
 } as const;
 
 // Using a function so we always get fresh datetime objects. "GetDefaults" is
-// "PascalCase" because its just mean to return a static object and not process
+// "PascalCase" because its just meant to return a static object and not process
 // any logic.
 const GetDefaults = (): IUser => ({
   id: 0,
@@ -43,7 +43,10 @@ export type ISOString =
 type ValueOf<T extends object> = T[keyof T];
 
 // "PascalCase" for types. Prepending with an "I" to distinguish it from the 
-// "User" module.
+// "User" module. `@References "users"` means this describes the "users" database
+// table
+
+// @References: "users"
 interface IUser {
   id: number;
   name: string;
