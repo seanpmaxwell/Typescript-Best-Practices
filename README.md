@@ -436,34 +436,3 @@ function getDummyUser() {
   updatedAt: new Date(), 
 }
 ```
-
-- For those of you using VSCode, there is the "Better Comments" extension so you can highlight this.
-- Install "Better Comments" and put the following in `settings.json`:
-```json
-"better-comments.tags": [
-    {
-        "tag": "@Table",
-        "color": "#7FBF6A",
-        "strikethrough": false,
-        "bold": true
-    },
-    {
-        "tag": "@PK",
-        "color": "#7FBF6A",
-        "strikethrough": false,
-        "bold": true
-    },
-    {
-        "tag": "@FK",
-        "color": "#7FBF6A",
-        "strikethrough": false,
-        "bold": true
-    },
-    {
-        "tag": "@NaC",
-        "color": "#7FBF6A",
-        "strikethrough": false,
-        "bold": true
-    }
-]
-```
