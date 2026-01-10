@@ -422,7 +422,7 @@ interface IUserAvatar {
 ```
 
 - For those of you using VSCode, there is the "Better Comments" extension so you can highlight this.
-- Install "Better Comments" and play the following in `settings.json`:
+- Install "Better Comments" and put the following in `settings.json`:
 ```json
 "better-comments.tags": [
     {
