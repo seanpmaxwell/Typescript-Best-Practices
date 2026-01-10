@@ -27,7 +27,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Imports](#imports)
 - [Testing](#testing)
 - [Organizing Shared Code](#organizing-shared-code)
-- [Food for Thought(#food-for-thought)
+- [Food for Thought](#food-for-thought)
 
 <br/><b>***</b><br/>
 
