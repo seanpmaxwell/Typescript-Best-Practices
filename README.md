@@ -385,4 +385,4 @@ Notes for all:
 - You can see a more thorough list of design rules [here](Design-Rules.md) to help you decide what feature/paradigm to use and when.
 
 ### Documentation Tips
-- For interfaces which represent database-tables place an `@References: "tableName"` comment above the interface declaration.
+- For interfaces which describe database-tables place a `@References: "tableName"` comment above the interface declaration.
