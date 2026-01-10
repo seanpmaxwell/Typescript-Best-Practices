@@ -386,15 +386,16 @@ Notes for all:
 
 ---
 
-### Describing database tables
+### Documentation with _"comment-annotations"_ 
+- A **comment-annotation** is keyword in a comment that starts with `@`.
 - Use interfaces to describe the raw dabase structure.
 - Place a `@Table: "tableName"` comment above the interface declaration.
 - Try to create new types for variations of the raw database-type instead of appending properties the original.
 - Although for simple/auxilliary tables an optional property is okay.
 - Make sure to document foreign/primary-keys with comments (i.e `@PK` and `@FK`).
-- I like to use `// @NC` which stands for `Not a Column` to indicate properties which do not correspond to
+- I like to use `// @NaC` which stands for `Not a Column` to indicate properties which do not correspond to
 a database-column:
-
+- Use `@TestingOnly` for items not meant to be used in production. 
 ```ts
 // @Table: "users"
 interface IUser {
@@ -444,8 +445,14 @@ interface IUserAvatar {
         "bold": true
     },
     {
-        "tag": "@NC",
+        "tag": "@NaC",
         "color": "#7FBF6A",
+        "strikethrough": false,
+        "bold": true
+    },
+    {
+        "tag": "@TestingOnly",
+        "color": "#6A9955",
         "strikethrough": false,
         "bold": true
     }
