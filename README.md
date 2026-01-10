@@ -413,7 +413,7 @@ interface IUserDTO extends IUser {
 // This is a simple auxilliary table so appending entries not
 // on the database table is okay.
 
-// @Table: "userAvatars"
+// @Table: "user_avatars"
 interface IUserAvatar {
   id: number; // @PK
   s3Path: string;
