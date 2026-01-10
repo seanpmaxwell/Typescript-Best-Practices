@@ -46,9 +46,9 @@ type ValueOf<T extends object> = T[keyof T];
 // "User" module. `@References "users"` means this describes the "users" database
 // table
 
-// @References: "users"
+// @Table: "users"
 interface IUser {
-  id: number;
+  id: number; // @PK
   name: string;
   role: UserRoles;
   created: Date | ISOString;
