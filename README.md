@@ -307,8 +307,13 @@ interface IUser {
 - **Booleans**: prefix with `is`
 
 Notes for all:
-- **Acronyms**: use **ALL CAPS** when using acronyms: i.e `insertIntoURL()`.
-- **Abbreviations:** abbreviations should generally be avoided for clarity BUT can be used if you end up with a really long variable name that could be cumbersome to use. However, never use abbreviations when doing `UPPER_SNAKE_CASE`.
+- **Abbreviations** and **Acronyms**:
+- This is not an exact science and abbreviations/acronyms should generally be avoided for clarity BUT there are plenty of exceptions:
+  - Well-establish abbreviations (i.e. URL, API) and acronyms (i.e. Pwd, Req => Request) are usually okay.
+  - Use **ALL CAPS** for well-established acronyms: i.e `insertIntoURL()`.
+  - Avoid both when when doing `UPPER_SNAKE_CASE` unless it's a well-establish acronym.
+  - For a long variable-names that could be cumbersome to use, which persist heavily throughout your application, an abbreviation/acronym is probably okay; however, the core layer describing them (i.e. the database table and its interface) should refrain unless it's a well-establish acronym.
+  - The more localized a name gets (i.e. just used once in a small function) the more you can abbreviate/"use-acronyms".
 
 > The modular-object script [User.ts](User.ts) has some good examples on standard naming conventions.
 
