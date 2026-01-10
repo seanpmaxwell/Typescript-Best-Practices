@@ -389,23 +389,9 @@ Notes for all:
 ### Describing database tables
 - Use interfaces to describe the raw dabase structure.
 - Place a `@Table: "tableName"` comment above the interface declaration.
-- For those of you using VSCode, there is the "Better Comments" extension so you can highlight this.
-- Install "Better Comments" and play the following in `settings.json`:
-
-```json
-    "better-comments.tags": [
-        {
-            "tag": "@Table",
-            "color": "#7FBF6A",
-            "strikethrough": false,
-            "bold": true
-        }
-    ]
-```
-
 - Try to create new types for variations of the raw database-type instead of appending properties the original.
 - Although for simple/auxilliary tables an optional property is okay.
-- Make sure to document foreign/primary-keys with comments:
+- Make sure to document foreign/primary-keys with comments (i.e `@PK` and `@FK`).
 - I like to use `// @NC` which stands for `Not a Column` to indicate properties which do not correspond to
 a database-column:
 
@@ -433,4 +419,35 @@ interface IUserAvatar {
   userId: number; // @FK
   imageSource?: string; // @NC
 }
+```
+
+- For those of you using VSCode, there is the "Better Comments" extension so you can highlight this.
+- Install "Better Comments" and play the following in `settings.json`:
+```json
+"better-comments.tags": [
+    {
+        "tag": "@Table",
+        "color": "#7FBF6A",
+        "strikethrough": false,
+        "bold": true
+    },
+    {
+        "tag": "@PK",
+        "color": "#7FBF6A",
+        "strikethrough": false,
+        "bold": true
+    },
+    {
+        "tag": "@FK",
+        "color": "#7FBF6A",
+        "strikethrough": false,
+        "bold": true
+    },
+    {
+        "tag": "@NC",
+        "color": "#7FBF6A",
+        "strikethrough": false,
+        "bold": true
+    }
+]
 ```
