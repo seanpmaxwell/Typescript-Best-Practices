@@ -384,15 +384,14 @@ Notes for all:
 - OOP can be achieved either through **classes** or **factory-functions** although I prefer the former.
 - You can see a more thorough list of design rules [here](Design-Rules.md) to help you decide what feature/paradigm to use and when.
 
-### Database Type Tips
+---
 
-#### Describing database tables
-
-##### `@Table`
+### Describing database tables
 - Use interfaces to describe the raw dabase structure.
 - Place a `@Table: "tableName"` comment above the interface declaration.
 - For those of you using VSCode, there is the "Better Comments" extension so you can highlight this.
 - Install "Better Comments" and play the following in `settings.json`:
+
 ```json
     "better-comments.tags": [
         {
@@ -404,12 +403,12 @@ Notes for all:
     ]
 ```
 
-#### `
 - Try to create new types for variations of the raw database-type instead of appending properties the original.
 - Although for simple/auxilliary tables an optional property is okay.
 - Make sure to document foreign/primary-keys with comments:
 - I like to use `// @NC` which stands for `Not a Column` to indicate properties which do not correspond to
-a database-column.
+a database-column:
+
 ```ts
 // @Table: "users"
 interface IUser {
