@@ -395,7 +395,7 @@ Notes for all:
 - Make sure to document foreign/primary-keys with comments (i.e `@PK` and `@FK`).
 - I like to use `// @NaC` which stands for `Not a Column` to indicate properties which do not correspond to
 a database-column:
-- Use `@TestingOnly` for items not meant to be used in production. 
+- Use `@TestOnly` for items not meant to be used in production. 
 ```ts
 // @Table: "users"
 interface IUser {
@@ -418,7 +418,18 @@ interface IUserAvatar {
   id: number; // @PK
   s3Path: string;
   userId: number; // @FK
-  imageSource?: string; // @NC
+  imageSource?: string; // @NaC
+}
+
+/**
+ * @TestOnly
+ */
+function getDummyUser() {
+  return {
+  id: randomInt(10),
+  name: 'John',
+  createdAt: new Date(),
+  updatedAt: new Date(), 
 }
 ```
 
@@ -447,12 +458,6 @@ interface IUserAvatar {
     {
         "tag": "@NaC",
         "color": "#7FBF6A",
-        "strikethrough": false,
-        "bold": true
-    },
-    {
-        "tag": "@TestingOnly",
-        "color": "#6A9955",
         "strikethrough": false,
         "bold": true
     }
