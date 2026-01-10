@@ -247,7 +247,7 @@ You can see a more thorough list of design rules [here](Design-Rules.md).
 <a id="enums"></a>
 #### `Enums`
 
-Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **readonly objects** instead with **declaration-merging** intead:
+Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **readonly objects** with **declaration-merging** intead:
 
 ```ts
 const UserRoles = {
