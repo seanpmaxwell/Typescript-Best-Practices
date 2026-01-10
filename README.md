@@ -383,3 +383,6 @@ Notes for all:
 - Projects don't have to strictly adhere to one paradigm or the other, use procedural where procedural makes the most sense and likewise for OOP.
 - OOP can be achieved either through **classes** or **factory-functions** although I prefer the former.
 - You can see a more thorough list of design rules [here](Design-Rules.md) to help you decide what feature/paradigm to use and when.
+
+### Documentation Tips
+- For interfaces which represent database-tables place an `@References: "tableName"` comment above the interface declaration.
