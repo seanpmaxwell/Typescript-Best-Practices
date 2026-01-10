@@ -56,8 +56,10 @@ So things are more clear down the line let's first clarify some terminology.
   - **readonly:** neither keys or values can change (typically done with `as const`)
  
 ### Functions
-- **embedded-functions:** functions declared in object literals
-- **validator-functions:** accept and unknown variable and return a type-predicate
+- **embedded-functions:** functions declared in object literals and the functionName is the object key.
+- **validator-functions:** accepts and unknown variable and returns a type-predicate
+- **function-declarations:** functions declared with `function functionName`.
+- **configured-functions:** functions returned from some other function call: `const parseUser = parseObject(UserSchema)`.
 
 <br/><b>***</b><br/>
 
@@ -189,8 +191,9 @@ Understand **type coercion**: when calling methods on primitives, JavaScript tem
 <a id="functions"></a>
 ### Functions
 
-- Prefer **function declarations** at the file level to take advantage of hoisting.
-- Use **arrow functions** for callbacks and inline logic.
+- Prefer **function-declarations** at the file level to take advantage of hoisting.
+- Use **arrow-functions** for callbacks and inline logic.
+- **configured-functions** should go above **function-declarations** in the functions section.
 
 ```ts
 function parentFn(param: string) {
@@ -198,8 +201,6 @@ function parentFn(param: string) {
   const childFn2 = (a, b) => doSomethingElse(a, b);
 }
 ```
-
-Use object-literal methods when `this` should refer to the object itself.
 
 ---
 
@@ -211,13 +212,13 @@ Objects are collections of key/value pairs created via:
 - Object literals
 - Classes
 - Enums
-
-Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
+- 
+> Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
 
 <a id="object-literals"></a>
 #### `Object Literals`
 
-Readonly object-literals are ideal for organizing related logic and are often preferable to classes.
+Readonly object-literals are ideal as namespaces and are often preferable to classes.
 
 ```ts
 export default {
@@ -233,16 +234,14 @@ OOP can be achieved in TypeScript/JavaScript with classes or factory-functions.
 
 People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
 
-- **Use a class** when you have an object with an internal state that needs to be modified after instantiation.
+- **Use a class** when you have an object with an internal state with functions which modify that internal state.
 - **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at instantiation** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
-- **Note:** I would also recommend avoiding **classes for handling IO data** (even when you feel tempted to use OOP), because this often leads to:
-  - Many unnecessary **constructor calls** to support dynamic behavior, or
-  - A large number of identical `public static` functions
-  - It doesn't fit the mental model for classes because values on a data item could be handled outside the class representing it. 
-    - For example, in `user.id` _id_ is probably set in the database not by the `user.setId()` function (unless copying it).
-  - A simpler approach is to handle IO data using **modular-object scripts** and describing data items with **interfaces**.
+- **Note:** I would also recommend avoiding classes for **handling IO data** (even when you feel tempted to use OOP), because this often leads to:
+  - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of identical `public static` functions
+  - IO-data should just be 'acted upon' not do things.
+  - Use **modular-object scripts** for handling IO-data and describe them with **interfaces**.
 
-You can see a more thorough list of design rules [here](Design-Rules.md). 
+> You can see a more thorough list of design rules [here](Design-Rules.md). 
 
 <a id="enums"></a>
 #### `Enums`
@@ -322,7 +321,7 @@ Notes for all:
 <a id="comments"></a>
 ## 💬 Comments
 
-- Place `/** */` above all function declarations.
+- Place `/** */` above all function-declarations always, `//` is okay for `configured-functions`.
 - Use `//` for inline explanations.
 - Capitalize and punctuate comments.
 - Separate logical regions clearly.
