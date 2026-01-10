@@ -384,5 +384,54 @@ Notes for all:
 - OOP can be achieved either through **classes** or **factory-functions** although I prefer the former.
 - You can see a more thorough list of design rules [here](Design-Rules.md) to help you decide what feature/paradigm to use and when.
 
-### Documentation Tips
-- For interfaces which describe database-tables place a `@References: "tableName"` comment above the interface declaration.
+### Database Type Tips
+
+#### Describing database tables
+
+##### `@Table`
+- Use interfaces to describe the raw dabase structure.
+- Place a `@Table: "tableName"` comment above the interface declaration.
+- For those of you using VSCode, there is the "Better Comments" extension so you can highlight this.
+- Install "Better Comments" and play the following in `settings.json`:
+```json
+    "better-comments.tags": [
+        {
+            "tag": "@Table",
+            "color": "#7FBF6A",
+            "strikethrough": false,
+            "bold": true
+        }
+    ]
+```
+
+#### `
+- Try to create new types for variations of the raw database-type instead of appending properties the original.
+- Although for simple/auxilliary tables an optional property is okay.
+- Make sure to document foreign/primary-keys with comments:
+- I like to use `// @NC` which stands for `Not a Column` to indicate properties which do not correspond to
+a database-column.
+```ts
+// @Table: "users"
+interface IUser {
+  id: number; // @PK
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// This is setup in the service layer
+interface IUserDTO extends IUser {
+  associates: IUser[]; // Place this here instead of IUser
+}
+
+// This is a simple auxilliary table so appending entries not
+// on the database table is okay.
+
+// @Table: "userAvatars"
+interface IUserAvatar {
+  id: number; // @PK
+  s3Path: string;
+  userId: number; // @FK
+  imageSource?: string; // @NC
+}
+```
