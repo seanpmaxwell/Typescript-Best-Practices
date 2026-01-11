@@ -1,8 +1,10 @@
 ## Script Examples
 
-### Modular Object
+### Namespace-Object
 
 ```ts
+// utils/MailUtils.ts
+
 // After we initialize the mailer, no further changes are needed
 const mailer = someThirdPartyMailerLib("your settings");
 
@@ -25,6 +27,8 @@ export default {
 ### Inventory
 
 ```tsx
+// common/components/buttons.tsx
+
 export function SubmitButton() {
   return <button>Submit</button>;
 }
@@ -43,6 +47,8 @@ export function CloseButton() {
 ### Linear Script
 
 ```ts
+// server.ts
+
 import express from 'express';
 
 const app = express(); 
@@ -61,7 +67,7 @@ export default app;
 ### Declaration
 
 ```typescript
-// ENV_VARS.ts
+// EnvVars.ts
 
 export default {
     port: process.env.PORT,
