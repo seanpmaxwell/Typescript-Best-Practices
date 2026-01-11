@@ -85,8 +85,10 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 - **Declaration**  
   Exports a single declared item (e.g., a large function, enum, or configuration object).
 
-- **Modular-Object**  
-  Exports a default object literal that groups closely related logic/readonly-values. Very handy as a namespace for stateless data/functions.
+- **Namespace-Object**  
+  Exports a default object-literal that groups closely related logic/readonly-values.
+
+> Note: the term **module** can be used interchangeably with a namespace-object-script's default export because in JavaScript, a module also refers to a file. So if we have a namespace-object-script called `User.ts` we could say (in referring to the default export) "that's the 'User module'" OR "that's the 'User namespace-object'". 
 
 - **Inventory**  
   Exports multiple independent declarations, such as shared types or small utility functions.
@@ -239,7 +241,7 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
 - **Note:** I would also recommend avoiding classes for **handling IO data** (even when you feel tempted to use OOP), because this often leads to:
   - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of identical `public static` functions
   - IO-data should just be 'acted upon' not do things.
-  - Use **modular-object scripts** for handling IO-data and describe them with **interfaces**.
+  - Use **namespace-object-scripts** for handling IO-data and describe the data-items with **interfaces**.
 
 > You can see a more thorough list of design rules [here](Design-Rules.md). 
 
@@ -287,7 +289,7 @@ interface IUser {
 - **Folders**: `kebab-case`
 - **Files**:
   - **Inventory / Linear scripts**: `kebab-case`
-  - **Modular object / Declaration scripts**: name it after the item being exported
+  - **Namespace-object / Declaration scripts**: name it after the item being exported
 - **Readonly**:
   - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
   - **Objects**:
@@ -314,7 +316,7 @@ Notes for all:
   - For a long variable-names that could be cumbersome to use, which persist heavily throughout your application, an abbreviation/acronym is probably okay; however, the core layer describing them (i.e. the database table and its interface) should refrain unless it's a well-establish acronym.
   - The more localized a name gets (i.e. just used once in a small function) the more you can abbreviate/"use-acronyms".
 
-> The modular-object script [User.ts](User.ts) has some good examples on standard naming conventions.
+> The namespace-object-script [User.ts](User.ts) has some good examples on standard naming conventions.
 
 <br/><b>***</b><br/>
 
@@ -352,7 +354,7 @@ Notes for all:
 ## 🤝 Organizing shared code
 - In a directory with shared content create a subfolder named `common/`.
 - Start off by adding the following files as needed
-  - `utils.ts`: logic that needs to be executed (standalone functions or modular-objects)
+  - `utils.ts`: logic that needs to be executed (standalone functions or namespace-object-scripts)
   - `constants.ts`: readonly items
   - `types.ts`: types only no values
   - Depending on the nature of your project you could have more. A react app for example could also include:
@@ -368,8 +370,7 @@ Notes for all:
 - If you have something that isn't shared but you don't want it to go in the file that it is used in for whatever reason create another subfolder called `aux/`and place it there.
   - `routes/`
     - `aux/`
-      - `postToPdf.ts` <-- Only used in the `PostRoutes.ts` file but large enough to separate out.
-    - `support/`
+      - `postToPdf.ts` <-- Only used in the `PostRoutes.ts` file, but large enough to separate out.
     - `PostRoutes.ts`
     - `UserRoutes.ts`
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
