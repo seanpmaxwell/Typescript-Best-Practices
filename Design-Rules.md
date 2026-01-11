@@ -2,7 +2,7 @@
 
 > While there are multiple approaches to doing OOP in TypeScript, to keep things simple and consistent, use procedural programming by default (and in most situations) and use classes for OOP. The following sections explain scenarios about when to use each with examples.
 
-> **Note:** there is a sub-paradigm of procedural programming called **procedural-modular** programming which means grouping functions together into some kinda of container (i.e. `namespace` keyword in C). Most large procedural applcations will use this as well. 
+> **Note:** there is a sub-paradigm of procedural programming called **procedural-modular** programming (PMP) which means grouping functions together into some kinda of container (i.e. `namespace` keyword in C). Most large procedural applcations will use this as well. 
 
 ---
 
@@ -69,8 +69,8 @@ function createLogger(level: "info" | "debug") {
 
 ---
 
-### ✅ Use a modular-object script (procedural-modular) when
-- The code is primarily IO or data transformation
+### ✅ Use a namespace-object-script when
+- The code is primarily IO or data-transformation
 - Operations are stateless or procedural
 - There is no instance identity at all
 - Classes would just end up acting as namespaces
