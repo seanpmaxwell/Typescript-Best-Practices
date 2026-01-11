@@ -322,6 +322,7 @@ Notes for all:
 ## 💬 Comments
 
 - Place `/** */` above all function-declarations always, `//` is okay for `configured-functions`.
+- Place a `@TestOnly` comment annotation for items not meant to be used in production. 
 - Use `//` for inline explanations.
 - Capitalize and punctuate comments.
 - Separate logical regions clearly.
@@ -390,18 +391,18 @@ Notes for all:
 
 ---
 
-### Documentation with _"comment-annotations"_ 
+### Working with databases
 - A **comment-annotation** is keyword in a comment that starts with `@`.
-- Use interfaces to describe the raw dabase structure.
-- Place a `@Table: "tableName"` comment above the interface declaration.
-- Try to create new types for variations of the raw database-type instead of appending properties the original.
+- Use interfaces to describe the raw database records with `/** */` comments above them like how you do with function-declarations.
+- Place a `@Table: table_name` comment above the interface declaration.
+- Try to create new types for variations of the raw database-record created at the API level instead of appending properties the original (i.e. `IUserDTO`).
 - Although for simple/auxilliary tables an optional property is okay.
 - Make sure to document foreign/primary-keys with comments (i.e `@PK` and `@FK`).
-- I like to use `// @NaC` which stands for `Not a Column` to indicate properties which do not correspond to
-a database-column:
-- Use `@TestOnly` for items not meant to be used in production. 
+- I like to use `// @NaC` which stands for `Not a Column` to indicate properties which do not correspond to a database-column.
 ```ts
-// @Table: "users"
+/**
+ * @Table: users
+ */
 interface IUser {
   id: number; // @PK
   name: string;
@@ -414,10 +415,11 @@ interface IUserDTO extends IUser {
   associates: IUser[]; // Place this here instead of IUser
 }
 
-// This is a simple auxilliary table so appending entries not
-// on the database table is okay.
-
-// @Table: "user_avatars"
+/**
+ * @Table: user_avatars
+ * This is a simple auxilliary table so appending entries not
+ * on the database table is okay.
+ */
 interface IUserAvatar {
   id: number; // @PK
   s3Path: string;
