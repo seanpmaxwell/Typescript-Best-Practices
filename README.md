@@ -49,11 +49,15 @@ It is designed to scale with real-world TypeScript applications.
 
 So things are more clear down the line let's first clarify some terminology.
 
-### Objects states
-- Objects can be **static**, **readonly**, or **dynamic**.
+### Objects
+
+- **States**: Objects can be **static**, **readonly**, or **dynamic**.
   - **static:** values can change but not keys (default for TypeScript)
   - **dynamic:** keys and values can change (default for JavaScript)
   - **readonly:** neither keys or values can change (typically done with `as const`)
+
+- **namespace-objects:** readonly object-literals used soley for organization
+- **lookup-table:** object-literal for storing related values and their labels (never functions)
  
 ### Functions
 - **embedded-functions:** functions declared in object literals and the functionName is the object key.
@@ -214,7 +218,6 @@ Objects are collections of key/value pairs created via:
 - Object literals
 - Classes
 - Enums
-- 
 > Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
 
 <a id="object-literals"></a>
@@ -238,7 +241,7 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
 
 - **Use a class** when you have an object with an internal state with functions which modify that internal state.
 - **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at instantiation** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
-- **Note:** I would also recommend avoiding classes for **handling IO data** (even when you feel tempted to use OOP), because this often leads to:
+- **Note:** I would also recommend avoiding classes for **handling IO-data** (even when you feel tempted to use OOP), because this often leads to:
   - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of identical `public static` functions
   - IO-data should just be 'acted upon' not do things.
   - Use **namespace-object-scripts** for handling IO-data and describe the data-items with **interfaces**.
@@ -248,7 +251,7 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
 <a id="enums"></a>
 #### `Enums`
 
-Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **readonly objects** with **declaration-merging** intead:
+Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **lookup-tables** with **declaration-merging** intead:
 
 ```ts
 const UserRoles = {
@@ -313,8 +316,8 @@ Notes for all:
   - Well-establish abbreviations (i.e. URL, API) and acronyms (i.e. Pwd, Req => Request) are usually okay.
   - Use **ALL CAPS** for well-established acronyms: i.e `insertIntoURL()`.
   - Avoid both when when doing `UPPER_SNAKE_CASE` unless it's a well-establish acronym.
-  - For a long variable-names that could be cumbersome to use, which persist heavily throughout your application, an abbreviation/acronym is probably okay; however, the core layer describing them (i.e. the database table and its interface) should refrain unless it's a well-establish acronym.
-  - The more localized a name gets (i.e. just used once in a small function) the more you can abbreviate/"use-acronyms".
+  - For a long variable-names that could be cumbersome to use (are used widely throughout your application) an abbreviation/acronym is probably okay; however, the core layer describing them (i.e. the database table and its interface) should refrain from doing so unless it's a well-establish acronym.
+  - The more localized a name gets (i.e. used just used once in a small function) the more you can abbreviate/use-acronyms.
 
 > The namespace-object-script [User.ts](User.ts) has some good examples on standard naming conventions.
 
