@@ -1,6 +1,6 @@
 ## Script Examples
 
-### Namespace-Object
+### Namespace-Object Script
 
 ```ts
 // utils/MailUtils.ts
@@ -24,7 +24,7 @@ export default {
 
 ---
 
-### Inventory
+### Inventory Script
 
 ```tsx
 // common/components/buttons.tsx
@@ -64,7 +64,7 @@ export default app;
 
 ---
 
-### Declaration
+### Declaration Script
 
 ```typescript
 // EnvVars.ts
