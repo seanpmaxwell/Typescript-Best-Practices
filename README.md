@@ -113,7 +113,9 @@ You can see a full list of script examples [here](Script-Examples.md).
 <br/><b>***</b><br/>
 
 <a id="file-organization"></a>
-## 🗂️ File Organization
+## 🗂️ Script Organization
+
+Heirarchy Summary: `Folders` (aka directories) -> `Files` (aka modules) -> `Regions` -> `Sections`.
 
 I would generally recommend breaking large files into `index.ts`, `types.ts`, and `constant.ts` files and group them together in a folder. This isn't always practical and probably is unnecessary for smaller files; however, all files large and small should still be organized into clearly defined regions:
 
@@ -137,14 +139,14 @@ Separate regions with:
 Regions can be divided further into sections:
 
 ```ts
-// ----------------------- Configured-Functions --------------------------- //
-
-const someConfiguredFn = createAsyncThunk(...do stuff);
-
-// ---------------------- Function-Declarations --------------------------- //
+// ---------------------- Accessor-Functions --------------------------- //
 
 function getUserName(userId: number) { isValidUser(id) ...do stuff }
 function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
+
+// ----------------------- Helper-Functions --------------------------- //
+
+function isValidUser(id: number) { ...do stuff }
 ```
 
 Comments in functions:
@@ -283,7 +285,7 @@ const basic: UserRoles = UserRoles.BASIC;
 - Place type aliases above interfaces.
 
 ```ts
-type Rolse = "basic" | "admin";
+type Roles = "basic" | "admin";
 
 interface IUser {
   id: number;
