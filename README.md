@@ -49,21 +49,29 @@ It is designed to scale with real-world TypeScript applications.
 
 So things are more clear down the line let's first clarify some terminology.
 
+### Lifecycles
+- **Compile-time:** Even though TypeScript is technically a _transpiled_ (not compiled) language when use the term **compile-time** to refer to period before a program starts.
+- **Runtime:** Everything that happens after compilation is runtime. Runtime can be futher divided into:
+  - **Startup-time:** When the application boots up.
+  - **Request-time:** Code runs in response to input (i.e. a user triggers and API call).
+
 ### Objects
-
 - **States**: Objects can be **static**, **readonly**, or **dynamic**.
-  - **static:** values can change but not keys (default for TypeScript)
-  - **dynamic:** keys and values can change (default for JavaScript)
-  - **readonly:** neither keys or values can change (typically done with `as const`)
-
-- **namespace-objects:** readonly object-literals used soley for organization
-- **lookup-table:** object-literal for storing related values and their labels (never functions)
+  - **static:** values can change but not keys (default for TypeScript).
+  - **dynamic:** keys and values can change (default for JavaScript).
+  - **readonly:** neither keys or values can change (typically done with `as const`).
+- **namespace-objects:** readonly object-literals used for organizing related code.
+- **lookup-table:** object-literal for storing related values and their labels (never functions).
  
 ### Functions
 - **embedded-functions:** functions declared in object literals and the functionName is the object key.
 - **validator-functions:** accepts and unknown variable and returns a type-predicate
 - **function-declarations:** functions declared with `function functionName`.
 - **configured-functions:** functions returned from some other function call: `const parseUser = parseObject(UserSchema)`.
+
+### Types
+- **type-aliases**: any time declared with `type TypeName = ...`.
+- **utility-types:** type-aliases with generics used for resolving other types.
 
 <br/><b>***</b><br/>
 
@@ -92,13 +100,13 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 - **Namespace-Object**  
   Exports a default object-literal that groups closely related logic/readonly-values.
 
-> Note: the term **module** can be used interchangeably with a namespace-object-script's default export because in JavaScript, a module also refers to a file. So if we have a namespace-object-script called `User.ts` we could say (in referring to the default export) "that's the 'User module'" OR "that's the 'User namespace-object'". 
+> Note: the term **module** can be used interchangeably with a namespace-object-script's default export, because in JavaScript a module also refers to a file. So if we have a namespace-object-script called `User.ts` we could say (in referring to the default export) "that's the 'User module'" OR "that's the 'User namespace-object'". 
 
 - **Inventory**  
   Exports multiple independent declarations, such as shared types or small utility functions.
 
 - **Linear**  
-  Executes a series of commands, often for setup or initialization.
+  Executes a series of commands, often for **startup-time** logic.
 
 You can see a full list of script examples [here](Script-Examples.md). 
 
@@ -188,7 +196,7 @@ JavaScript primitives include:
 
 `null`, `undefined`, `boolean`, `number`, `string`, `symbol`, and `bigint`.
 
-Understand **type coercion**: when calling methods on primitives, JavaScript temporarily wraps them in their object counterparts (`String`, `Number`, `Boolean`).
+Understand **type-coercion**: when calling methods on primitives, JavaScript temporarily wraps them in their object counterparts (`String`, `Number`, `Boolean`).
 
 `symbol` is particularly useful for defining unique object keys in shared or library code.
 
@@ -217,7 +225,7 @@ Objects are collections of key/value pairs created via:
 
 - Object literals
 - Classes
-- Enums
+- Enums 
 > Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
 
 <a id="object-literals"></a>
@@ -271,16 +279,16 @@ const basic: UserRoles = UserRoles.BASIC;
 ### Types
 
 - Prefer `interface` for object shapes.
-- Use `type` for unions, primitives, and utility types.
+- Use `type` for unions, primitives, and utility-types.
 - Place type aliases above interfaces.
 
 ```ts
-type Role = "basic" | "admin";
+type Rolse = "basic" | "admin";
 
 interface IUser {
   id: number;
   name: string;
-  role: Role;
+  role: Roles;
 }
 ```
 
