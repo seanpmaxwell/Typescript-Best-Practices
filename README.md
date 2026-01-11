@@ -326,7 +326,7 @@ Notes for all:
 <a id="comments"></a>
 ## 💬 Comments
 
-- Place `/** */` above all function-declarations always, `//` is okay for `configured-functions`.
+- Place `/** */` above all **function-declarations** always, `//` or no comment is okay for **configured-functions**.
 - Place a `@TestOnly` comment annotation for items not meant to be used in production. 
 - Use `//` for inline explanations.
 - Capitalize and punctuate comments.
