@@ -123,11 +123,11 @@ Separate regions with:
 Regions can be divided further into sections:
 
 ```ts
-// **** Configured Functions **** //
+// ----------------------- Configured-Functions --------------------------- //
 
 const someConfiguredFn = createAsyncThunk(...do stuff);
 
-// **** Function Declarations **** //
+// ---------------------- Function-Declarations --------------------------- //
 
 function getUserName(userId: number) { isValidUser(id) ...do stuff }
 function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
