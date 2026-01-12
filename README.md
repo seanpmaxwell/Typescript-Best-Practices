@@ -21,7 +21,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
     - [Object Literals](#object-literals)
     - [Classes](#classes)
     - [Enums](#enums)
-  - [Types](#types)
+  - [Types](#types-link)
 - [Naming Conventions](#naming-conventions)
 - [Comments](#comments)
 - [Imports](#imports)
@@ -314,7 +314,7 @@ const basic: UserRoles = UserRoles.BASIC;
 
 ---
 
-<a id="types"></a>
+<a id="types-link"></a>
 ### Types
 
 - Prefer `interface` for object shapes.
