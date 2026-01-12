@@ -119,15 +119,17 @@ You can see a full list of script examples [here](Script-Examples.md).
   1. `Folders` (aka directories)
   2. `Files` (aka modules)
   3. `Regions`
-  4. `Sections`.
+  4. `Sections`
+  5. `Blocks` (uncommon except in maybe linear scripts)
 
-#### Due to how hoisting works, regions in a file should be in this order top-to-bottom:
+#### Top-down ordering
+Due to how hoisting works, regions in a file should be in this order top-to-bottom:
   1. `Constants`  
   2. `Types`  
   3. `Setup / Execution` 
   4. `Components` (if applicable `.jsx` / `.tsx`)  
   5. `Functions`
-  6. `Exports` 
+  6. `Export` 
 
 Place `export default` at the **very bottom** of the file to make the public API immediately obvious.
 
@@ -139,10 +141,12 @@ Separate regions with:
 ******************************************************************************/
 ```
 
-Regions can be divided further into sections:
+**Regions** can be divided further into **sections**:
 
 ```ts
 // ---------------------- Accessor Functions --------------------------- //
+// Note: if you to add some comments for a Section or Region separator
+// place them here, directly below the separator.
 
 function getUserName(userId: number) { isValidUser(id) ...do stuff }
 function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
@@ -150,6 +154,30 @@ function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
 // ----------------------- Helper Functions --------------------------- //
 
 function isValidUser(id: number) { ...do stuff }
+```
+
+**Sections** can be divided into **blocks**:
+
+```ts
+// apiRouter.ts <-- Linear script
+
+// ----------------------- Add User Routes  --------------------------- //
+const loginRouter = Router.new();
+
+// -- Local Login -- //
+// Login with username and password
+
+const localRouter = Router.new();
+localRouter.use('/local', addUser);
+localRouter.use('/reset-passowrd-request', sendLink);
+
+loginRouter.use('/login', localRouter);
+
+// -- Google Login -- //
+// Login with Google credentials
+
+do stuff...
+
 ```
 
 > If you find your region/section separators getting off center over time there is the [center-comment-headers script](center-comment-headers.js) which can adjust them for you.
