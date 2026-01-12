@@ -135,25 +135,27 @@ Separate regions with:
 
 ```ts
 /******************************************************************************
-                        RegionName (i.e. Constants)
+                        "Region Name" (i.e. Constants)
 ******************************************************************************/
 ```
 
 Regions can be divided further into sections:
 
 ```ts
-// ---------------------- Accessor-Functions --------------------------- //
+// ---------------------- Accessor Functions --------------------------- //
 
 function getUserName(userId: number) { isValidUser(id) ...do stuff }
 function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
 
-// ----------------------- Helper-Functions --------------------------- //
+// ----------------------- Helper Functions --------------------------- //
 
 function isValidUser(id: number) { ...do stuff }
 ```
 
-> A nice bonus of having clearly defined regions is you'll feel less tempted to break up your files into (`types.ts`, `constants.ts` etc) unless they become really large.
 > If you find your region/section separators getting off center over time there is the [center-comment-headers script](center-comment-headers.js) which can adjust them for you.
+
+#### Linear Script Exception
+- For large linear scripts you don't necessarily have to place all constants in their own region and the top, but you should group linear scripts into sections and place constants at the top of their respective section.
 
 #### Comments in functions:
 - Generally you should not put spaces in functions and separate chunks of logic with a single inline comment.
