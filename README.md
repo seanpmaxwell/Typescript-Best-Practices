@@ -385,14 +385,8 @@ Notes for all:
       - `index.ts`
       - `StringUtils.ts`
     - `types.ts`
-- If you have something that isn't shared but you don't want it to go in the file that it is used in for whatever reason create another subfolder called `aux/`and place it there.
-  - `routes/`
-    - `aux/`
-      - `postToPdf.ts` <-- Only used in the `PostRoutes.ts` file, but large enough to separate out.
-    - `PostRoutes.ts`
-    - `UserRoutes.ts`
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
-- If `common/` or `aux/` are in a folder with a bunch of other folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend them with an `underscore` (i.e. `_common/`). 
+- If `common/` is in a folder with a bunch of other folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend them with an `underscore` (i.e. `_common/`). 
 
 <br/><b>***</b><br/>
 
