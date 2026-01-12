@@ -50,7 +50,7 @@ It is designed to scale with real-world TypeScript applications.
 So things are more clear down the line let's first clarify some terminology.
 
 ### Lifecycles
-- **Compile-time:** Even though TypeScript is technically a _transpiled_ (not compiled) language when use the term **compile-time** to refer to period before a program starts.
+- **Compile-time:** Even though TypeScript is technically a _transpiled_ (not compiled) language we still use the term **compile-time** to refer to period before a program starts.
 - **Runtime:** Everything that happens after compilation is runtime. Runtime can be futher divided into:
   - **Startup-time:** When the application boots up.
   - **Request-time:** Code runs in response to input (i.e. a user triggers and API call).
