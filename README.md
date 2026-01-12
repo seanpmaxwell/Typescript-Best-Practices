@@ -126,12 +126,14 @@ You can see a full list of script examples [here](Script-Examples.md).
 Due to how hoisting works, regions in a file should be in this order top-to-bottom:
   1. `Constants`  
   2. `Types`  
-  3. `Setup / Execution` 
+  3. `Run (or Setup)` (if it runs at start-up time I like to say "Setup" but if it's at request-time I'll say "Run") 
   4. `Components` (if applicable `.jsx` / `.tsx`)  
   5. `Functions`
-  6. `Export` 
+  6. `Classes`
+  7. `Export` 
 
-Place `export default` at the **very bottom** of the file to make the public API immediately obvious.
+- Place `export default` at the **very bottom** of the file to make the public API immediately obvious.
+- Classes generally should go in their own file but small locally used ones are okay. 
 
 Separate regions with:
 
@@ -177,17 +179,16 @@ loginRouter.use('/login', localRouter);
 // Login with Google credentials
 
 do stuff...
-
 ```
 
 > If you find your region/section separators getting off center over time there is the [center-comment-headers script](center-comment-headers.js) which can adjust them for you.
 
 #### Linear Script Exception
-- For large linear scripts you don't necessarily have to place all constants in their own region and the top, but you should group linear scripts into sections and place constants at the top of their respective section.
+- For large linear scripts you don't necessarily have to place all constants in their own region and the top, but you should group large linear scripts into **sections** and place constants at the top of their respective **section**.
 
 #### Comments in functions:
 - Generally you should not put spaces in functions and separate chunks of logic with a single inline comment.
-- If you have a really large function that can't can't be broken up (i.e. React Component or a linear script with a bunch of async/await line) the you can further separate functions with a space and `// ** "Info" ** //`
+- If you have a really large function that can't can't be broken up (i.e. React Component) the you can further separate functions with a space and `// ** "Info" ** //`
 
 ```ts
 /**
