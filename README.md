@@ -115,13 +115,13 @@ You can see a full list of script examples [here](Script-Examples.md).
 <a id="file-organization"></a>
 ## 🗂️ Script Organization
 
-Project heirarchy summery: 
+#### Project heirarchy summery: 
   1. `Folders` (aka directories)
   2. `Files` (aka modules)
   3. `Regions`
   4. `Sections`.
 
-Due to how hoisting works, regions in a file should be in this order top-to-bottom:
+#### Due to how hoisting works, regions in a file should be in this order top-to-bottom:
   1. `Constants`  
   2. `Types`  
   3. `Setup / Execution` 
@@ -154,7 +154,7 @@ function isValidUser(id: number) { ...do stuff }
 
 > A nice bonus of having clearly defined regions is you'll feel less tempted to break you files up just because they grow larger.
 
-Comments in functions:
+#### Comments in functions:
 - Generally you should not put spaces in functions and separate chunks of logic with a single inline comment.
 - If you have a really large function that can't can't be broken up (i.e. React Component or a linear script with a bunch of async/await line) the you can further separate functions with a space and `// ** "Info" ** //`
 
