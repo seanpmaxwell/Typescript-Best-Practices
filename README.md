@@ -152,7 +152,8 @@ function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
 function isValidUser(id: number) { ...do stuff }
 ```
 
-> A nice bonus of having clearly defined regions is you'll feel less tempted to break you files up just because they grow larger.
+> A nice bonus of having clearly defined regions is you'll feel less tempted to break up your files into (`types.ts`, `constants.ts` etc) unless they become really large.
+> If you find your region/section separators getting off center over time there is the [center-comment-headers script](center-comment-headers.js) which can adjust them for you.
 
 #### Comments in functions:
 - Generally you should not put spaces in functions and separate chunks of logic with a single inline comment.
