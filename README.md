@@ -115,16 +115,19 @@ You can see a full list of script examples [here](Script-Examples.md).
 <a id="file-organization"></a>
 ## 🗂️ Script Organization
 
-Heirarchy Summary: `Folders` (aka directories) -> `Files` (aka modules) -> `Regions` -> `Sections`.
+Project heirarchy summery: 
+  1. `Folders` (aka directories)
+  2. `Files` (aka modules)
+  3. `Regions`
+  4. `Sections`.
 
-I would generally recommend breaking large files into `index.ts`, `types.ts`, and `constant.ts` files and group them together in a folder. This isn't always practical and probably is unnecessary for smaller files; however, all files large and small should still be organized into clearly defined regions:
-
-1. Constants  
-2. Types  
-3. Setup / Execution  
-4. Components (`.jsx` / `.tsx`)  
-5. Functions
-6. Exports  
+Due to how hoisting works, regions in a file should be in this order top-to-bottom:
+  1. `Constants`  
+  2. `Types`  
+  3. `Setup / Execution` 
+  4. `Components` (if applicable `.jsx` / `.tsx`)  
+  5. `Functions`
+  6. `Exports` 
 
 Place `export default` at the **very bottom** of the file to make the public API immediately obvious.
 
@@ -148,6 +151,8 @@ function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
 
 function isValidUser(id: number) { ...do stuff }
 ```
+
+> A nice bonus of having clearly defined regions is you'll feel less tempted to break you files up just because they grow larger.
 
 Comments in functions:
 - Generally you should not put spaces in functions and separate chunks of logic with a single inline comment.
