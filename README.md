@@ -36,14 +36,20 @@ So things are more clear down the line let's first clarify some terminology.
 
 ### Projects/Packages
 - **Package**: any JavaScript/TypeScript project with a `package.json` is a **package**.
-- **Applications**: packages mean to be executed (the final thing called with `node main."js/ts"`).
+- **Applications**: packages mean to be executed.
 - **Library**: shared packages to be used by applications or other libraries.
 
 ### Files/Folders
-- **nested-directory**: a directory other than the root.
-- **branch-directory**: a nested-directory with a broad focus and which has lots of its own child-directories.
-- **leaf-directory**: a nested-directory with no nested-directories
+- **root**: The highest level folder in a package.
+- **branch-directory**: a directory other than the root with a broad focus and multiple nested directories of its own.
+- **leaf-directory**: a directory with no nested-directories
 - **focused-directory**: a nested-directory with a very narrow scope and purpose and is often a **leaf-directory** although not necessarily.
+- Example:
+  1. "package name"/ <--root
+  2.  "src/" <-- branch
+  3.  "components/" <-- branch
+  4.  "Login/" <-- focused
+  5.  "internal/" <-- leaf 
 
 ### Lifecycles
 - **Compile-time:** Even though TypeScript is technically a _transpiled_ (not compiled) language we still use the term **compile-time** to refer to period before a program starts.
@@ -548,7 +554,7 @@ function getDummyUser() {
 
 #### Server-Side Architecture
 
-Use **layered-based** architecure for simple (single developer) applications:
+Use **layer** based architecture for simple (single developer) applications:
   - Easier mental map
   - Folder names show clear intent
   - Doesn't scale well though
@@ -574,7 +580,7 @@ Use **layered-based** architecure for simple (single developer) applications:
 - tsconfig.json
 ```
 
-Use **feature-based** architecure for large applications:
+Use **domain (aka feature)** based architecture for large applications:
   - Scales better
   - Less risk of circular dependencies
   - Avoids bloated services layer
@@ -582,27 +588,39 @@ Use **feature-based** architecure for large applications:
   - Intent less clear for smaller projects and demos/tutorials
 
 ```markdown
-- tests/
+- config/
 - src/
-  - config/
-  - users/
-    - UserRepo.ts
-    - UserRoutes.ts
-    - UserServices.ts
-    - UserBlobUtils.ts <-- Created later: for uploading avatar to blob storage. 
-  - posts/
-    - PostRepo.ts
-    - PostRoutes.ts
-    - PostServices.ts
+  - common/
+  - domain/
+    - users/
+      - internal/
+        - UserBlobUtils.ts <-- Created later: for uploading avatar to blob storage. 
+      - UserRepo.ts
+      - UserServices.ts
+      - UserController.ts
+    - posts/
+      - PostRepo.ts
+      - PostServices.ts
+      - PostController.ts
+  - infra/
+    - db.ts
+  - routers/
+    - middleware/
+    - user.router.ts
+    - post.router.ts
+    - api.ts
   - main.ts
   - server.ts
+- tests/
+  - users.test.ts
+  - posts.test.ts
 - package.json
 - tsconfig.json
 ```
 
 ##### Keys points from examples above
 - In the above **layer-based** example, you can see that when we needed to add another module for `UserServices`, we had to add a folder to the services layer, move UserServices.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service layer domains.
-- You might be wondering why we gave the domain files names like `UserRepo.ts` instead of `User.repo.ts`/`user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section.
+- You might be wondering why we gave the domain files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section. Except for the files ending in `*.router.ts`, which are linear scripts for adding controller functions to an express `Router()` instance and then returning that instance to 
 
 
 #### Client-Side Architecture
