@@ -68,6 +68,7 @@ So things are more clear down the line let's first clarify some terminology.
 - **validator-functions:** accepts and unknown variable and returns a type-predicate
 - **function-declarations:** functions declared with `function functionName`.
 - **configured-functions:** functions returned from some other function call: `const parseUser = parseObject(UserSchema)`.
+- **utilities:** either standalone functions or **namespace-object-scripts** (see [Script Types)[#script-types] section below) for grouping related functions.
 
 ### Types
 - **type-aliases**: any time declared with `type TypeName = ...`.
@@ -405,7 +406,7 @@ Notes for all:
 - In a directory with shared content create a subfolder named `common/`.
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
 - If `common/` is in a folder with a bunch of other sibling folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend them with an `underscore` (i.e. `_common/`).
-- Within `_common/` it's okay to create folders like `constants/`, `types/`, utils/` but do not name files after these, for files these are dumping ground names: file names should always imply clear intent: (i.e. `_common/utility-types.ts`).
+- Within `_common/` it's okay to create folders like `constants/`, `types/`, utils/` but **DO NOT** give files names which could be ambiguous. For files, names like `shared/`, `utils`, etc are dumping ground names: file names should always imply clear intent: (i.e. `_common/utility-types.ts`).
 
 <br/><b>***</b><br/>
 
