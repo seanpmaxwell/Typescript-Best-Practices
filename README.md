@@ -404,8 +404,8 @@ Notes for all:
 ## 🤝 Organizing shared code
 - In a directory with shared content create a subfolder named `common/`.
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
-- If `common/` is in a folder with a bunch of other folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend them with an `underscore` (i.e. `_common/`).
-- Add files to `common/` as needed but avoid file names like `types.ts` or `utils.ts` as these could also become dumping grounds. File names should imply clear intent: (i.e. `_common/utility-types.ts`).
+- If `common/` is in a folder with a bunch of other sibling folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend them with an `underscore` (i.e. `_common/`).
+- Within `_common/` it's okay to create folders like `constants/`, `types/`, utils/` but do not name files after these, for files these are dumping ground names: file names should always imply clear intent: (i.e. `_common/utility-types.ts`).
 
 <br/><b>***</b><br/>
 
