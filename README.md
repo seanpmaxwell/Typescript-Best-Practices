@@ -627,7 +627,7 @@ This could vary depending on your framework but I'll share what I like to use fo
 
 **Important:**
   - Make sure your `components/` folder is organized how one would navigate to them in the browser
-  - i.e `https:your-domain.com/login/reset-password` will be rendered by `src/components/Login/ResetPassword.tsx`
+    - i.e `https:your-domain.com/login/reset-password` will be rendered by `src/components/Login/ResetPassword.tsx`
 
 ```markdown
 - src/
