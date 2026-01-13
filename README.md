@@ -120,7 +120,16 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 - **Linear**  
   Executes a series of commands, often for **startup-time** logic.
 
-You can see a full list of script examples [here](Script-Examples.md). 
+You can see a full list of script examples [here](Script-Examples.md).
+
+#### Namespace-object-scripts are great for organization
+I believe that for organzing the backbone of logic (both server and client-side, with the exception of JSX elements of course), namespace-object scripts are a much better than classes or inventory-scripts.
+
+Reasons:
+- That way we only need one import at the top
+- It's easier differentiate between public and helper functions
+- We don't end up with name conflicts for two modules which have the same name for a function that is exported.
+- Classes should not be used as namespaces: see the [Classes](#classes) section.
 
 <br/><b>***</b><br/>
 
@@ -510,7 +519,6 @@ function getDummyUser() {
 }
 ```
 
-// TODO
 ### Architecture
 
 #### Server-Side
@@ -518,16 +526,62 @@ function getDummyUser() {
 Use **layered-based** architecure for simple (single developer) applications:
   - Easier mental map
   - Folder names show clear intent
+  - Doesn't scale well though
+
+```markdown
+- tests/
+- src/
+  - config/
+  - repos/
+    - UserRepos.ts
+    - PostRepos.ts
+  - routes/ (aka controllers)
+    - UserRoutes.ts
+    - PostRoutes.ts
+  - services/
+    - UserServices/
+      - UserServices.ts
+      - UserBlobUtils.ts <-- Created later: for uploading avatar to blob storage.
+    - PostServices.ts
+  - main.ts
+  - server.ts
+```
 
 Use **feature-based** architecure for large applications:
   - Scales better
   - Less risk of circular dependencies
   - Avoid bloated services layer
   - Avoid merge-conflicts
+  - Intent less clear for smaller projects and demos/tutorials
+
+```markdown
+- tests/
+- src/
+  - config/
+  - users/
+    - UsersRepo.ts
+    - UserRoutes.ts
+    - UserServices.ts
+    - UserBlobUtils.ts <-- Created later: for uploading avatar to blob storage. 
+  - posts/
+    - PostRepo.ts
+    - PostRoutes.ts
+    - PostServices.ts
+  - main.ts
+  - server.ts
+```
+
+In the above **layer-based** example, you can see that when we needed to add another module for UserServices, we had to add a folder to the services layer, move UserServices.ts inside of it, and now for the root of the `services/` folder we have a mixture of files and folders.
+
+You might be wondering why we gave the domain files names like `UserRepo.ts` instead of `User.repo.ts`. That's because these are **namespace-object-scripts** not **inventory-scripts**. 
 
 #### Client-Side
 
 This could vary widely depending on your framework but I'll go over what I like to use for React:
 
-For simple applications/static websites I used the directory structure as is by the generating framework 
+#### Smaller projects
+For simple applications/static websites I used the directory structure as is by the generating framework
+
+#### Large projects
+
 
