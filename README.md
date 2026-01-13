@@ -342,7 +342,9 @@ interface IUser {
   - **Inventory / Linear scripts**: `kebab-case`
   - **Namespace-object / Declaration scripts**: name it after the item being exported
   - For a bunch of sibling files using `keybab-case`, repeat hyphenated chunks can be moved to `.`:
-    - `user-utils.ts` and `user-types.ts` => `user.utils.ts` and `user.types.ts` 
+    - i.e. `user-utils.ts` and `user-types.ts` => `user.utils.ts` and `user.types.ts`
+  - Reserve the filename `index.ts` for **barrel-files**. Barrel-files are for creating a single entry point for a folder.
+  - Use the filename `main.ts` for a file meant to be the starting point for an application (in contrast to libraries). 
 - **Readonly**:
   - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
   - **Objects**:
