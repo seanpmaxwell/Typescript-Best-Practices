@@ -403,22 +403,9 @@ Notes for all:
 <a id="organizing-shared-code"></a>
 ## 🤝 Organizing shared code
 - In a directory with shared content create a subfolder named `common/`.
-- Start off by adding the following files as needed
-  - `utils.ts`: logic that needs to be executed (standalone functions or namespace-object-scripts)
-  - `constants.ts`: readonly items
-  - `types.ts`: types only no values
-  - Depending on the nature of your project you could have more. A react app for example could also include:
-    - `components/`
-    - `hooks/`
-- If any of these files becomes too large, create a folder of the same name, rename the file to `index.ts` and place it there along with its adjacent content:
-  - `common/`
-    - `constants.ts`
-    - `utils/` <-- `utils.ts` grew too large so we separated it into `index.ts` and `StringUtils.ts`
-      - `index.ts`
-      - `StringUtils.ts`
-    - `types.ts`
 - Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
-- If `common/` is in a folder with a bunch of other folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend them with an `underscore` (i.e. `_common/`). 
+- If `common/` is in a folder with a bunch of other folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend them with an `underscore` (i.e. `_common/`).
+- Add files to `common/` as needed but avoid file names like `types.ts` or `utils.ts` as these could also become dumping grounds. File names should imply clear intent: (i.e. `_common/utility-types.ts`).
 
 <br/><b>***</b><br/>
 
