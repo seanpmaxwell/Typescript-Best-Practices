@@ -49,6 +49,11 @@ It is designed to scale with real-world TypeScript applications.
 
 So things are more clear down the line let's first clarify some terminology.
 
+### Projects/Packages
+- **Package**: any JavaScript/TypeScript project with a `package.json` is a **package**.
+- **Applications**: packages mean to be executed (the final thing called with `node main."js/ts"`).
+- **Library**: shared packages to be used by applications or other libraries. 
+
 ### Lifecycles
 - **Compile-time:** Even though TypeScript is technically a _transpiled_ (not compiled) language we still use the term **compile-time** to refer to period before a program starts.
 - **Runtime:** Everything that happens after compilation is runtime. Runtime can be futher divided into:
@@ -73,6 +78,12 @@ So things are more clear down the line let's first clarify some terminology.
 ### Types
 - **type-aliases**: any time declared with `type TypeName = ...`.
 - **utility-types:** type-aliases with generics used for resolving other types.
+
+### Files/Folders
+- **nested-directory**: a directory other than the root.
+- **branch-directory**: a nested-directory with a broad focus and which has lots of its own child-directories.
+- **leaf-directory**: a nested-directory with no nested-directories
+- **focused-directory**: a nested-directory with a very narrow scope and purpose and is usually a leaf-directory although not necessarily.
 
 <br/><b>***</b><br/>
 
@@ -339,12 +350,16 @@ interface IUser {
 
 - **Folders**: `kebab-case`
 - **Files**:
-  - **Inventory / Linear scripts**: `kebab-case`
-  - **Namespace-object / Declaration scripts**: name it after the item being exported
-  - For a bunch of sibling files using `keybab-case`, repeat hyphenated chunks can be moved to `.`:
-    - i.e. `user-utils.ts` and `user-types.ts` => `user.utils.ts` and `user.types.ts`
-  - Reserve the filename `index.ts` for **barrel-files**. Barrel-files are for creating a single entry point for a folder.
-  - Use the filename `main.ts` for a file meant to be the starting point for an application (in contrast to libraries). 
+  - **Linear scripts**: `kebab-case`
+  - **Namespace-object scripts / Declaration scripts**: name it after the item being exported
+  - **Inventory**
+    - Default to `kebab-case` but the name can be more nuanced depending on context.
+    - For inventory-scripts in **branch-directories** (see (Terminology)[#terminology] above) kebab-case usually makes sense.
+    - For **focused-directories** see the (Organizing Shared Code)[#organizing-shared-code] section below.
+  - **index.ts** and **main.ts** 
+    - Reserve the filename `index.ts` for **barrel-files**. Barrel-files are for creating a single entry point for a folder.
+    - Use the filename `main.ts` for a file meant to be the starting point of an application (in contrast to a library).
+    - Think of `index.ts` as usually the entry point for libraries and `main.ts` the starting point for applications. 
 - **Readonly**:
   - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
   - **Objects**:
@@ -406,10 +421,30 @@ interface IUser {
 
 <a id="organizing-shared-code"></a>
 ## 🤝 Organizing shared code
-- In a directory with shared content create a subfolder named `common/`.
-- Try to avoid giving folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
-- If `common/` is in a folder with a bunch of other sibling folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend them with an `underscore` (i.e. `_common/`).
-- Within `_common/` it's okay to create folders like `constants/`, `types/`, `utils/` but **DO NOT** use files names which could be ambiguous. For files, names like `shared/`, `utils`, etc are dumping ground names: file names should always imply clear intent: (i.e. `_common/utility-types.ts`).
+- In a **branch-directory** with shared content create a subfolder named `common/`.
+- Try to avoid using folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
+- If `common/` is in a folder with a bunch of other sibling folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend it with an `underscore` (i.e. `_common/`).
+- Within `_common/` it's okay to group files into folder categories like `constants/`, `types/`, `utils/` but for files **DO NOT** use names which could be ambiguous. For files, names like `shared.ts`, `utils.ts`, etc are dumping-ground names: filenames should always demonstrate clear intent: (i.e. `_common/utility-types.ts`).
+- Let's consider **utils**, **types**, and **constants** the 3 main **common-categories**:
+  - **utils** either standalone functions in inventory-scripts or namespace-object-scripts for grouping related functions.
+  - **constants**: organzing readonly values or but can also include simple functions with basic parsing (function which returns an error message string while inserting a username into it).
+  - **types**: storing only compile-time items (type-aliases and interfaces, never runtime items).
+  - **components:** 4 category **components** for those working with JSX elements.
+
+### Organzing shared code in focused-directories
+- Don't create folders named `common/` under focused-directories.
+- There might be scenarios where you need an inventory-script in a focused-directory (i.e. `pages/Login/some-shared-home-components.ts` in a React app). 
+- For inventory-scripts the default is to use `kebab-case` but for **focused-directory inventory-scripts** what demonstrats clear intent is to use the domain-name followed by what's being exported:
+  - `Login/`
+    - `dialogs/` 
+      - `ForgotPasswordDialog.tsx`
+      - `SignupInsteadDialog.tsx`
+    - `Login.tsx`
+    - `Login.test.tsx`
+    - `Login.shared.tsx` <-- Stores JSX elements needed by both the `Login` component and the `ForgotPasswordDialog` component.
+    - `Login.utils.ts`
+
+> In the previous example, you might be wondering why we did `Login.shared.tsx` when I said not to used the name `shared`. Because this is a focused directory and we prepended the "domain name" `.shared` is okay. But here we are only doing this for JSX components because with the name `Login.components.tsx`, it could be unclear whether this contains all Login components (like the ones in `Login.tsx`) or just the shared ones.
 
 <br/><b>***</b><br/>
 
@@ -452,7 +487,7 @@ interface IUserDTO extends IUser {
 }
 
 /**
- * @Table: user_avatars
+ * @Table user_avatars
  * This is a simple auxilliary table so appending entries not
  * on the database table is okay.
  */
@@ -474,3 +509,25 @@ function getDummyUser() {
   updatedAt: new Date(), 
 }
 ```
+
+// TODO
+### Architecture
+
+#### Server-Side
+
+Use **layered-based** architecure for simple (single developer) applications:
+  - Easier mental map
+  - Folder names show clear intent
+
+Use **feature-based** architecure for large applications:
+  - Scales better
+  - Less risk of circular dependencies
+  - Avoid bloated services layer
+  - Avoid merge-conflicts
+
+#### Client-Side
+
+This could vary widely depending on your framework but I'll go over what I like to use for React:
+
+For simple applications/static websites I used the directory structure as is by the generating framework 
+
