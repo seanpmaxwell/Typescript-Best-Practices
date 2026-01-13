@@ -12,8 +12,6 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Philosophy](#philosophy)
 - [Terminology](#terminology)
 - [Fundamental Concepts](#fundamental-concepts)
-- [Script Types](#script-types)
-- [File Organization](#file-organization)
 - [Core Language Features](#core-language-features)
   - [Primitives](#primitives)
   - [Functions](#functions)
@@ -22,6 +20,8 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
     - [Classes](#classes)
     - [Enums](#enums)
   - [Types](#types-link)
+- [Script Types](#script-types)
+- [File Organization](#file-organization)
 - [Naming Conventions](#naming-conventions)
 - [Comments](#comments)
 - [Imports](#imports)
@@ -73,7 +73,7 @@ So things are more clear down the line let's first clarify some terminology.
 - **validator-functions:** accepts and unknown variable and returns a type-predicate
 - **function-declarations:** functions declared with `function functionName`.
 - **configured-functions:** functions returned from some other function call: `const parseUser = parseObject(UserSchema)`.
-- **utilities:** either standalone functions or **namespace-object-scripts** (see [Script Types)[#script-types] section below) for grouping related functions.
+- **utilities:** either standalone functions or **namespace-object scripts** (see [Script Types)[#script-types] section below) for grouping related functions.
 
 ### Types
 - **type-aliases**: any time declared with `type TypeName = ...`.
@@ -83,7 +83,7 @@ So things are more clear down the line let's first clarify some terminology.
 - **nested-directory**: a directory other than the root.
 - **branch-directory**: a nested-directory with a broad focus and which has lots of its own child-directories.
 - **leaf-directory**: a nested-directory with no nested-directories
-- **focused-directory**: a nested-directory with a very narrow scope and purpose and is usually a leaf-directory although not necessarily.
+- **focused-directory**: a nested-directory with a very narrow scope and purpose and is often a **leaf-directory** although not necessarily.
 
 <br/><b>***</b><br/>
 
@@ -101,6 +101,116 @@ These concepts form the foundation of all JavaScript and TypeScript programs. Ma
 
 <br/><b>***</b><br/>
 
+<a id="core-language-features"></a>
+## 🛠️ Core Language Features
+
+<a id="primitives"></a>
+### Primitives 
+
+JavaScript primitives include:
+
+`null`, `undefined`, `boolean`, `number`, `string`, `symbol`, and `bigint`.
+
+Understand **type-coercion**: when calling methods on primitives, JavaScript temporarily wraps them in their object counterparts (`String`, `Number`, `Boolean`).
+
+`symbol` is particularly useful for defining unique object keys in shared or library code.
+
+---
+
+<a id="functions"></a>
+### Functions
+
+- Prefer **function-declarations** at the file level to take advantage of hoisting.
+- Use **arrow-functions** for callbacks and inline logic.
+- **configured-functions** should go above **function-declarations** in the functions section: see [File Organization](#file-organization).
+
+```ts
+const 
+
+function parentFn(param: string) {
+  const childFn = value => doSomething(value);
+  const childFn2 = (a, b) => doSomethingElse(a, b);
+}
+```
+
+---
+
+<a id="objects"></a>
+### Objects
+
+Objects are collections of key/value pairs created via:
+
+- Object literals
+- Classes
+- Enums 
+> Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
+
+<a id="object-literals"></a>
+#### `Object Literals`
+
+Readonly object-literals are ideal as namespaces and are often preferable to classes.
+
+```ts
+export default {
+  someFunction,
+  someOtherFunction,
+} as const;
+```
+
+<a id="classes"></a>
+#### `Classes`
+
+OOP can be achieved in TypeScript/JavaScript with classes or factory-functions.
+
+People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
+
+- **Use a class** when you have an object with an internal state with functions which modify that internal state.
+- **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at instantiation** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
+- **Note:** I would also recommend avoiding classes for **handling IO-data** (even when you feel tempted to use OOP), because this often leads to:
+  - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of identical `public static` functions
+  - IO-data should just be 'acted upon' not do things.
+  - Use **namespace-object scripts** for handling IO-data and describe the data-items with **interfaces**.
+
+> You can see a more thorough list of design rules [here](Design-Rules.md). 
+
+<a id="enums"></a>
+#### `Enums`
+
+Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **lookup-tables** with **declaration-merging** intead:
+
+```ts
+const UserRoles = {
+  BASIC: 0,
+  ADMIN: 1,
+  OWNER: 2,
+} as const;
+
+type UserRoles = typeof UserRoles[typeof UserRoles]; // 0 | 1 | 2
+
+const basic: UserRoles = UserRoles.BASIC;
+```
+
+---
+
+<a id="types-link"></a>
+### Types
+
+- Prefer `interface` for object shapes.
+- Use `type` for unions, primitives, and utility-types.
+- Place type aliases above interfaces.
+
+```ts
+type Roles = "basic" | "admin";
+
+interface IUser {
+  id: number;
+  name: string;
+  role: Roles;
+}
+```
+
+<br/><b>***</b><br/>
+
 <a id="script-types"></a>
 ## 📄 Script Types
 
@@ -112,7 +222,7 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 - **Namespace-Object**  
   Exports a default object-literal that groups closely related logic/readonly-values.
 
-> Note: the term **module** can be used interchangeably with a namespace-object-script's default export, because in JavaScript a module also refers to a file. So if we have a namespace-object-script called `User.ts` we could say (in referring to the default export) "that's the 'User module'" OR "that's the 'User namespace-object'". 
+> Note: the term **module** can be used interchangeably with a namespace-object script's default export, because in JavaScript a module also refers to a file. So if we have a namespace-object script called `User.ts` we could say (in referring to the default export) "that's the 'User module'" OR "that's the 'User namespace-object'". 
 
 - **Inventory**  
   Exports multiple independent declarations, such as shared types or small utility functions.
@@ -122,19 +232,19 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 
 You can see a full list of script examples [here](Script-Examples.md).
 
-#### Namespace-object-scripts are great for organization
-I believe that for organzing the backbone of logic (both server and client-side, with the exception of JSX elements of course), namespace-object scripts are a much better than classes or inventory-scripts.
+#### Namespace-object scripts are great for organization
+I believe that for the backbone of all application logic, which is static after startup-time (both server and client-side, with the exception of JSX elements), namespace-object scripts are preferred.
 
 Reasons:
 - That way we only need one import at the top
-- It's easier differentiate between public and helper functions
-- We don't end up with name conflicts for two modules which have the same name for a function that is exported.
+- Less likely to accidentally export helper functions.
+- Less likely to have naming conflicts for exported functions.
 - Classes should not be used as namespaces: see the [Classes](#classes) section.
 
 <br/><b>***</b><br/>
 
 <a id="file-organization"></a>
-## 🗂️ Script Organization
+## 🗂️ File (script) Organization
 
 #### Project heirarchy summery: 
   1. `Folders` (aka directories)
@@ -199,13 +309,13 @@ loginRouter.use('/login', localRouter);
 // -- Google Login -- //
 // Login with Google credentials
 
-do stuff...
+more stuff...
 ```
 
 > If you find your region/section separators getting off center over time there is the [center-comment-headers script](center-comment-headers.js) which can adjust them for you.
 
 #### Linear Script Exception
-- For large linear scripts you don't necessarily have to place all constants in their own region and the top, but you should group large linear scripts into **sections** and place constants at the top of their respective **section**.
+- For large linear scripts, you don't necessarily have to place all constants in their own region and the top, but you should group large linear scripts into **sections** and place constants at the top of their respective section/block.
 
 #### Comments in functions:
 - Generally you should not put spaces in functions and separate chunks of logic with a single inline comment.
@@ -246,129 +356,22 @@ function normalFunction() {
 
 <br/><b>***</b><br/>
 
-<a id="core-language-features"></a>
-## 🛠️ Core Language Features
-
-<a id="primitives"></a>
-### Primitives 
-
-JavaScript primitives include:
-
-`null`, `undefined`, `boolean`, `number`, `string`, `symbol`, and `bigint`.
-
-Understand **type-coercion**: when calling methods on primitives, JavaScript temporarily wraps them in their object counterparts (`String`, `Number`, `Boolean`).
-
-`symbol` is particularly useful for defining unique object keys in shared or library code.
-
----
-
-<a id="functions"></a>
-### Functions
-
-- Prefer **function-declarations** at the file level to take advantage of hoisting.
-- Use **arrow-functions** for callbacks and inline logic.
-- **configured-functions** should go above **function-declarations** in the functions section.
-
-```ts
-function parentFn(param: string) {
-  const childFn = value => doSomething(value);
-  const childFn2 = (a, b) => doSomethingElse(a, b);
-}
-```
-
----
-
-<a id="objects"></a>
-### Objects
-
-Objects are collections of key/value pairs created via:
-
-- Object literals
-- Classes
-- Enums 
-> Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
-
-<a id="object-literals"></a>
-#### `Object Literals`
-
-Readonly object-literals are ideal as namespaces and are often preferable to classes.
-
-```ts
-export default {
-  someFunction,
-  someOtherFunction,
-} as const;
-```
-
-<a id="classes"></a>
-#### `Classes`
-
-OOP can be achieved in TypeScript/JavaScript with classes or factory-functions.
-
-People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
-
-- **Use a class** when you have an object with an internal state with functions which modify that internal state.
-- **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at instantiation** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
-- **Note:** I would also recommend avoiding classes for **handling IO-data** (even when you feel tempted to use OOP), because this often leads to:
-  - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of identical `public static` functions
-  - IO-data should just be 'acted upon' not do things.
-  - Use **namespace-object-scripts** for handling IO-data and describe the data-items with **interfaces**.
-
-> You can see a more thorough list of design rules [here](Design-Rules.md). 
-
-<a id="enums"></a>
-#### `Enums`
-
-Enums emit runtime JavaScript and are discouraged in modern TypeScript configurations because they generate additional code. Prefer **lookup-tables** with **declaration-merging** intead:
-
-```ts
-const UserRoles = {
-  BASIC: 0,
-  ADMIN: 1,
-  OWNER: 2,
-} as const;
-
-type UserRoles = typeof UserRoles[typeof UserRoles]; // 0 | 1 | 2
-
-const basic: UserRoles = UserRoles.BASIC;
-```
-
----
-
-<a id="types-link"></a>
-### Types
-
-- Prefer `interface` for object shapes.
-- Use `type` for unions, primitives, and utility-types.
-- Place type aliases above interfaces.
-
-```ts
-type Roles = "basic" | "admin";
-
-interface IUser {
-  id: number;
-  name: string;
-  role: Roles;
-}
-```
-
-<br/><b>***</b><br/>
-
 <a id="naming-conventions"></a>
 ## 🏷️ Naming Conventions
 
-- **Folders**: `kebab-case`
+- **Folders**: `kebab-case` (default) or name them after the primary declared item they are meant to export.
 - **Files**:
   - **Linear scripts**: `kebab-case`
-  - **Namespace-object scripts / Declaration scripts**: name it after the item being exported
+  - **Declaration scripts**: Like with folders, name them after the item being exported
+  - **Namespace-object scripts:** Name them how you will using them in the 
   - **Inventory**
     - Default to `kebab-case` but the name can be more nuanced depending on context.
-    - For inventory-scripts in **branch-directories** (see (Terminology)[#terminology] above) kebab-case usually makes sense.
-    - For **focused-directories** see the (Organizing Shared Code)[#organizing-shared-code] section below.
+    - For inventory-scripts, in **branch-directories** (see [Terminology](#terminology) above), kebab-case usually makes sense.
+    - For **focused-directories**, see the [Organizing Shared Code](#organizing-shared-code) section below.
   - **index.ts** and **main.ts** 
     - Reserve the filename `index.ts` for **barrel-files**. Barrel-files are for creating a single entry point for a folder.
     - Use the filename `main.ts` for a file meant to be the starting point of an application (in contrast to a library).
-    - Think of `index.ts` as usually the entry point for libraries and `main.ts` the starting point for applications. 
+    - Think of `index.ts` as the entry point for libraries and `main.ts` the starting point for applications. 
 - **Readonly**:
   - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
   - **Objects**:
@@ -392,9 +395,9 @@ interface IUser {
   - Use **ALL CAPS** for well-established acronyms: i.e `insertIntoURL()`.
   - Avoid both when when doing `UPPER_SNAKE_CASE` unless it's a well-establish acronym.
   - For a long variable-names that could be cumbersome to use (are used widely throughout your application) an abbreviation/acronym is probably okay; however, the core layer describing them (i.e. the database table and its interface) should refrain from doing so unless it's a well-establish acronym.
-  - The more localized a name gets (i.e. used just used once in a small function) the more you can abbreviate/use-acronyms.
+  - For very narrowly-scoped items, abbreviate/use-acronyms are usually okay.
 
-> The namespace-object-script [User.ts](User.ts) has some good examples on standard naming conventions.
+> The namespace-object script [User.ts](User.ts) has some good examples on standard naming conventions.
 
 <br/><b>***</b><br/>
 
@@ -433,10 +436,10 @@ interface IUser {
 - In a **branch-directory** with shared content create a subfolder named `common/`.
 - Try to avoid using folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
 - If `common/` is in a folder with a bunch of other sibling folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend it with an `underscore` (i.e. `_common/`).
-- Within `_common/` it's okay to group files into folder categories like `constants/`, `types/`, `utils/` but for files **DO NOT** use names which could be ambiguous. For files, names like `shared.ts`, `utils.ts`, etc are dumping-ground names: filenames should always demonstrate clear intent: (i.e. `_common/utility-types.ts`).
+- Within `_common/` it's okay to group files into folder categories like `constants/`, `types/`, `utils/` but for files **DO NOT** use names which could be ambiguous. For files, names like `shared.ts`, `utils.ts`, etc are dumping-ground names: **filenames should always demonstrate clear intent**: (i.e. `src/_common/utility-types.ts`).
 - Let's consider **utils**, **types**, and **constants** the 3 main **common-categories**:
-  - **utils** either standalone functions in inventory-scripts or namespace-object-scripts for grouping related functions.
-  - **constants**: organzing readonly values or but can also include simple functions with basic parsing (function which returns an error message string while inserting a username into it).
+  - **utils** either standalone functions in inventory-scripts or namespace-object scripts for grouping related functions.
+  - **constants**: organzing readonly values or but can also include functions which return mostly readonly values after some simple formatting (function which returns an error message string with the username inserted into it).
   - **types**: storing only compile-time items (type-aliases and interfaces, never runtime items).
   - **components:** 4 category **components** for those working with JSX elements.
 
@@ -453,7 +456,7 @@ interface IUser {
     - `Login.shared.tsx` <-- Stores JSX elements needed by both the `Login` component and the `ForgotPasswordDialog` component.
     - `Login.utils.ts`
 
-> In the previous example, you might be wondering why we did `Login.shared.tsx` when I said not to used the name `shared`. Because this is a focused directory and we prepended the "domain name" `.shared` is okay. But here we are only doing this for JSX components because with the name `Login.components.tsx`, it could be unclear whether this contains all Login components (like the ones in `Login.tsx`) or just the shared ones.
+> In the previous example, you might be wondering why we did `Login.shared.tsx` when I said not to used the name `shared`. Because this is a focused directory and we prepended the domain name `Login`, `.shared` is okay. But here we are only doing this for JSX components because with the name `Login.components.tsx`, it could be unclear whether this contains all Login components (like the ones in `Login.tsx`) or just the shared ones.
 
 <br/><b>***</b><br/>
 
@@ -471,40 +474,40 @@ interface IUser {
 
 ---
 
-### Working with databases
+### Using comment-annotations
 - A **comment-annotation** is keyword in a comment that starts with `@`.
 - Use interfaces to describe the raw database records with `/** */` comments above them like how you do with function-declarations.
-- Place a `@Table: table_name` comment above the interface declaration.
-- Try to create new types for variations of the raw database-record created at the API level instead of appending properties the original (i.e. `IUserDTO`).
-- Although for simple/auxilliary tables an optional property is okay.
-- Make sure to document foreign/primary-keys with comments (i.e `@PK` and `@FK`).
-- I like to use `// @NaC` which stands for `Not a Column` to indicate properties which do not correspond to a database-column.
+  - Place a `@Table table_name` comment above the interface declaration.
+- Try to create new types for variations of raw database-records created at the API level instead of appending properties the original (i.e. `IUserDTO`).
+  - `DTO` stands for data-transfer-object and is a great acronym for objects used for moving IO data.
+- For `@Tables`, Make sure to document foreign/primary-keys with comments (i.e `@PK` and `@FK`).
+  - I like to use `// @NaC` which stands for `Not a Column` to indicate properties which do not correspond to a database-column.
+- Mark items only to be used for testing with `@TestOnly`.  
 ```ts
-/**
- * @Table: users
- */
-interface IUser {
+interface IModel {
   id: number; // @PK
-  name: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-// This is setup in the service layer
-interface IUserDTO extends IUser {
-  associates: IUser[]; // Place this here instead of IUser
+/**
+ * @Table users
+ */
+interface IUser extends IModel {
+  name: string;
 }
 
 /**
  * @Table user_avatars
- * This is a simple auxilliary table so appending entries not
- * on the database table is okay.
  */
-interface IUserAvatar {
-  id: number; // @PK
-  s3Path: string;
+interface IUserAvatar extends IModel {
+  fileName: string | null;
   userId: number; // @FK
-  imageSource?: string; // @NaC
+}
+
+// This is setup in the service layer
+interface IUserAvatarDTO extends IUserAvatar {
+  data: Blob; // Place this here instead of IUser
 }
 
 /**
@@ -550,8 +553,8 @@ Use **layered-based** architecure for simple (single developer) applications:
 Use **feature-based** architecure for large applications:
   - Scales better
   - Less risk of circular dependencies
-  - Avoid bloated services layer
-  - Avoid merge-conflicts
+  - Avoids bloated services layer
+  - Avoids merge-conflicts
   - Intent less clear for smaller projects and demos/tutorials
 
 ```markdown
@@ -559,7 +562,7 @@ Use **feature-based** architecure for large applications:
 - src/
   - config/
   - users/
-    - UsersRepo.ts
+    - UserRepo.ts
     - UserRoutes.ts
     - UserServices.ts
     - UserBlobUtils.ts <-- Created later: for uploading avatar to blob storage. 
@@ -571,9 +574,10 @@ Use **feature-based** architecure for large applications:
   - server.ts
 ```
 
-In the above **layer-based** example, you can see that when we needed to add another module for UserServices, we had to add a folder to the services layer, move UserServices.ts inside of it, and now for the root of the `services/` folder we have a mixture of files and folders.
+#### Keys points from examples above
+- In the above **layer-based** example, you can see that when we needed to add another module for `UserServices`, we had to add a folder to the services layer, move UserServices.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service layer domains.
+- You might be wondering why we gave the domain files names like `UserRepo.ts` instead of `User.repo.ts`/`user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section.
 
-You might be wondering why we gave the domain files names like `UserRepo.ts` instead of `User.repo.ts`. That's because these are **namespace-object-scripts** not **inventory-scripts**. 
 
 #### Client-Side
 
