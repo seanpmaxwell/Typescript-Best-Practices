@@ -341,6 +341,8 @@ interface IUser {
 - **Files**:
   - **Inventory / Linear scripts**: `kebab-case`
   - **Namespace-object / Declaration scripts**: name it after the item being exported
+  - For a bunch of sibling files using `keybab-case`, repeat hyphenated chunks can be moved to `.`:
+    - `user-utils.ts` and `user-types.ts` => `user.utils.ts` and `user.types.ts` 
 - **Readonly**:
   - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
   - **Objects**:
@@ -358,8 +360,7 @@ interface IUser {
   - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
 - **Booleans**: prefix with `is`
 
-Notes for all:
-- **Abbreviations** and **Acronyms**:
+**Abbreviations** and **Acronyms**:
 - This is not an exact science and abbreviations/acronyms should generally be avoided for clarity BUT there are plenty of exceptions:
   - Well-establish abbreviations (i.e. URL, API) and acronyms (i.e. Pwd, Req => Request) are usually okay.
   - Use **ALL CAPS** for well-established acronyms: i.e `insertIntoURL()`.
