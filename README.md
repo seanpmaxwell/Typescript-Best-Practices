@@ -353,12 +353,10 @@ function normalFunction() {
 - **Folders**: `kebab-case` (default) or name them after the primary declared item they are meant to export.
 - **Files**:
   - **Linear scripts**: `kebab-case`
-  - **Declaration scripts**: Like with folders, name them after the item being exported
-  - **Namespace-object scripts:** Name them how you will using them in the 
-  - **Inventory**
-    - Default to `kebab-case` but the name can be more nuanced depending on context.
-    - For inventory-scripts, in **branch-directories** (see [Terminology](#terminology) above), kebab-case usually makes sense.
-    - For **focused-directories**, see the [Organizing Shared Code](#organizing-shared-code) section below.
+    - Can also use kebab-case in conjunction with `.` to differentiate sibling scripts with similar purposes: i.e `user.router.ts` and `post.router.ts`.
+  - **Declaration scripts**: Name them after the item being exported.
+  - **Namespace-object scripts:** PascalCase
+  - **Inventory:** `kebab-case`
   - **index.ts** and **main.ts** 
     - Reserve the filename `index.ts` for **barrel-files**. Barrel-files are for creating a single entry point for a folder.
     - Use the filename `main.ts` for a file meant to be the starting point of an application (in contrast to a library).
@@ -367,17 +365,18 @@ function normalFunction() {
   - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
   - **Objects**:
     - For object-literals used as a namespace for a collection of readonly values `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys.
-    - If the entire object is a value being passed (it's not simply a namespace) and you can't choose the keys, UPPER_SNAKE_CASE is okay for the name. 
+    - If the entire object is being passed as as value (it's not simply a namespace) and you need specific key names, UPPER_SNAKE_CASE is okay for the object name. 
 - **Variables**: `camelCase`
 - **Functions**:
   - `camelCase`: most of the time
   - `PascalCase`: for certain situations
     - JSX Elements
-    - Functions just meant to return static data with simple formatting (i.e. get a clone of an object with current datetime objects) can be `PascalCase`.
+    - Functions just meant to return mostly static data with simple formatting (i.e. get a clone of an object with current datetime objects) can be `PascalCase`.
   - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch` (i.e. `fetchUsers()`).
   - Prepend **validator-functions** with an `is`.
 - **Classes / Types**: `PascalCase`
   - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
+  - Many prepend type-aliases with a `T`, there is no convention around this, and I simply choose not to. 
 - **Booleans**: prefix with `is`
 
 **Abbreviations** and **Acronyms**:
@@ -593,8 +592,7 @@ Use **domain (aka feature)** based architecture for large applications:
   - common/
   - domain/
     - users/
-      - internal/
-        - UserBlobUtils.ts <-- Created later: for uploading avatar to blob storage. 
+      - UserBlobUtils.ts <-- Created later: for uploading avatar to blob storage. 
       - UserRepo.ts
       - UserServices.ts
       - UserController.ts
@@ -619,8 +617,8 @@ Use **domain (aka feature)** based architecture for large applications:
 ```
 
 ##### Keys points from examples above
-- In the above **layer-based** example, you can see that when we needed to add another module for `UserServices`, we had to add a folder to the services layer, move UserServices.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service layer domains.
-- You might be wondering why we gave the domain files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section. Except for the files ending in `*.router.ts`, which are linear scripts for adding controller functions to an express `Router()` instance and then returning that instance to 
+- In the above **layer-based** example, you can see that when we needed to add another module for `UserServices`, we had to add a folder to the services layer, move UserServices.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service-layer domains.
+- You might be wondering why we gave the domain files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section. The files ending in `*.router.ts`, are linear scripts for adding controller functions to an express `Router()` instance and then returning that instance to the root express instance.
 
 
 #### Client-Side Architecture
