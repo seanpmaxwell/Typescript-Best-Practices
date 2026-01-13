@@ -9,7 +9,6 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 
 ## 📚 Table of Contents
 
-- [Philosophy](#philosophy)
 - [Terminology](#terminology)
 - [Fundamental Concepts](#fundamental-concepts)
 - [Core Language Features](#core-language-features)
@@ -25,22 +24,8 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Naming Conventions](#naming-conventions)
 - [Comments](#comments)
 - [Imports](#imports)
-- [Testing](#testing)
 - [Organizing Shared Code](#organizing-shared-code)
-- [Food for Thought](#food-for-thought)
-
-<br/><b>***</b><br/>
-
-<a id="philosophy"></a>
-## 🧭 Philosophy 
-
-This guide favors:
-
-- Explicitness over cleverness  
-- Simplicity over abstraction  
-- Consistency over novelty  
-
-It is designed to scale with real-world TypeScript applications.
+- [Philosophy](#philosophy)
 
 <br/><b>***</b><br/>
 
@@ -52,7 +37,13 @@ So things are more clear down the line let's first clarify some terminology.
 ### Projects/Packages
 - **Package**: any JavaScript/TypeScript project with a `package.json` is a **package**.
 - **Applications**: packages mean to be executed (the final thing called with `node main."js/ts"`).
-- **Library**: shared packages to be used by applications or other libraries. 
+- **Library**: shared packages to be used by applications or other libraries.
+
+### Files/Folders
+- **nested-directory**: a directory other than the root.
+- **branch-directory**: a nested-directory with a broad focus and which has lots of its own child-directories.
+- **leaf-directory**: a nested-directory with no nested-directories
+- **focused-directory**: a nested-directory with a very narrow scope and purpose and is often a **leaf-directory** although not necessarily.
 
 ### Lifecycles
 - **Compile-time:** Even though TypeScript is technically a _transpiled_ (not compiled) language we still use the term **compile-time** to refer to period before a program starts.
@@ -78,12 +69,6 @@ So things are more clear down the line let's first clarify some terminology.
 ### Types
 - **type-aliases**: any time declared with `type TypeName = ...`.
 - **utility-types:** type-aliases with generics used for resolving other types.
-
-### Files/Folders
-- **nested-directory**: a directory other than the root.
-- **branch-directory**: a nested-directory with a broad focus and which has lots of its own child-directories.
-- **leaf-directory**: a nested-directory with no nested-directories
-- **focused-directory**: a nested-directory with a very narrow scope and purpose and is often a **leaf-directory** although not necessarily.
 
 <br/><b>***</b><br/>
 
@@ -382,7 +367,7 @@ function normalFunction() {
   - `camelCase`: most of the time
   - `PascalCase`: for certain situations
     - JSX Elements
-    - Functions just meant to return static data or make simple insertions to static data (i.e. put a value in a string) can be `PascalCase`.
+    - Functions just meant to return static data with simple formatting (i.e. get a clone of an object with current datetime objects) can be `PascalCase`.
   - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch` (i.e. `fetchUsers()`).
   - Prepend **validator-functions** with an `is`.
 - **Classes / Types**: `PascalCase`
@@ -421,47 +406,82 @@ function normalFunction() {
 
 <br/><b>***</b><br/>
 
-<a id="testing"></a>
-## 🧪 Testing
+<a id="organizing-shared-code"></a>
+## 🤝 Organizing shared code
 
+Here the terms **branch-directory** and **focused-directory** are important: see the [Terminology](#terminology) section above. Note: even though we used a React schema for are examples, the following section could be applied to any TypeScript project, client or server.
+
+### Categories
+- Let's consider **utils**, **types**, and **constants** the 3 main **common categories**:
+  - **utils** either standalone functions in inventory-scripts or namespace-object scripts for grouping related functions.
+  - **constants**: organzing readonly values or but can also include functions which return mostly readonly values after some simple formatting (function which returns an error message string with the username inserted into it).
+  - **types**: storing only compile-time items (type-aliases and interfaces, never runtime items).
+  - **components:** 4th category _components_ for those working with JSX elements.
+
+### Branch-directories and the `common/` folder
+- In a **branch-directory** with shared content create a subfolder named `common/`.
+- Avoid using folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
+- Within `common/` it's okay to group files into category-named folders like `constants/`, `types/`, `utils/` but for files **DO NOT** use names which could be ambiguous. For files, names like `shared.ts`, `helpers.ts`, `utils.ts`, etc are "dumping ground" names. In branch-directories **filenames should always demonstrate clear intent**: (i.e. `src/common/types/utility-types.ts`).
+- You can have multiple levels of `common/` for nested branch-directories:
+```markdown
+- public/
+- src/
+  - assets/
+  - common/
+    - types/
+      - utility-types.ts
+  - components
+    - common/ <-- shared folder just for components
+      - ui/
+        - buttons.tsx
+      - styles/
+        - box-styles.ts
+    - pages/
+      - Home/
+        - Home.tsx
+        - Home.test.tsx
+      - Login/
+        - dialogs/
+          - ResetPasswordDialog.tsx
+        - Login.tsx
+        - Login.test.tsx
+    - App.tsx
+    - index.css
+  - services/
+  - index.html
+- package.json
+- tsconfig.json
+```
+
+> In the above markdown, `src/` and `components/` are examples of **branch-directories**, `Home/` and `Login/` are **focused-directories**. 
+
+### Focused-directories and the `internal/` folder
+- Use the folder name `internal/` for shared content in a focused directory.
+- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx` are actually okay. 
+```markdown
+- Login/
+  - dialogs/
+    - ForgotPasswordDialog.tsx
+    - SignupInsteadDialog.tsx
+  - internal/
+    - ui.tsx <-- Stores JSX elements needed by both the `Login` component and the `ForgotPasswordDialog` component.
+    - utils.tsx
+  - Login.tsx
+  - Login.test.tsx
+```
+
+<br/><b>***</b><br/>
+
+<a id="philosophy"></a>
+## 🧠 Philosopy
+
+## Testing
 - Unit-test all user-driven behavior.
 - Developers should write their own tests.
 - Integration tests should be focused and minimal early on.
 - Tests improve readability as well as correctness.
 
-<br/><b>***</b><br/>
-
-<a id="organizing-shared-code"></a>
-## 🤝 Organizing shared code
-- In a **branch-directory** with shared content create a subfolder named `common/`.
-- Try to avoid using folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
-- If `common/` is in a folder with a bunch of other sibling folders and you want them flushed to the top of whatever IDE or file-explorer your using, you can prepend it with an `underscore` (i.e. `_common/`).
-- Within `_common/` it's okay to group files into folder categories like `constants/`, `types/`, `utils/` but for files **DO NOT** use names which could be ambiguous. For files, names like `shared.ts`, `utils.ts`, etc are dumping-ground names: **filenames should always demonstrate clear intent**: (i.e. `src/_common/utility-types.ts`).
-- Let's consider **utils**, **types**, and **constants** the 3 main **common-categories**:
-  - **utils** either standalone functions in inventory-scripts or namespace-object scripts for grouping related functions.
-  - **constants**: organzing readonly values or but can also include functions which return mostly readonly values after some simple formatting (function which returns an error message string with the username inserted into it).
-  - **types**: storing only compile-time items (type-aliases and interfaces, never runtime items).
-  - **components:** 4 category **components** for those working with JSX elements.
-
-### Organzing shared code in focused-directories
-- Don't create folders named `common/` under focused-directories.
-- There might be scenarios where you need an inventory-script in a focused-directory (i.e. `pages/Login/some-shared-home-components.ts` in a React app). 
-- For inventory-scripts the default is to use `kebab-case` but for **focused-directory inventory-scripts** what demonstrats clear intent is to use the domain-name followed by what's being exported:
-  - `Login/`
-    - `dialogs/` 
-      - `ForgotPasswordDialog.tsx`
-      - `SignupInsteadDialog.tsx`
-    - `Login.tsx`
-    - `Login.test.tsx`
-    - `Login.shared.tsx` <-- Stores JSX elements needed by both the `Login` component and the `ForgotPasswordDialog` component.
-    - `Login.utils.ts`
-
-> In the previous example, you might be wondering why we did `Login.shared.tsx` when I said not to used the name `shared`. Because this is a focused directory and we prepended the domain name `Login`, `.shared` is okay. But here we are only doing this for JSX components because with the name `Login.components.tsx`, it could be unclear whether this contains all Login components (like the ones in `Login.tsx`) or just the shared ones.
-
-<br/><b>***</b><br/>
-
-<a id="food-for-thought"></a>
-## 🍽️ Food for Thought
+--- 
 
 ### Programming Paradigms
 - To be clear, **OOP (Object-Oriented-Programming)** is a set of design principles not a specific language feature.
@@ -522,9 +542,11 @@ function getDummyUser() {
 }
 ```
 
+--- 
+
 ### Architecture
 
-#### Server-Side
+#### Server-Side Architecture
 
 Use **layered-based** architecure for simple (single developer) applications:
   - Easier mental map
@@ -548,6 +570,8 @@ Use **layered-based** architecure for simple (single developer) applications:
     - PostServices.ts
   - main.ts
   - server.ts
+- package.json
+- tsconfig.json
 ```
 
 Use **feature-based** architecure for large applications:
@@ -572,20 +596,48 @@ Use **feature-based** architecure for large applications:
     - PostServices.ts
   - main.ts
   - server.ts
+- package.json
+- tsconfig.json
 ```
 
-#### Keys points from examples above
+##### Keys points from examples above
 - In the above **layer-based** example, you can see that when we needed to add another module for `UserServices`, we had to add a folder to the services layer, move UserServices.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service layer domains.
 - You might be wondering why we gave the domain files names like `UserRepo.ts` instead of `User.repo.ts`/`user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section.
 
 
-#### Client-Side
+#### Client-Side Architecture
 
-This could vary widely depending on your framework but I'll go over what I like to use for React:
+This could vary depending on your framework but I'll share what I like to use for React. There's also the [React-Ts-Best-Practices](https://github.com/seanpmaxwell/React-Ts-Best-Practices) repo for a more detailed overview.
 
-#### Smaller projects
-For simple applications/static websites I used the directory structure as is by the generating framework
+**Important:**
+  - Make sure your `components/` folder is organized how one would navigate to them in the browser
+  - i.e `https:your-domain.com/login/reset-password` will be rendered by `src/components/Login/ResetPassword.tsx`
 
-#### Large projects
-
+```markdown
+- src/
+  - common/
+    - StringUtils.ts
+  - components/
+    - ui-common/
+      - hooks/
+      - components/
+        - buttons.tsx
+    - pages/
+      - Home/
+        - Home.tsx
+        - Home.test.tsx
+      - Login/
+        - Login.tsx
+        - Login.test.tsx
+        - Login.constants.ts <-- If we have constants needed by Login.tsx or any nested files
+        - ForgotPassword/
+          - ForgotPassword.tsx
+          - ForgotPassword.test.tsx
+    - index.css
+    - App.tsx
+    - main.tsx
+  - domain/ <-- Business logic
+  - services/ <-- (if you need to make API calls to a back-end)
+    - UserService.ts <-- Call the UserRoutes.ts in your back-end
+```
 
