@@ -455,7 +455,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 ### Focused-directories and the `internal`/`external` folders
 - Use the folder name `internal/` for shared content in a focused-directory.
 - Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx` are actually okay in a focused-directories `internal/` folder.
-- If a focused-directory needs to provide some helper items to code elsewhere in the package, and those are are not used by the directory itself, you can place those in a folder named `external/`. The same rules about filenames apply.
+- If a focused-directory needs to provide some helper items to code elsewhere in the package, you can place those in a folder named `external/`: the same rules about filenames apply. Items in `external/` can also be shared within the focused-directory where they are declared.  
 ```markdown
 - common/
   - ui/
