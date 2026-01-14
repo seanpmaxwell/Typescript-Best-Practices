@@ -555,7 +555,7 @@ function getDummyUser() {
 
 If you're building a back-end webserver, I highlighly suggest you document your route functions with the Http "verb+path" as well. Long term, it will help you look up route functions faster.
 
-```
+```ts
 /**
  * @route GET /api/posts/:userId
  */
