@@ -461,7 +461,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
   - ui/
     - DataTable/
       - external/
-        - filterToUrl.ts <-- a helper function that users can use to convert a table filter object to URL string.
+        - filterToUrl.ts <-- a helper function that other code can use to convert a DataTable filter object to URL string.
       - Datatable.tsx
 - Login/
   - dialogs/
