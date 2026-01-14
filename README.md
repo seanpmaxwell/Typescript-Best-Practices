@@ -415,10 +415,10 @@ Here the terms **branch-directory** and **focused-directory** are important: see
   - **types**: storing only compile-time items (type-aliases and interfaces, never runtime items).
   - **ui:** A 4th category _ui_ is for those working with JSX elements.
 
-### Branch-directories and the `common/` folder
+### Branch-directories and the `common` folder
 - In a **branch-directory** with shared content create a subfolder named `common/`.
-- Avoid using folders names like `misc/`, `helpers/`, `shared/` etc. as these can quickly become dumping grounds.
-- Within `common/` it's okay to group files into category-named folders like `constants/`, `types/`, `utils/` but for files **DO NOT** use names which could be ambiguous. For files, names like `shared.ts`, `helpers.ts`, `utils.ts`, etc are "dumping ground" names. In branch-directories **filenames should always demonstrate clear intent**: (i.e. `src/common/types/utility-types.ts`).
+- Avoid using **dumping-ground** names for folders like `misc/`, `helpers/`, `shared/` etc. as their purpose in ambiguous and they can quickly degrade your package's organization.
+- Within `common/` it's okay to group files into category-named folders like `constants/`, `types/`, `utils/` etc but for files **DO NOT** use dumping-ground names. In branch-directories **filenames should always demonstrate clear intent**: (i.e. `src/common/types/utility-types.ts`).
 - You can have multiple levels of `common/` for nested branch-directories:
 ```markdown
 - public/
@@ -452,16 +452,23 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 > In the above markdown, `src/` and `components/` are examples of **branch-directories**, `Home/` and `Login/` are **focused-directories**. 
 
-### Focused-directories and the `internal/` folder
-- Use the folder name `internal/` for shared content in a focused directory.
-- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx` are actually okay. 
+### Focused-directories and the `internal`/`external` folders
+- Use the folder name `internal/` for shared content in a focused-directory.
+- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx` are actually okay in a focused-directories `internal/` folder.
+- If a focused-directory needs to provide some helper items to code elsewhere in the package, and those are are not used by the directory itself, you can place those in a folder named `external/`. The same rules about filenames apply.
 ```markdown
+- common/
+  - ui/
+    - DataTable/
+      - external/
+        - utils.ts <-- exports a helper function that users can use to convert a table filter object to URL string.
+      - Datatable.tsx
 - Login/
   - dialogs/
     - ForgotPasswordDialog.tsx
     - SignupInsteadDialog.tsx
   - internal/
-    - ui.tsx <-- Stores JSX elements needed by both the `Login` component and the `ForgotPasswordDialog` component.
+    - ui.tsx <-- stores JSX elements needed by both the `Login` component and the `ForgotPasswordDialog` component.
     - utils.tsx
   - Login.tsx
   - Login.test.tsx
