@@ -25,6 +25,10 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Imports](#imports)
 - [Organizing Shared Code](#organizing-shared-code)
 - [Philosophy](#philosophy)
+  - [Testing](#testing)
+  - [Programming Paradigms](#programming-paradigms)
+  - [Using Comment Annotations](#using-comment-annotations)
+  - [Architecture](#architecture)
 
 <br/><b>***</b><br/>
 
@@ -479,7 +483,8 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 <a id="philosophy"></a>
 ## 🧠 Philosopy
 
-## Testing
+<a id="testing"></a>
+### Testing
 - Unit-test all user-driven behavior.
 - Developers should write their own tests.
 - Integration tests should be focused and minimal early on.
@@ -487,6 +492,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 --- 
 
+<a id="programming-paradigms"></a>
 ### Programming Paradigms
 - To be clear, **OOP (Object-Oriented-Programming)** is a set of design principles not a specific language feature.
   - The four design principles are: **Inheritence**, **Polymorphism**, **Abstraction**, and **Encapsulation**
@@ -498,6 +504,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 ---
 
+<a id="using-comment-annotations"></a>
 ### Using comment-annotations
 - A **comment-annotation** is keyword in a comment that starts with `@`.
 - Use interfaces to describe the raw database records with `/** */` comments above them like how you do with function-declarations.
@@ -548,6 +555,7 @@ function getDummyUser() {
 
 --- 
 
+<a id="architecture"></a>
 ### Architecture
 
 #### Server-Side Architecture
