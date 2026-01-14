@@ -45,11 +45,11 @@ So things are more clear down the line let's first clarify some terminology.
 - **leaf-directory**: a directory with no nested-directories
 - **focused-directory**: a nested-directory with a very narrow scope and purpose and is often a **leaf-directory** although not necessarily.
 - Example:
-  1. "package name"/ <--root
-  2.  "src/" <-- branch
-  3.  "components/" <-- branch
-  4.  "Login/" <-- focused
-  5.  "internal/" <-- leaf 
+  1. `package name/` <--root
+  2.  `src/` <-- branch
+  3.  `components/` <-- branch
+  4.  `Login/` <-- focused
+  5.  `internal/` <-- leaf 
 
 ### Lifecycles
 - **Compile-time:** Even though TypeScript is technically a _transpiled_ (not compiled) language we still use the term **compile-time** to refer to period before a program starts.
