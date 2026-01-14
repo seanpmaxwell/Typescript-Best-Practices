@@ -408,12 +408,12 @@ function normalFunction() {
 
 Here the terms **branch-directory** and **focused-directory** are important: see the [Terminology](#terminology) section above. Note: even though we used a React schema for are examples, the following section could be applied to any TypeScript project, client or server.
 
-### Categories
+### Shared code categories
 - Let's consider **utils**, **types**, and **constants** the 3 main **common categories**:
   - **utils** either standalone functions in inventory-scripts or namespace-object scripts for grouping related functions.
   - **constants**: organzing readonly values or but can also include functions which return mostly readonly values after some simple formatting (function which returns an error message string with the username inserted into it).
   - **types**: storing only compile-time items (type-aliases and interfaces, never runtime items).
-  - **components:** 4th category _components_ for those working with JSX elements.
+  - **ui:** A 4th category _ui_ is for those working with JSX elements.
 
 ### Branch-directories and the `common/` folder
 - In a **branch-directory** with shared content create a subfolder named `common/`.
@@ -626,9 +626,9 @@ This could vary depending on your framework but I'll share what I like to use fo
   - common/
     - StringUtils.ts
   - components/
-    - ui-common/
+    - common/
       - hooks/
-      - components/
+      - ui/
         - buttons.tsx
     - pages/
       - Home/
