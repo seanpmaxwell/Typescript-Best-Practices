@@ -10,7 +10,6 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 ## 📚 Table of Contents
 
 - [Terminology](#terminology)
-- [Fundamental Concepts](#fundamental-concepts)
 - [Core Language Features](#core-language-features)
   - [Primitives](#primitives)
   - [Functions](#functions)
@@ -78,8 +77,8 @@ So things are more clear down the line let's first clarify some terminology.
 
 <br/><b>***</b><br/>
 
-<a id="fundamental-concepts"></a>
-## 💡 Fundamental Concepts
+<a id="core-language-features"></a>
+## 💡 Core Language Features
 
 This guide revolves around four fundamental language features:
 
@@ -87,13 +86,6 @@ This guide revolves around four fundamental language features:
 - **Functions**
 - **Objects**
 - **Types**
-
-These concepts form the foundation of all JavaScript and TypeScript programs. Mastering them—and using them consistently—results in code that is easier to read, reason about, and maintain.
-
-<br/><b>***</b><br/>
-
-<a id="core-language-features"></a>
-## 🛠️ Core Language Features
 
 <a id="primitives"></a>
 ### Primitives 
