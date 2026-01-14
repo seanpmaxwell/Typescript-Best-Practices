@@ -644,7 +644,6 @@ This could vary depending on your framework but I'll share what I like to use fo
       - Login/
         - Login.tsx
         - Login.test.tsx
-        - Login.constants.ts <-- If we have constants needed by Login.tsx or any nested files
         - ForgotPassword/
           - ForgotPassword.tsx
           - ForgotPassword.test.tsx
@@ -652,7 +651,8 @@ This could vary depending on your framework but I'll share what I like to use fo
     - App.tsx
     - main.tsx
   - domain/ <-- Business logic
+    - UserDomain.ts
   - services/ <-- (if you need to make API calls to a back-end)
-    - UserService.ts <-- Call the UserRoutes.ts in your back-end
+    - UserService.ts <-- Call the user.routes.ts in your back-end
 ```
 
