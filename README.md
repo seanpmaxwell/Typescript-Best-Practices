@@ -553,6 +553,20 @@ function getDummyUser() {
 }
 ```
 
+If you're building a back-end webserver, I highlighly suggest you document your route functions with the Http "verb+path" as well. Long term, it will help you look up route functions faster.
+
+```
+/**
+ * @route GET /api/posts/:userId
+ */
+function fetchPostsByUserId(userId: number): IPost[] {
+  return postRepo(userId);
+}
+
+// Somewhere else in your package
+express.get('/api/posts/:userId', fetchPostsByUserId);
+```
+
 --- 
 
 <a id="architecture"></a>
