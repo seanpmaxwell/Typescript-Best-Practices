@@ -205,7 +205,7 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 - **Namespace-Object**  
   Exports a default object-literal that groups closely related logic/readonly-values.
 
-> Note: the term **module** can be used interchangeably with a namespace-object script's default export, because in JavaScript a module also refers to a file. So if we have a namespace-object script called `User.ts` we could say (in referring to the default export) "that's the 'User module'" OR "that's the 'User namespace-object'". 
+> Note: the term **module** can be used interchangeably with a namespace-object script's default export, because in JavaScript a module also refers to a file. So if we have a namespace-object script called `User.ts` we could say (in referring to the default export) "that's the User module" OR "that's the User namespace-object". 
 
 - **Inventory**  
   Exports multiple independent declarations, such as shared types or small utility functions.
