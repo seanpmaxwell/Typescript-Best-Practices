@@ -454,14 +454,14 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 ### Focused-directories and the `internal`/`external` folders
 - Use the folder name `internal/` for shared content in a focused-directory.
-- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx` are actually okay in a focused-directories `internal/` folder.
+- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx` are actually okay in the `internal/` folder. However, **DO NOT** place them directly in the focused-directory itself.
 - If a focused-directory needs to provide some helper items to code elsewhere in the package, you can place those in a folder named `external/`: the same rules about filenames apply. Items in `external/` can also be shared within the focused-directory where they are declared.  
 ```markdown
 - common/
   - ui/
     - DataTable/
       - external/
-        - utils.ts <-- exports a helper function that users can use to convert a table filter object to URL string.
+        - filterToUrl.ts <-- a helper function that users can use to convert a table filter object to URL string.
       - Datatable.tsx
 - Login/
   - dialogs/
