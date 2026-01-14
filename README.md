@@ -36,7 +36,7 @@ So things are more clear down the line let's first clarify some terminology.
 
 ### Projects/Packages
 - **Package**: any JavaScript/TypeScript project with a `package.json` is a **package**.
-- **Applications**: packages mean to be executed.
+- **Application**: packages mean to be executed.
 - **Library**: shared packages to be used by applications or other libraries.
 
 ### Files/Folders
