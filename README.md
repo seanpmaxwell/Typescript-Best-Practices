@@ -460,14 +460,14 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 ### Focused-directories and the `local` folder
 - Use the folder name `local/` for shared content in a focused-directory.
 - Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx` are actually okay in the `local/` folder. However, **DO NOT** place them directly in the focused-directory itself.
-- If a focused-directory needs to share code elsewhere in the package, **but it still makes sense to place that code in that particular focused-directory because it's very unique to that directory's purpose,** you can also place those items in `local/`.
-  - If an item in in `local/` is shared outside the focused-directory, I recommend marking it with the `/** @External */` tag.
+- If a focused-directory has some shared code not used internally, **but it still makes sense to place that code in that particular focused-directory because it's very unique to that directory's purpose,** place those items in the `external/` folder.
+- If there's a focused-directory code which needs to be shared both locally and externally, you can place those items in `local/` as well, but I would recommend marking those items with the `@public` tag to keep track of which items are also used externally.
 ```markdown
 - common/
   - ui/
     - DataTable/
-      - local/
-        - dataTableFilterToUrlString.ts <-- an @External helper function.
+      - external/
+        - dataTableFilterToUrlString.ts <-- an external helper function.
       - Datatable.tsx
 - Login/
   - dialogs/
