@@ -52,7 +52,7 @@ So things are more clear down the line let's first clarify some terminology.
   2.  `src/` <-- branch
   3.  `components/` <-- branch
   4.  `Login/` <-- focused
-  5.  `internal/` <-- leaf 
+  5.  `local/` <-- leaf 
 
 ### Lifecycles
 - **Compile-time:** Even though TypeScript is technically a _transpiled_ (not compiled) language we still use the term **compile-time** to refer to period before a program starts.
@@ -151,7 +151,7 @@ OOP can be achieved in TypeScript/JavaScript with classes or factory-functions.
 
 People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
 
-- **Use a class** when you have an object with an internal state with functions which modify that internal state.
+- **Use a class** when you have an object with an internal state and methods which modify that internal state.
 - **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at instantiation** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
 - **Note:** I would also recommend avoiding classes for **handling IO-data** (even when you feel tempted to use OOP), because this often leads to:
   - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of identical `public static` functions
@@ -410,19 +410,19 @@ function normalFunction() {
 <a id="organizing-shared-code"></a>
 ## 🤝 Organizing shared code
 
-Here the terms **branch-directory** and **focused-directory** are important: see the [Terminology](#terminology) section above. Note: even though we used a React schema for are examples, the following section could be applied to any TypeScript project, client or server.
+Here the terms **branch-directory** and **focused-directory** are important: see the [Terminology](#terminology) section above. Note: even though we used a React schema for our examples, the following section could be applied to any TypeScript project, client or server.
 
-### Shared code categories
-- Let's consider **utils**, **types**, and **constants** the 3 main **common categories**:
+### Shared categories
+- Let's consider **utils**, **types**, and **constants** the 3 main **shared-categories**. And a 4th category **ui** for those working with JSX elements.
   - **utils** either standalone functions in inventory-scripts or namespace-object scripts for grouping related functions.
   - **constants**: organzing readonly values or but can also include functions which return mostly readonly values after some simple formatting (function which returns an error message string with the username inserted into it).
   - **types**: storing only compile-time items (type-aliases and interfaces, never runtime items).
-  - **ui:** A 4th category _ui_ is for those working with JSX elements.
+  - **ui:** Any file ending with a `.jsx/.tsx` extension.
 
 ### Branch-directories and the `common` folder
 - In a **branch-directory** with shared content create a subfolder named `common/`.
-- Avoid using **dumping-ground** names for folders like `misc/`, `helpers/`, `shared/` etc. as their purpose in ambiguous and they can quickly degrade your package's organization.
-- Within `common/` it's okay to group files into category-named folders like `constants/`, `types/`, `utils/` etc but for files **DO NOT** use dumping-ground names. In branch-directories **filenames should always demonstrate clear intent**: (i.e. `src/common/types/utility-types.ts`).
+- Avoid using **dumping-ground** names for folders like `misc/`, `helpers/`, `uils/`, `shared/` etc. as their purpose is ambiguous and can quickly degrade your package's organization.
+- Within `common/` it's okay to group files into category-named folders like `constants/`, `types/`, `utils/` etc but for files **DO NOT** use dumping-ground names. In branch-directories (including `common/`) **filenames should always demonstrate clear intent**: (i.e. `src/common/types/utility-types.ts`).
 - You can have multiple levels of `common/` for nested branch-directories:
 ```markdown
 - public/
@@ -456,24 +456,27 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 > In the above markdown, `src/` and `components/` are examples of **branch-directories**, `Home/` and `Login/` are **focused-directories**. 
 
-### Focused-directories and the `internal`/`external` folders
-- Use the folder name `internal/` for shared content in a focused-directory.
-- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx` are actually okay in the `internal/` folder. However, **DO NOT** place them directly in the focused-directory itself.
-- If a focused-directory needs to provide some helper items to code elsewhere in the package, you can place those in a folder named `external/`: the same rules about filenames apply. Items in `external/` can also be shared within the focused-directory where they are declared.  
+### Focused-directories and the `local` folder
+- Use the folder name `local/` for shared content in a focused-directory.
+- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx` are actually okay in the `local/` folder. However, **DO NOT** place them directly in the focused-directory itself.
+- If a focused-directory needs to share code elsewhere in the package, **but it still makes sense to place that code in that particular focused-directory because it's very unique to that directory's purpose,** you can also place those items in `local/`.
+  - If an item in in `local/` is shared outside the focused-directory, I recommend marking it with the `/** @External */` tag.
 ```markdown
 - common/
   - ui/
     - DataTable/
-      - external/
-        - filterToUrl.ts <-- a helper function that other code can use to convert a DataTable filter object to URL string.
+      - local/
+        - dataTableFilterToUrlString.ts <-- an @External helper function.
       - Datatable.tsx
 - Login/
   - dialogs/
+    - local/
+      - utils.ts <-- stores functions needed by both dialog components
     - ForgotPasswordDialog.tsx
     - SignupInsteadDialog.tsx
-  - internal/
+  - local/
     - ui.tsx <-- stores JSX elements needed by both the `Login` component and the `ForgotPasswordDialog` component.
-    - utils.tsx
+    - constants.ts
   - Login.tsx
   - Login.test.tsx
 ```
