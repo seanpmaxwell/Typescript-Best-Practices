@@ -422,7 +422,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 ### Branch-directories and the `common` folder
 - In a **branch-directory** with shared content create a subfolder named `common/`.
-- Avoid using **dumping-ground** names for folders like `misc/`, `helpers/`, `uils/`, `shared/` etc. as their purpose is ambiguous and can quickly degrade your package's organization.
+- Avoid using **dumping-ground** names for folders like `misc/`, `helpers/`, `utils/`, `shared/` etc. as their purpose is ambiguous and can quickly degrade your package's organization.
 - Within `common/` it's okay to group files into category-named folders like `constants/`, `types/`, `utils/` etc but for files **DO NOT** use dumping-ground names. In branch-directories (including `common/`) **filenames should always demonstrate clear intent**: (i.e. `src/common/types/utility-types.ts`).
 - You can have multiple levels of `common/` for nested branch-directories:
 ```markdown
@@ -459,7 +459,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 ### Focused-directories and the `local` folder
 - Use the folder name **local/** for shared content in a focused-directory.
-- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx` are actually okay in the `local/` folder. However, **DO NOT** place them directly in the focused-directory itself.
+- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx`, etc are actually okay in the `local/` folder. However, **DO NOT** place them directly in the focused-directory itself.
 - If there's a focused-directory code which needs to be shared both locally and externally, you can place those items in `local/` as well; `local/` is not meant to be super strict.
 - If a focused-directory has some shared code not used internally, **but it still makes sense to place that code in that particular focused-directory because it's very unique to that directory's purpose,** place those items in the **external/** folder.
 - If you want to be extra careful about some focused-directory items never being used externally, create a folder named **internal/**, and configure eslint to never allow imports from folders named `internal/`, except for files of the same focused-directory.
