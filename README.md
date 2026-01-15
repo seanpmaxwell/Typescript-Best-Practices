@@ -458,10 +458,11 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 > In the above markdown, `src/` and `components/` are examples of **branch-directories**, `Home/` and `Login/` are **focused-directories**. 
 
 ### Focused-directories and the `local` folder
-- Use the folder name `local/` for shared content in a focused-directory.
+- Use the folder name **local/** for shared content in a focused-directory.
 - Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx` are actually okay in the `local/` folder. However, **DO NOT** place them directly in the focused-directory itself.
-- If a focused-directory has some shared code not used internally, **but it still makes sense to place that code in that particular focused-directory because it's very unique to that directory's purpose,** place those items in the `external/` folder.
-- If there's a focused-directory code which needs to be shared both locally and externally, you can place those items in `local/` as well, but I would recommend marking those items with the `@public` tag to keep track of which items are also used externally.
+- If there's a focused-directory code which needs to be shared both locally and externally, you can place those items in `local/` as well; `local/` is not meant to be super strict.
+- If a focused-directory has some shared code not used internally, **but it still makes sense to place that code in that particular focused-directory because it's very unique to that directory's purpose,** place those items in the **external/** folder.
+- If you want to be extra careful about some focused-directory items never being used externally, create a folder named **internal/**, and configure eslint to never allow imports from folders named `internal/`, except for files of the same focused-directory.
 ```markdown
 - common/
   - ui/
