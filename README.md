@@ -391,6 +391,7 @@ function normalFunction() {
 ## 💬 Comments
 
 - Place `/** */` above all **function-declarations** always, `//` or no comment is okay for **configured-functions**.
+- I would also recommend `/** */` for utility-types as they can become pretty complex.
 - Place a `@TestOnly` comment annotation for items not meant to be used in production. 
 - Use `//` for inline explanations.
 - Capitalize and punctuate comments.
