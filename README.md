@@ -515,7 +515,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 > Documenting the model-layer well saves us a lot of time from constantly have to look in our database-manager for relationship-info.
 
 #### Terminology
-- **model-layer:** is an architecture-layer (layered or domain) for describing/handling the shape of database-tables.
+- **model-layer:** is an architecture-layer for describing/handling the shape of database-tables.
 - **comment-annotation:** keyword in a comment that starts with `@`.
 - **entity-type:** an interface or structured-type-alias used to describe the shape of a raw database-table.
   - People also use the term **record** when referring to database-rows, but for TypeScript I advise against this to avoid confusion with the type **Record<>**
@@ -594,9 +594,12 @@ express.get('/api/posts/:userId', fetchPostsByUserId);
 ### Architecture
 
 Use **layer-based** based architecture for simple (single developer) applications:
-  - Easier mental map
-  - Folder names show clear intent
-  - Doesn't scale well though
+
+> A **layer** is a specific level of an application that data moves through.
+
+- Easier mental map
+- Folder names show clear intent
+- Doesn't scale well though
 
 ```markdown
 - tests/
@@ -619,12 +622,15 @@ Use **layer-based** based architecture for simple (single developer) application
 - tsconfig.json
 ```
 
-Use **domain (aka feature) based** architecture for large applications:
-  - Scales better
-  - Less risk of circular dependencies
-  - Avoids bloated services layer
-  - Avoids merge-conflicts
-  - Intent less clear for smaller projects and demos/tutorials
+Use **domain-based** architecture for large applications:
+
+> A **domain** is a high-level business feature for grouping smaller features. For example, if _Signup_ and _Login_ are features for a website, _Auth_ could be a domain.
+
+- Scales better
+- Less risk of circular dependencies
+- Avoids bloated services layer
+- Avoids merge-conflicts
+- Intent less clear so harder to demo for smaller projects tutorials
 
 ```markdown
 - config/
@@ -657,6 +663,6 @@ Use **domain (aka feature) based** architecture for large applications:
 ```
 
 ##### Keys points
-- In the above **layer-based** example, you can see that when we needed to add another module for `UserServices`, we had to add a folder to the services layer, move UserServices.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service-layer domains.
-- You might be wondering why we gave the domain files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section. The files ending in `*.router.ts`, are linear scripts for adding controller functions to an express `Router()` instance and then returning that instance to the root express instance.
+- In the above layer-based example, you can see that when we needed to add another module for `UserServices`, we had to add a folder to the services-layer, move UserServices.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service-layer domains.
+- You might be wondering why we gave the certain files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section. The files ending in `*.router.ts`, are linear-scripts for adding controller functions to an express `Router()` instance and then returning that instance to the root express-instance.
 - The examples demonstrated architecture using a typical back-end web server. For a client-side example of domain-based architecture, see: [React-Ts-Best-Practices](https://github.com/seanpmaxwell/React-Ts-Best-Practices).
