@@ -577,9 +577,7 @@ express.get('/api/posts/:userId', fetchPostsByUserId);
 <a id="architecture"></a>
 ### Architecture
 
-#### Server-Side Architecture
-
-Use **layer** based architecture for simple (single developer) applications:
+Use **layer-based** based architecture for simple (single developer) applications:
   - Easier mental map
   - Folder names show clear intent
   - Doesn't scale well though
@@ -605,7 +603,7 @@ Use **layer** based architecture for simple (single developer) applications:
 - tsconfig.json
 ```
 
-Use **domain (aka feature)** based architecture for large applications:
+Use **domain (aka feature) based** architecture for large applications:
   - Scales better
   - Less risk of circular dependencies
   - Avoids bloated services layer
@@ -642,44 +640,7 @@ Use **domain (aka feature)** based architecture for large applications:
 - tsconfig.json
 ```
 
-##### Keys points from examples above
+##### Keys points
 - In the above **layer-based** example, you can see that when we needed to add another module for `UserServices`, we had to add a folder to the services layer, move UserServices.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service-layer domains.
 - You might be wondering why we gave the domain files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section. The files ending in `*.router.ts`, are linear scripts for adding controller functions to an express `Router()` instance and then returning that instance to the root express instance.
-
-
-#### Client-Side Architecture
-
-This could vary depending on your framework but I'll share what I like to use for React. There's also the [React-Ts-Best-Practices](https://github.com/seanpmaxwell/React-Ts-Best-Practices) repo for a more detailed overview.
-
-**Important:**
-  - Make sure your `components/` folder is organized how one would navigate to them in the browser
-    - i.e `https:your-domain.com/login/reset-password` will be rendered by `src/components/Login/ResetPassword.tsx`
-
-```markdown
-- src/
-  - common/
-    - StringUtils.ts
-  - components/
-    - common/
-      - hooks/
-      - ui/
-        - buttons.tsx
-    - pages/
-      - Home/
-        - Home.tsx
-        - Home.test.tsx
-      - Login/
-        - Login.tsx
-        - Login.test.tsx
-        - ForgotPassword/
-          - ForgotPassword.tsx
-          - ForgotPassword.test.tsx
-    - index.css
-    - App.tsx
-    - main.tsx
-  - domain/ <-- Business logic
-    - UserDomain.ts
-  - services/ <-- (if you need to make API calls to a back-end)
-    - UserService.ts <-- Call the user.routes.ts in your back-end
-```
-
+- The examples demonstrated architecture using a typical back-end web server. For a client-side example of domain-based architecture, see: [React-Ts-Best-Practices](https://github.com/seanpmaxwell/React-Ts-Best-Practices).
