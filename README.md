@@ -242,16 +242,14 @@ Reasons:
 
 #### Top-down ordering
 Due to how hoisting works, regions in a file should be in this order top-to-bottom:
-  1. `Constants`  
-  2. `Types`  
-  3. `Run (or Setup)` (if it runs at start-up time I like to say "Setup" but if it's at request-time I'll say "Run") 
-  4. `Components` (if applicable `.jsx` / `.tsx`)  
-  5. `Functions`
-  6. `Classes`
-  7. `Export` 
-
-- Place `export default` at the **very bottom** of the file to make the public API immediately obvious.
-- Classes generally should go in their own file but small locally used ones are okay. 
+  1. `Docs`
+  2. `Constants`  
+  3. `Types`  
+  4. `Run (or Setup)`: (if it runs at start-up time I like to say "Setup" but if it's at request-time I'll say "Run") 
+  5. `Components`: (if applicable `.jsx` / `.tsx`)  
+  6. `Functions`
+  7. `Classes`: Classes generally should go in their own file but small locally used ones are okay. 
+  8. `Export`: imports should generally go at the bottom unless it's an inventory-script
 
 Separate regions with:
 
