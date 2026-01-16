@@ -527,13 +527,13 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 #### Documenting with comment-annotations
 - Place an `@Entity "database table name"` comment above an entity-type declaration: i.e. `/** @Entity users */`.
-- Place `@AuxEntity(relation type) "database table name"` for auxiliary-entites: i.e. `/** @AuxEntity(1-1) user_avatars */`.
+- Place `@AuxEntity "database table name"` for auxiliary-entites: i.e. `/** @AuxEntity user_avatars */`.
 - Try to use derived-types for properties added to entities outside the database-level, instead of appending properties to the original.
   - If you do end up adding a property to an `@Entity` which does not correspond to a database column, I like to use `// @Transient` (borrowing from SpringBoot).
 - For `@Entity`, define the columns in this order and use the following annotations:
   - `// @PK`: primary-key
   - ...everything in between... (i.e. `name`)
-  - `// @FK`: foreign-key
+  - `// @FK (join-type i.e. 1-1 or 1-many)`: foreign-key
   - `// @Audit`: for audits which are not also foreign-keys (i.e. `createdAt`, `updatedAt`)
 - Tag code only to be used for testing with `@TestOnly`.
 
@@ -550,10 +550,10 @@ interface IUser extends IModel {
   name: string;
 }
 
-/** @AuxEntity(1-1) user_avatars */
+/** @AuxEntity user_avatars */
 interface IUserAvatar extends IModel {
   fileName: string | null;
-  userId: number; // @FK
+  userId: number; // @FK 1-1
 }
 
 // This is setup in the services layer
