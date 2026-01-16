@@ -27,7 +27,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 - [Philosophy](#philosophy)
   - [Testing](#testing)
   - [Programming Paradigms](#programming-paradigms)
-  - [Using Comment Annotations](#using-comment-annotations)
+  - [Documenting code](#documenting-code)
   - [Architecture](#architecture)
 
 <br/><b>***</b><br/>
@@ -509,39 +509,52 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 ---
 
-<a id="using-comment-annotations"></a>
-### Using comment-annotations
+<a id="documenting-code"></a>
+### Documenting code
+
+#### Terminology
 - A **comment-annotation** is keyword in a comment that starts with `@`.
-- Use interfaces to describe the raw database records with `/** */` comments above them like how you do with function-declarations.
-  - Place a `@Table table_name` comment above the interface declaration.
-- Try to create new types for variations of raw database-records created at the API level instead of appending properties the original (i.e. `IUserDTO`).
-  - `DTO` stands for data-transfer-object and is a great acronym for objects used for moving IO data.
-- For `@Tables`, Make sure to document foreign/primary-keys with comments (i.e `@PK` and `@FK`).
-  - I like to use `// @NaC` which stands for `Not a Column` to indicate properties which do not correspond to a database-column.
-- Mark items only to be used for testing with `@TestOnly`.  
+- An **entity-type** is an interface or structured-type-alias used to describe the shape of a raw database-table.
+  - People also use the term **record** when referring to database-rows, but for TypeScript I advise against this to avoid confusion with the type **Record<>** 
+- A **derived-type** is a type which builds off of an entity-type.
+- The **model-layer** is an architecture-layer (layered or domain) for describing/handling the shape of database-tables.
+- A **database-transfer-object (DTO)** is an object created for moving IO-data.
+  - A good convention is to append their types with `DTO` at the end: ie `IUserDTO`.
+- An **audit-column** is a database column which holds meta-data about an entity's lifecycle: i.e. `createdAt`, `createdBy`.
+
+#### Using comment-annotations
+- Place an `@Entity "database table name"` comment above an entity-type declaration: i.e. `/** @Entity users */`.
+- Try to use derived-types for properties added to entities outside the database-level instead of appending properties to the original.
+- For `@Entity`, define the columns in this order and use the following annotations:
+  - `// @PK`: primary-key
+  - ...everything in between... (i.e. `name`)
+  - `// @FK`: foreign-key
+  - `// @Audit`: for audits which are not also foreign-keys (i.e. `createdAt`, `updatedAt`)
+- If you do end up adding a property to an `@Entity` which does not correspond to a database column, I like to use `// @Transient` (borrowing from SpringBoot).
+- Tag code only to be used for testing with `@TestOnly`.  
 ```ts
 interface IModel {
   id: number; // @PK
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date; // @Audit
+  updatedAt: Date; // @Audit
 }
 
 /**
- * @Table users
+ * @Entity users
  */
 interface IUser extends IModel {
   name: string;
 }
 
 /**
- * @Table user_avatars
+ * @Entity user_avatars
  */
 interface IUserAvatar extends IModel {
   fileName: string | null;
   userId: number; // @FK
 }
 
-// This is setup in the service layer
+// This is setup in the services layer
 interface IUserAvatarDTO extends IUserAvatar {
   data: Blob; // Place this here instead of IUser
 }
@@ -551,14 +564,15 @@ interface IUserAvatarDTO extends IUserAvatar {
  */
 function getDummyUser() {
   return {
-  id: randomInt(10),
-  name: 'John',
-  createdAt: new Date(),
-  updatedAt: new Date(), 
+    id: randomInt(10),
+    name: 'John',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
 }
 ```
 
-If you're building a back-end webserver, I highlighly suggest you document your route functions with the Http "verb+path" as well. Long term, it will help you look up route functions faster.
+If you're building a back-end webserver, I highly suggest you document your route functions with the Http "verb+path" as well. Long term, it will help you look up route functions faster.
 
 ```ts
 /**
@@ -568,7 +582,7 @@ function fetchPostsByUserId(userId: number): IPost[] {
   return postRepo(userId);
 }
 
-// Somewhere else in your package
+// ...Somewhere else in your package
 express.get('/api/posts/:userId', fetchPostsByUserId);
 ```
 
