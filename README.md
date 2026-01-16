@@ -518,14 +518,16 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 - **entity-type:** an interface or structured-type-alias used to describe the shape of a raw database-table.
   - People also use the term **record** when referring to database-rows, but for TypeScript I advise against this to avoid confusion with the type **Record<>**
 - **auxiliary-table:** a database-table which supports another: (i.e user_avatars holds image data for users)
+  - **join-table:** an auxiliary-entity which supports multiple tables together. User plural for both tables in the name: i.e. `projects_users`
 - **derived-type:** is a type which builds off of an entity-type.
 - **data-transfer-object (DTO):** is an object created for moving IO-data.
   - A good convention is to append their types with `DTO` at the end: ie `IUserDTO`.
 - An **audit-column** is a database-column which holds meta-data about an entity's lifecycle: i.e. `createdAt`, `createdBy`.
 
 #### Documenting with comment-annotations
-- Place an `@Entity "database table name"` comment above an entity-type declaration: i.e. `/** @Entity users */`.
-- Place `@AuxEntity "database table name"` for auxiliary-entites: i.e. `/** @AuxEntity user_avatars */`.
+- `@Entity table_name`: above an entity-type declaration: i.e. `/** @Entity users */`.
+- `@AuxEntity table_name`: auxiliary-entites: i.e. `/** @AuxEntity user_avatars */`.
+- `@JoinEntity table_name`: join-entities: i.e. `/** @JoinEntity projects_users */`.
 - Try to use derived-types for properties added to entities outside the database-level, instead of appending properties to the original.
   - If you do end up adding a property to an `@Entity` which does not correspond to a database column, I like to use `// @Transient` (borrowing from SpringBoot).
 - For `@Entity`, define the columns in this order and use the following annotations:
@@ -543,12 +545,16 @@ interface IModel {
   updatedAt: Date | string; // @Audit
 }
 
-/** @Entity users */
+/**
+ * @Entity users
+ */
 interface IUser extends IModel {
   name: string;
 }
 
-/** @AuxEntity user_avatars */
+/**
+ * @AuxEntity user_avatars
+ */
 interface IUserAvatar extends IModel {
   fileName: string | null;
   userId: number; // @FK 1-1
