@@ -531,35 +531,53 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 - An **audit-column** is a database-column which holds meta-data about an entity's lifecycle: i.e. `createdAt`, `createdBy`.
 
 #### Documenting with comment-annotations
-- `@Entity table_name`: above an entity-type declaration: i.e. `/** @Entity users */`.
-- `@AuxEntity table_name`: auxiliary-entites: i.e. `/** @AuxEntity user_avatars */`.
-- `@JoinEntity table_name`: join-entities: i.e. `/** @JoinEntity projects_users */`.
-- Try to use derived-types for properties added to entities outside the database-level, instead of appending properties to the original.
-  - If you do end up adding a property to an `@Entity` which does not correspond to a database column, I like to use `// @Transient` (borrowing from SpringBoot).
-- For `@Entity`, define the columns in this order and use the following annotations:
+- `@entity table_name`, above an entity-type declaration: i.e. `/** @entity users */`.
+
+- `@entity table_name` + `@auxiliaryOf table_it_compliments`, auxiliary-tables:
+```ts
+/**
+ * @entity user_avatars
+ * @auxiliaryOf users
+ */
+```
+
+- `@entity table_name` + `@joins table_key`, join-tables:
+```ts
+/**
+ * @entity charts_users
+ * @joins users
+ * @joins charts
+ */
+```
+
+- Try to use derived-types in palace of entites if you need append properties to an object outside the database-level.
+  - If you do end up adding a property to an `@entity` which does not correspond to a database column, I like to use `// @der` (short for derived).
+  
+- For `@entity`, define the columns in this order and use the following annotations:
   - `// @PK`: primary-key
   - ...everything in between... (i.e. `name`)
   - `// @FK (join-type i.e. 1-1 or 1-many)`: foreign-key
-  - `// @Audit`: for audits which are not also foreign-keys (i.e. `createdAt`, `updatedAt`)
-- Tag code only to be used for testing with `@TestOnly`.
+  - `// @audit`: for audits which are not also foreign-keys (i.e. `createdAt`, `updatedAt`)
+- Tag code only to be used for testing with `@testOnly`.
 
 #### User model snippet
 ```ts
 interface IModel {
   id: number; // @PK
-  createdAt: Date | string; // @Audit
-  updatedAt: Date | string; // @Audit
+  createdAt: Date | string; // @audit
+  updatedAt: Date | string; // @audit
 }
 
 /**
- * @Entity users
+ * @entity users
  */
 interface IUser extends IModel {
   name: string;
 }
 
 /**
- * @AuxEntity user_avatars
+ * @entity user_avatars
+ * @auxiliaryOf users
  */
 interface IUserAvatar extends IModel {
   fileName: string | null;
@@ -572,7 +590,7 @@ interface IUserAvatarDTO extends IUserAvatar {
 }
 
 /**
- * @TestOnly
+ * @testOnly
  */
 function getDummyUser() {
   return {
