@@ -528,7 +528,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 - **derived-type:** is a type which builds off of an entity-type.
 - **data-transfer-object (DTO):** is an object created for moving IO-data.
   - A good convention is to append their types with `DTO` at the end: ie `IUserDTO`.
-- An **audit-column** is a database-column which holds meta-data about an entity's lifecycle: i.e. `createdAt`, `createdBy`.
+- An **audit-key** is a database-key which holds meta-data about an entity's lifecycle: i.e. `createdAt`, `createdBy`.
 
 #### Documenting with comment-annotations
 - `@entity table_name`, above an entity-type declaration: i.e. `/** @entity users */`.
@@ -551,21 +551,21 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 ```
 
 - Try to use derived-types in palace of entites if you need append properties to an object outside the database-level.
-  - If you do end up adding a property to an `@entity` which does not correspond to a database column, I like to use `// @der` (short for derived).
+  - If you do end up adding a property to an `@entity` which does not correspond to a database column, I like to use `// @DK` (short for derived-key).
   
 - For `@entity`, define the columns in this order and use the following annotations:
   - `// @PK`: primary-key
   - ...everything in between... (i.e. `name`)
   - `// @FK (join-type i.e. 1-1 or 1-many)`: foreign-key
-  - `// @audit`: for audits which are not also foreign-keys (i.e. `createdAt`, `updatedAt`)
+  - `// @AK`: for audits which are not also foreign-keys (i.e. `createdAt`, `updatedAt`)
 - Tag code only to be used for testing with `@testOnly`.
 
 #### User model snippet
 ```ts
 interface IModel {
   id: number; // @PK
-  createdAt: Date | string; // @audit
-  updatedAt: Date | string; // @audit
+  createdAt: Date | string; // @AK
+  updatedAt: Date | string; // @AK
 }
 
 /**
