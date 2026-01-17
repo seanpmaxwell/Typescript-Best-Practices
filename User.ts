@@ -43,7 +43,7 @@ export type ISOString =
 type ValueOf<T extends object> = T[keyof T];
 
 // "PascalCase" for types. Prepending with an "I" to distinguish it from the 
-// "User" namespace-object. `@Table "users"` means this describes the "users" database
+// "User" namespace-object. `@entity "users"` means this describes the "users" database
 // table
 
 /**
