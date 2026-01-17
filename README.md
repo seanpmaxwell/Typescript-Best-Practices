@@ -396,7 +396,7 @@ function normalFunction() {
 
 - Place `/** */` above all **function-declarations** always, `//` or no comment is okay for **configured-functions**.
 - I would also recommend `/** */` for utility-types as they can become pretty complex.
-- Place a `@TestOnly` comment annotation for items not meant to be used in production. 
+- Place a `@testOnly` comment annotation for items not meant to be used in production. 
 - Use `//` for inline explanations.
 - Capitalize and punctuate comments.
 - Separate logical regions clearly.
@@ -520,7 +520,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 #### Terminology
 - **model-layer:** is an architecture-layer for describing/handling the shape of database-tables.
-- **comment-annotation:** keyword in a comment that starts with `@`.
+- **comment-tags:** keyword in a comment that starts with `@`.
 - **entity-type:** an interface or structured-type-alias used to describe the shape of a raw database-table.
   - People also use the term **record** when referring to database-rows, but for TypeScript I advise against this to avoid confusion with the type **Record<>**
 - **auxiliary-table:** a database-table which supports another: (i.e user_avatars holds image data for users)
