@@ -47,13 +47,13 @@ type ValueOf<T extends object> = T[keyof T];
 // table
 
 /**
- * @Table users
+ * @entity users
  */
 interface IUser {
   id: number; // @PK
   name: string;
   role: UserRoles;
-  created: Date | ISOString;
+  createdAt: Date | ISOString; // @audit
 }
 
 /******************************************************************************
