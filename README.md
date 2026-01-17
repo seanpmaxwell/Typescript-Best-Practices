@@ -76,8 +76,10 @@ So things are more clear down the line let's first clarify some terminology.
 - **utilities:** either standalone functions or **namespace-object scripts** (see [Script Types)[#script-types] section below) for grouping related functions.
 
 ### Types
-- **type-aliases**: any time declared with `type TypeName = ...`.
+- **type-aliases**: any type declared with `type TypeName = ...`.
+- **interfaces**: types declared with `interface SomeInterfaceName { ... }`.
 - **utility-types:** type-aliases with generics used for resolving other types.
+- **structured-types:** type-aliases or interfaces used to describe the entries of an object.
 
 <br/><b>***</b><br/>
 
@@ -349,7 +351,7 @@ function normalFunction() {
   - **Linear scripts**: `kebab-case`
     - Can also use kebab-case in conjunction with `.` to differentiate sibling scripts with similar purposes: i.e `user.router.ts` and `post.router.ts`.
   - **Declaration scripts**: Name them after the item being exported.
-  - **Namespace-object scripts:** PascalCase
+  - **Namespace-object scripts:** Name them after the object that's used in the code. Usually this is PascalCase but not always. See object naming below.
   - **Inventory:** `kebab-case`
   - **index.ts** and **main.ts** 
     - Reserve the filename `index.ts` for **barrel-files**. Barrel-files are for creating a single entry point for a folder.
@@ -359,18 +361,22 @@ function normalFunction() {
   - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
   - **Objects**:
     - For object-literals used as a namespace for a collection of readonly values `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys.
-    - If the entire object is being passed as as value (it's not simply a namespace) and you need specific key names, UPPER_SNAKE_CASE is okay for the object name. 
-- **Variables**: `camelCase`
+    - If an object is readonly but the entire object is being passed as as value (it's not simply a namespace) and you need specific key names, UPPER_SNAKE_CASE is preferred for the object name.
+    - For the objects of namespace-object scripts:
+      - If its functions are mostly static-logic (no initialization at startup-time), prefer `PascalCase`: i.e `import DateUtils from 'DateUtils.ts;`.
+      - If its functions require initialization, prefer `camelCase`: i.e `import db from '@src/infra/db.ts;`.
+- **All variables declared inside of functions except for type declarations**: `camelCase`
 - **Functions**:
   - `camelCase`: most of the time
   - `PascalCase`: for certain situations
     - JSX Elements
-    - Functions just meant to return mostly static data with simple formatting (i.e. get a clone of an object with current datetime objects) can be `PascalCase`.
-  - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch` (i.e. `fetchUsers()`).
-  - Prepend **validator-functions** with an `is`.
+    - Functions just meant to return mostly static data with simple formatting (i.e. return an error message and interpolate a value) can be `PascalCase`.
+  - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch` (i.e. `getTimeAsUTC()`,`async fetchUserRecords()`).
+  - Prepend **validator-functions** with an `is`: `isValidUser(arg: unknown): arg is IUser`.
 - **Classes / Types**: `PascalCase`
-  - You can prepend an interface with an `I` for scenarios where you might have a type/value naming conflict: ie. `class Dog implements IDog`.
-  - Many prepend type-aliases with a `T`, there is no convention around this, and I simply choose not to. 
+  - Aside from using PascalCase, there are some other common patterns used; however, these are not established conventions:
+    - Prepend interfaces with an `I`. I like to do this because I mostly used interfaces for structured-types and it helps to avoid naming collisions with classes/namespace-objects.
+    - Prepend type-aliases with a `T. I don't usually do this unless I specific value I'm trying to distinguish the type from. 
 - **Booleans**: prefix with `is`
 
 **Abbreviations** and **Acronyms**:
