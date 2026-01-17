@@ -396,7 +396,7 @@ function normalFunction() {
 
 - Place `/** */` above all **function-declarations** always, `//` or no comment is okay for **configured-functions**.
 - I would also recommend `/** */` for utility-types as they can become pretty complex.
-- Place a `@testOnly` comment annotation for items not meant to be used in production. 
+- Place a `@testOnly` tag for items not meant to be used in production. 
 - Use `//` for inline explanations.
 - Capitalize and punctuate comments.
 - Separate logical regions clearly.
@@ -530,8 +530,23 @@ Here the terms **branch-directory** and **focused-directory** are important: see
   - A good convention is to append their types with `DTO` at the end: ie `IUserDTO`.
 - An **audit-key** is a database-key which holds meta-data about an entity's lifecycle: i.e. `createdAt`, `createdBy`.
 
-#### Documenting with comment-annotations
-- `@entity table_name`, above an entity-type declaration: i.e. `/** @entity users */`.
+#### Documenting with comment @tags
+
+##### Misc
+- Function-declarations not exported tag with `@private`
+- Tag code only to be used for testing with `@testOnly`.
+
+##### Working with relational-databases
+
+> `@tags` are extremely helpful for code that works with database, so we don't constantly have to look in our DBMS for relationship info
+
+- `@entity table_name`, above an entity-type declaration:
+```ts
+/**
+ * @entity users
+ */
+interface IUser { name: string; };
+```
 
 - `@entity table_name` + `@auxiliaryOf table_it_compliments`, auxiliary-tables:
 ```ts
@@ -550,15 +565,13 @@ Here the terms **branch-directory** and **focused-directory** are important: see
  */
 ```
 
-- Try to use derived-types in palace of entites if you need append properties to an object outside the database-level.
-  - If you do end up adding a property to an `@entity` which does not correspond to a database column, I like to use `// @DK` (short for derived-key).
-  
-- For `@entity`, define the columns in this order and use the following annotations:
+- For `@entity`, define the columns in this order and use the following tags:
   - `// @PK`: primary-key
   - ...everything in between... (i.e. `name`)
-  - `// @FK (join-type i.e. 1-1 or 1-many)`: foreign-key
+  - `// @FK + "join type" (i.e. 1-1 or 1-many)`: foreign-key
   - `// @AK`: for audits which are not also foreign-keys (i.e. `createdAt`, `updatedAt`)
-- Tag code only to be used for testing with `@testOnly`.
+  - `// @TK`: transient-key, keys appended to an object outside the database level
+    - Generally, try to use derived-types in palace of entites with transient-keys.
 
 #### User model snippet
 ```ts
