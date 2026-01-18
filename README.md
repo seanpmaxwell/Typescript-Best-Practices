@@ -487,8 +487,8 @@ Here the terms **branch-directory** and **focused-directory** are important: see
   - Login.test.tsx
 ```
 
-Keep in mind, folders under `common/` and files/folders under `local/` are not confined to common-category names. You can create your own categories too for something used heavily throughout your codebase. Common-categories are more for storing items which don't fit into a specific place. Some other categories I commonly created are:
-  - **schemas** - structured-types tightly-coupled with functions for initialzing/validating them.
+Keep in mind, folders under `common/` and files/folders under `local/` are not confined to common-category names. You can create your own categories too for something used heavily throughout your codebase. Common-categories are more for storing items which don't fit into a specific place. Some other categories I commonly create are:
+  - **schemas** - structured-types that maybe tightly-coupled with functions for initialzing/validating them.
   - **validators** - Validator-functions passed to the controller layer to handle **input-level** (as opposed to business-level) validation.
 
 <br/><b>***</b><br/>
