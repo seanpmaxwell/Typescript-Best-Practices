@@ -634,13 +634,21 @@ express.get('/api/posts/:userId', fetchPostsByUserId);
 <a id="architecture"></a>
 ### Architecture
 
-Use **layer-based** based architecture for simple (single developer) applications:
+Terminology:
+  - **domain:** high-level business feature for grouping smaller features:
+    - For example: if _Signup_ and _Login_ are features for a website, _Auth_ could be a domain.
+  - **layer:** is a specific level of an application that data moves through.
+    - Layers are typically grouped as: 
+      - **repository:** talks to the persistence layer (server-side)
+      - **service:** business logic (server-side) or API calls (client-side)
+      - **controller:** handle incoming requests from the client (server-side)
+      - **middleware:** logic typically passed to the framework to format/validate incoming requests
+      - Note: layers are not an exact science and you'll find many applications which take various approaches to the above.
 
-> A **layer** is a specific level of an application that data moves through.
-
-- Easier mental map
-- Folder names show clear intent
-- Doesn't scale well though
+Use **layer-based** based architecture for simple (single developer) applications
+  - Easier mental map
+  - Folder names show clear intent
+  - Doesn't scale well though
 
 ```markdown
 - tests/
@@ -664,9 +672,6 @@ Use **layer-based** based architecture for simple (single developer) application
 ```
 
 Use **domain-based** architecture for large applications:
-
-> A **domain** is a high-level business feature for grouping smaller features. For example, if _Signup_ and _Login_ are features for a website, _Auth_ could be a domain.
-
 - Scales better
 - Less risk of circular dependencies
 - Avoids bloated services layer
