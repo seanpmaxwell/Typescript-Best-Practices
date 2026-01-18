@@ -487,7 +487,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
   - Login.test.tsx
 ```
 
-Keep in mind, folders under `common/` and files/folders under `local/` are not confined to common-category names. You can create your own categories too for something used heavily throughout your codebase. I like to create files under `local/` named `dtos.ts` for storing my DTO (see terminology under documenting code) types. Common-categories are more for storing items which don't fit into a specific place.
+Keep in mind, folders under `common/` and files/folders under `local/` are not confined to common-category names. You can create your own categories too for something used heavily throughout your codebase. I like to create files under `local/` named `entities.ts` for storing types/functions which describe/handle specific database tables. Common-categories are more for storing items which don't fit into a specific place.
 
 <br/><b>***</b><br/>
 
