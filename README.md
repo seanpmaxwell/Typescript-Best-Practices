@@ -419,9 +419,9 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 ### Shared categories
 - Let's consider **utils**, **types**, and **constants** the 3 main **shared-categories**. And a 4th category **ui** for those working with JSX elements.
-  - **utils** either standalone functions in inventory-scripts or namespace-object scripts for grouping related functions.
-  - **constants**: organzing readonly values or but can also include functions which return mostly readonly values after some simple formatting (function which returns an error message string with the username inserted into it).
-  - **types**: storing only compile-time items (type-aliases and interfaces, never runtime items).
+  - **utils** runtime logic. If some runtime logic is tightly coupled with a type which also needs to be exported, the type can go in the corresponding util folder too.
+  - **constants**: organzing readonly values but can also include functions which return mostly readonly values after some simple formatting (function which returns an error message string with the username inserted into it).
+  - **types**: standalone compile-time items (type-aliases and interfaces, never runtime items) that don't need to be coupled with runtime logic in the shared area.
   - **ui:** Any file ending with a `.jsx/.tsx` extension.
 
 ### Branch-directories and the `common` folder
@@ -692,7 +692,7 @@ Use **domain-based** architecture for large applications:
       - PostRepo.ts
       - PostServices.ts
       - PostController.ts
-  - infra/
+  - infra/ <-- Talking to the persistence layer. 
     - db.ts
   - routers/
     - middleware/
