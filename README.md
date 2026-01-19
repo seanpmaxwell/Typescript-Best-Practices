@@ -419,15 +419,15 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 ### Shared categories
 - Let's consider **utils**, **types**, and **constants** the 3 main **shared-categories**. And a 4th category **ui** for those working with JSX elements.
-  - **utils** runtime logic. If some runtime logic is tightly coupled with a type which also needs to be exported, the type can go in the corresponding util folder too.
+  - **utils** runtime logic.
   - **constants**: organzing readonly values but can also include functions which return mostly readonly values after some simple formatting (function which returns an error message string with the username inserted into it).
   - **types**: standalone compile-time items (type-aliases and interfaces, never runtime items) that don't need to be coupled with runtime logic in the shared area.
   - **ui:** Any file ending with a `.jsx/.tsx` extension.
 
 ### Branch-directories and the `common` folder
 - In a **branch-directory** with shared content create a subfolder named `common/`.
-- Avoid using **dumping-ground** names for folders like `misc/`, `helpers/`, `utils/`, `shared/` etc. as their purpose is ambiguous and can quickly degrade your package's organization.
-- Within `common/` it's okay to group files into category-named folders like `constants/`, `types/`, `utils/` etc but for files **DO NOT** use dumping-ground names. In branch-directories (including `common/`) **filenames should always demonstrate clear intent**: (i.e. `src/common/types/utility-types.ts`).
+- Avoid using **dumping-ground-names** for folders like `misc/`, `helpers/`, `shared/` etc. (except for the common-categories listed above) as their purpose is ambiguous and can quickly degrade your package's organization.
+- Within `common/` it's okay to group files by category but for files **DO NOT EVER** use dumping-ground names. In branch-directories (including `common/`) **filenames should always demonstrate clear intent**: (i.e. `src/common/types/utility-types.ts`).
 - You can have multiple levels of `common/` for nested branch-directories:
 ```markdown
 - public/
@@ -463,16 +463,18 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 ### Focused-directories and the `local` folder
 - Use the folder name **local/** for shared content in a focused-directory.
-- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx`, etc are actually okay in the `local/` folder. However, **DO NOT** place them directly in the focused-directory itself.
+- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx`, etc are actually okay in the `local/` folder. However, **DO NOT** place files with dumping-ground-names directly in the focused-directory itself.
 - If there's a focused-directory code which needs to be shared both locally and externally, you can place those items in `local/` as well; `local/` is not meant to be super strict.
 - If a focused-directory has some shared code not used internally, **but it still makes sense to place that code in that particular focused-directory because it's very unique to that directory's purpose,** place those items in the **external/** folder.
-- If you want to be extra careful about some focused-directory items never being used externally, create a folder named **internal/**, and configure eslint to never allow imports from folders named `internal/`, except for files of the same focused-directory.
+- If you want to be extra careful about some focused-directory items never being used externally, create a folder named **internal/**. If you're using eslint you can configure it to never allow imports from folders named `internal/` except for files of the same focused-directory.
 ```markdown
 - common/
   - ui/
     - DataTable/
       - external/
         - dataTableFilterToUrlString.ts <-- an external helper function.
+      - internal/
+        - table-sort-functions.ts <-- not used outside of DataTable/
       - Datatable.tsx
 - Login/
   - dialogs/
@@ -487,9 +489,28 @@ Here the terms **branch-directory** and **focused-directory** are important: see
   - Login.test.tsx
 ```
 
-Keep in mind, folders under `common/` and files/folders under `local/` are not confined to common-category names. You can create your own categories too for something used heavily throughout your codebase. Common-categories are more for storing items which don't fit into a specific place. Some other categories I commonly create are:
-  - **entities** - structure-types which describe database tables.
-  - **schemas** - structured-types which describe data relevant to the persistance-layer although not directly to database tables.
+### Going further
+
+Folders under `common/` and files/folders under `local/` are not confined to common-category names. You can create your own categories too for something used heavily throughout your codebase. Common-categories are more for storing items which don't fit into a specific place. Some other categories I commonly create are:
+  - **entities** - structure-types which describe database-tables.
+  - **schemas** - structured-types which describe data relevant to the persistance-layer although not directly mapping to database tables (i.e. DTO data-transfer-objects).
+
+In a focused-directory shareable code isn't necessarily restricted to the `local/` folder. If you have a file name which demonstrates a very clear intent and purpose it can go directly in a focused-directory. `local/` is mostly useful when you need a filename without a restricted purpose.
+
+In the example below, `local/schemas.ts` does not have a specific purpose in the filename other than holding structured-types, and we have to look at the folder heirarchy for knowing those types are related to users. In contrast, we know by the filename that `UserSupportService.ts` holds shareable business logic related to the user domain and is called by other service layers. The purpose is clear, so it doesn't need to go in `local/`.
+```markdown
+- domains/
+  - users/
+    - local/
+      - schemas.ts
+    - UserController.ts
+    - UserService.ts <-- Uses UserSupportService.ts
+    - UserRepo.ts
+    - UserSupportService.ts <-- Shareable business logic related to the user domain
+  - posts/
+    - PostController.ts 
+    - PostService.ts <-- Also uses UserSupportService.ts
+```
 
 <br/><b>***</b><br/>
 
@@ -532,14 +553,14 @@ Keep in mind, folders under `common/` and files/folders under `local/` are not c
 - **derived-type:** is a type which builds off of an entity-type.
 - **data-transfer-object (DTO):** is an object created for moving IO-data.
   - A good convention is to append their types with `DTO` at the end: ie `IUserDTO`.
-- An **audit-key** is a database-key which holds meta-data about an entity's lifecycle: i.e. `createdAt`, `createdBy`.
+- An **audit-column** is a database-key which holds meta-data about an entity's lifecycle: i.e. `createdAt`, `createdBy`.
 
 #### Documenting with comment @tags
 
 ##### Misc
 - `@private`: functions never used outside of their file
 - `@testOnly`: for testing only and never in production
-- `@cronJob`: functions only for cron-jobs and not user initiated
+- `@cronJob`: functions only for cron-jobs and not user-initiated
 
 ##### Working with relational-databases
 
