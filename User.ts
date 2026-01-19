@@ -53,7 +53,7 @@ interface IUser {
   id: number; // @PK
   name: string;
   role: UserRoles;
-  createdAt: Date | ISOString; // @audit
+  createdAt: Date | ISOString; // @AC
 }
 
 /******************************************************************************
