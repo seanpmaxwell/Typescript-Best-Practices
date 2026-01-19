@@ -595,16 +595,16 @@ interface IUser { name: string; };
   - `// @PK`: primary-key
   - ...everything in between... (i.e. `name`)
   - `// @FK + "join type" (i.e. 1-1 or 1-many)`: foreign-key
-  - `// @AK`: for audits which are not also foreign-keys (i.e. `createdAt`, `updatedAt`)
-  - `// @TK`: transient-key, keys appended to an object outside the database level
+  - `// @AC`: auditing columns which are not also foreign-keys (i.e. `createdAt`, `updatedAt`)
+  - `// @Tr`: transient entries appended to an object outside the database level
     - Generally, try to use derived-types in palace of entites with transient-keys.
 
 #### User model snippet
 ```ts
 interface IEntity {
   id: number; // @PK
-  createdAt: Date | string; // @AK
-  updatedAt: Date | string; // @AK
+  createdAt: Date | string; // @AC
+  updatedAt: Date | string; // @AC
 }
 
 /**
