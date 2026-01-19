@@ -665,8 +665,8 @@ Terminology:
     - For example: if _Signup_ and _Login_ are features for a website, _Auth_ could be a domain.
   - **layer:** is a specific level of an application that data moves through.
     - Layers are typically grouped as: 
-      - **repository:** talks to the persistence-layer (server-side)
-        - In most situations this means the database but is not restricted to it. I like to use plain `repo` when talking to a database and then "persistence name" + "repo" for something else: i.e "UserRepo.ts" (talks to the database) and "UserS3Repo.ts" fetches user blob data from s3.
+      - **repository:** service-layer which talks to the persistence-layer
+        - If you have multiple persistence-layers (i.e. and database and a file storage third party tool). I like to use plain `repo` when referring to the database and then `"persistence layer" + "repo"` for something else: i.e "UserRepo.ts" (talks to the database) and "UserAssetRepo.ts" (fetches user file data from s3).
       - **service:** business logic (server-side) or API calls (client-side)
       - **controller:** handle incoming requests from the client (server-side)
       - **middleware:** logic typically passed to the framework to format/validate incoming requests
