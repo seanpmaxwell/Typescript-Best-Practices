@@ -527,7 +527,7 @@ Keep in mind, folders under `common/` and files/folders under `local/` are not c
 - **comment-tags:** keyword in a comment that starts with `@`.
 - **entity-type:** an interface or structured-type-alias used to describe the shape of a raw database-table.
   - People also use the term **record** when referring to database-rows, but for TypeScript I advise against this to avoid confusion with the type **Record<>**
-- **auxiliary-table:** a database-table which supports another: (i.e user_avatars holds image data for users)
+- **auxiliary-table:** a database-table which supports another: (i.e user_avatars holds image metadata for users)
   - **join-table:** an auxiliary-entity which supports multiple tables together. User plural for both tables in the name: i.e. `projects_users`
 - **derived-type:** is a type which builds off of an entity-type.
 - **data-transfer-object (DTO):** is an object created for moving IO-data.
@@ -537,12 +537,13 @@ Keep in mind, folders under `common/` and files/folders under `local/` are not c
 #### Documenting with comment @tags
 
 ##### Misc
-- Function-declarations not exported tag with `@private`
-- Tag code only to be used for testing with `@testOnly`.
+- `@private`: functions never used outside of their file
+- `@testOnly`: for testing only and never in production
+- `@cronJob`: functions only for cron-jobs and not user initiated
 
 ##### Working with relational-databases
 
-> `@tags` are extremely helpful for code that works with database, so we don't constantly have to look in our DBMS for relationship info
+> `@tags` are extremely helpful for code that works with a database so we don't constantly have to look in our DBMS for relationship info.
 
 - `@entity table_name`, above an entity-type declaration:
 ```ts
@@ -579,7 +580,7 @@ interface IUser { name: string; };
 
 #### User model snippet
 ```ts
-interface IModel {
+interface IEntity {
   id: number; // @PK
   createdAt: Date | string; // @AK
   updatedAt: Date | string; // @AK
@@ -588,7 +589,7 @@ interface IModel {
 /**
  * @entity users
  */
-interface IUser extends IModel {
+interface IUser extends IEntity {
   name: string;
 }
 
@@ -596,7 +597,7 @@ interface IUser extends IModel {
  * @entity user_avatars
  * @auxiliaryOf users
  */
-interface IUserAvatar extends IModel {
+interface IUserAvatar extends IEntity {
   fileName: string | null;
   userId: number; // @FK 1-1
 }
@@ -643,11 +644,17 @@ Terminology:
     - For example: if _Signup_ and _Login_ are features for a website, _Auth_ could be a domain.
   - **layer:** is a specific level of an application that data moves through.
     - Layers are typically grouped as: 
-      - **repository:** talks to the persistence layer (server-side)
+      - **repository:** talks to the persistence-layer (server-side)
+        - In most situations this means the database but is not restricted to it. I like to use plain `repo` when talking to a database and then "persistence name" + "repo" for something else: i.e "UserRepo.ts" (talks to the database) and "UserS3Repo.ts" fetches user blob data from s3.
       - **service:** business logic (server-side) or API calls (client-side)
       - **controller:** handle incoming requests from the client (server-side)
       - **middleware:** logic typically passed to the framework to format/validate incoming requests
-      - Note: layers are not an exact science and you'll find many applications which take various approaches to the above.
+      - Additional notes:
+        - layers are not an exact science and you'll find many applications which take various approaches to the above.
+        - **infra:**
+          - server-side: if you need to wrap tools which talk to the persistance layer (i.e. `infra/s3.ts` or `infra/db.ts`).
+          - client-side: if you need to wrap tools which trigger API calls and is called by the service-layer (infra/http.ts).
+        - **inter-service:** I like to use this term (short for intermediate-service) for service-modules not meant to talk to the controller-layer but holding shareable business logic used by other service.
 
 Use **layer-based** based architecture for simple (single developer) applications
   - Easier mental map
@@ -666,9 +673,9 @@ Use **layer-based** based architecture for simple (single developer) application
     - PostRoutes.ts
   - services/
     - UserServices/
-      - UserServices.ts
-      - UserBlobUtils.ts <-- Created later: for uploading avatar to blob storage.
-    - PostServices.ts
+      - UserService.ts
+      - UserImageInterService.ts <-- Created later: for uploading avatar to remote storage (i.e S3).
+    - PostService.ts
   - main.ts
   - server.ts
 - package.json
@@ -688,13 +695,13 @@ Use **domain-based** architecture for large applications:
   - common/
   - domain/
     - users/
-      - UserBlobUtils.ts <-- Created later: for uploading avatar to blob storage. 
       - UserRepo.ts
-      - UserServices.ts
+      - UserService.ts
+      - UserImageInterService.ts
       - UserController.ts
     - posts/
       - PostRepo.ts
-      - PostServices.ts
+      - PostService.ts
       - PostController.ts
   - infra/ <-- Talking to the persistence layer. 
     - db.ts
@@ -713,6 +720,6 @@ Use **domain-based** architecture for large applications:
 ```
 
 ##### Keys points
-- In the above layer-based example, you can see that when we needed to add another module for `UserServices`, we had to add a folder to the services-layer, move UserServices.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service-layer domains.
+- In the above layer-based example, you can see that when we needed to add another module for `UserService`, we had to add a folder to the services-layer, move UserService.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service-layer domains.
 - You might be wondering why we gave the certain files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section. The files ending in `*.router.ts`, are linear-scripts for adding controller functions to an express `Router()` instance and then returning that instance to the root express-instance.
 - The examples demonstrated architecture using a typical back-end web server. For a client-side example of domain-based architecture, see: [React-Ts-Best-Practices](https://github.com/seanpmaxwell/React-Ts-Best-Practices).
