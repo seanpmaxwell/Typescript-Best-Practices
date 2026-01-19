@@ -654,7 +654,7 @@ Terminology:
         - **infra:**
           - server-side: if you need to wrap tools which talk to the persistance layer (i.e. `infra/s3.ts` or `infra/db.ts`).
           - client-side: if you need to wrap tools which trigger API calls and is called by the service-layer (infra/http.ts).
-        - **inter-service:** I like to use this term (short for intermediate-service) for service-modules not meant to talk to the controller-layer but holding shareable business logic used by other service.
+        - **auxiliary-service:** I like to use this term for service-modules not meant to talk to the controller-layer but holding shareable business logic used by other services: i.e UserAuthAuxService.ts
 
 Use **layer-based** based architecture for simple (single developer) applications
   - Easier mental map
