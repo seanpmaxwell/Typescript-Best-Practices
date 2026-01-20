@@ -73,7 +73,6 @@ So things are more clear down the line let's first clarify some terminology.
 - **validator-functions:** accepts and unknown variable and returns a type-predicate
 - **function-declarations:** functions declared with `function functionName`.
 - **configured-functions:** functions returned from some other function call: `const parseUser = parseObject(UserSchema)`.
-- **utilities:** either standalone functions or **namespace-object scripts** (see [Script Types)[#script-types] section below) for grouping related functions.
 
 ### Types
 - **type-aliases**: any type declared with `type TypeName = ...`.
@@ -419,7 +418,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 ### Shared categories
 - Let's consider **utils**, **types**, and **constants** the 3 main **shared-categories**. And a 4th category **ui** for those working with JSX elements.
-  - **utils** runtime logic.
+  - **utils** runtime logic. Functions under `utils` should not fetch IO-data, talk to persistance layers, or import runtime logic from anywhere else other than third-party-libraries or other utility functions in the same directory. This helps to prevent dependency loops.
   - **constants**: organzing readonly values but can also include functions which return mostly readonly values after some simple formatting (function which returns an error message string with the username inserted into it).
   - **types**: standalone compile-time items (type-aliases and interfaces, never runtime items) that don't need to be coupled with runtime logic in the shared area.
   - **ui:** Any file ending with a `.jsx/.tsx` extension.
@@ -492,12 +491,12 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 ### Going further
 
 Folders under `common/` and files/folders under `local/` are not confined to common-category names. You can create your own categories too for something used heavily throughout your codebase. Common-categories are more for storing items which don't fit into a specific place. Some other categories I commonly create are:
-  - **entities** - structure-types which describe database-tables.
+  - **classes** - I rarely implement new classes but I'll create a folder for them if I do: (i.e. creating custom `Error` objects).
   - **schemas** - structured-types which describe data relevant to the persistance-layer although not directly mapping to database tables (i.e. DTO data-transfer-objects).
 
-In a focused-directory shareable code isn't necessarily restricted to the `local/` folder. If you have a file name which demonstrates a very clear intent and purpose it can go directly in a focused-directory. `local/` is mostly useful when you need a filename without a restricted purpose.
+In a focused-directory shareable code isn't necessarily restricted to the `local/` folder. If you have a file name which demonstrates a very clear intent and purpose it can go directly in a focused-directory. `local/` is moreso useful when you need a filename without a clear purpose.
 
-In the example below, `local/schemas.ts` does not have a specific purpose in the filename other than holding structured-types, and we have to look at the folder heirarchy for knowing those types are related to users. In contrast, we know by the filename that `UserStorageInfoService.ts` holds shareable business logic related to the user storage. The purpose is clear, so it doesn't need to go in `local/`.
+In the example below, `local/schemas.ts` does not have a specific purpose in the filename other than holding structured-types, and we have to look at the folder heirarchy for knowing those types are related to users. In contrast, we know by the filename that `UserStorageInfoService.ts` holds shareable business logic related to user storage. The purpose is clear, so it doesn't need to go in `local/`.
 ```markdown
 - domains/
   - users/
@@ -561,6 +560,7 @@ In the example below, `local/schemas.ts` does not have a specific purpose in the
 - `@private`: functions never used outside of their file
 - `@testOnly`: for testing only and never in production
 - `@cronJob`: functions only for cron-jobs and not user-initiated
+- `@dummyData`: functions only used by dummy-data scripts.
 
 ##### Working with relational-databases
 
