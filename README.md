@@ -497,19 +497,19 @@ Folders under `common/` and files/folders under `local/` are not confined to com
 
 In a focused-directory shareable code isn't necessarily restricted to the `local/` folder. If you have a file name which demonstrates a very clear intent and purpose it can go directly in a focused-directory. `local/` is mostly useful when you need a filename without a restricted purpose.
 
-In the example below, `local/schemas.ts` does not have a specific purpose in the filename other than holding structured-types, and we have to look at the folder heirarchy for knowing those types are related to users. In contrast, we know by the filename that `UserSupportService.ts` holds shareable business logic related to the user domain and is called by other service layers. The purpose is clear, so it doesn't need to go in `local/`.
+In the example below, `local/schemas.ts` does not have a specific purpose in the filename other than holding structured-types, and we have to look at the folder heirarchy for knowing those types are related to users. In contrast, we know by the filename that `UserStorageInfoService.ts` holds shareable business logic related to the user storage. The purpose is clear, so it doesn't need to go in `local/`.
 ```markdown
 - domains/
   - users/
     - local/
       - schemas.ts
     - UserController.ts
-    - UserService.ts <-- Uses UserSupportService.ts
+    - UserService.ts <-- Uses UserStorageService.ts
     - UserRepo.ts
-    - UserSupportService.ts <-- Shareable business logic related to the user domain
+    - UserStorageInfoService.ts <-- Shareable business logic related to the user domain
   - posts/
     - PostController.ts 
-    - PostService.ts <-- Also uses UserSupportService.ts
+    - PostService.ts <-- Also uses UserStorageInfoService.ts
 ```
 
 <br/><b>***</b><br/>
@@ -675,7 +675,6 @@ Terminology:
         - **infra:**
           - server-side: if you need to wrap tools which talk to the persistance layer (i.e. `infra/s3.ts` or `infra/db.ts`).
           - client-side: if you need to wrap tools which trigger API calls and is called by the service-layer (infra/http.ts).
-        - **support-service:** I like to use this term for service-modules not meant to talk to the controller-layer but holding shareable business logic used by other services: i.e UserAuthSupportService.ts
 
 Use **layer-based** based architecture for simple (single developer) applications
   - Easier mental map
