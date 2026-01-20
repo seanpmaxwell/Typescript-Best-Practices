@@ -463,22 +463,28 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 ### Focused-directories and the `local` folder
 - Use the folder name **local/** for shared content in a focused-directory.
 - Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx`, etc are actually okay in the `local/` folder. However, **DO NOT** place files with dumping-ground-names directly in the focused-directory itself.
-- If there's a focused-directory code which needs to be shared both locally and externally, you can place those items in `local/` as well; `local/` is not meant to be super strict.
+- If there's focused-directory code which needs to be shared both locally and externally, you can place those items in `local/` as well **`local/` is not meant to be super strict**.
 - If a focused-directory has some shared code not used internally, **but it still makes sense to place that code in that particular focused-directory because it's very unique to that directory's purpose,** place those items in the **external/** folder.
-- If you want to be extra careful about some focused-directory items never being used externally, create a folder named **internal/**. If you're using eslint you can configure it to never allow imports from folders named `internal/` except for files of the same focused-directory.
+- If you want to be extra careful about some focused-directory items never being used externally, place them in a folder named **internal/**.
+- If some code in a focused directory isn't shared (that is, it's just used in one place but it was large enough to make separate file for) but you'd like to keep in separated from the other files at a focused-directories root, you can use `local/internal` for that as well: see the `sortTableData.ts` file in the example below.
+
+Various focused directories in a React project:
 ```markdown
 - common/
   - ui/
     - DataTable/
+      - local/
+        - datatable-elements.tsx <-- shared inside and outside of DataTable/
       - external/
-        - dataTableFilterToUrlString.ts <-- an external helper function.
+        - dataTableFilterToUrlString.ts <-- an external only helper function.
       - internal/
-        - table-sort-functions.ts <-- not used outside of DataTable/
+        - sortTableData.ts <-- not shared, only called in one place in DataTable.ts
       - Datatable.tsx
+      - Datatable.test.tsx
 - Login/
   - dialogs/
     - local/
-      - utils.ts <-- stores functions needed by both dialog components
+      - AuthDialog.tsx <-- base dialog for the other two
     - ForgotPasswordDialog.tsx
     - SignupInsteadDialog.tsx
   - local/
@@ -492,24 +498,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 Folders under `common/` and files/folders under `local/` are not confined to common-category names. You can create your own categories too for something used heavily throughout your codebase. Common-categories are more for storing items which don't fit into a specific place. Some other categories I commonly create are:
   - **classes** - I rarely implement new classes but I'll create a folder for them if I do: (i.e. creating custom `Error` objects).
-  - **schemas** - structured-types which describe data relevant to the persistance-layer although not directly mapping to database tables (i.e. DTO data-transfer-objects).
-
-In a focused-directory shareable code isn't necessarily restricted to the `local/` folder. If you have a file name which demonstrates a very clear intent and purpose it can go directly in a focused-directory. `local/` is moreso useful when you need a filename without a clear purpose.
-
-In the example below, `local/schemas.ts` does not have a specific purpose in the filename other than holding structured-types, and we have to look at the folder heirarchy for knowing those types are related to users. In contrast, we know by the filename that `UserStorageInfoService.ts` holds shareable business logic related to user storage. The purpose is clear, so it doesn't need to go in `local/`.
-```markdown
-- domains/
-  - users/
-    - local/
-      - schemas.ts
-    - UserController.ts
-    - UserService.ts <-- Uses UserStorageService.ts
-    - UserRepo.ts
-    - UserStorageInfoService.ts <-- Shareable business logic related to the user domain
-  - posts/
-    - PostController.ts 
-    - PostService.ts <-- Also uses UserStorageInfoService.ts
-```
+  - **schemas** - structured-types which describe data relevant to the persistance-layer, although not directly mapping to database tables (i.e. DTOs data-transfer-objects).
 
 <br/><b>***</b><br/>
 
@@ -550,8 +539,6 @@ In the example below, `local/schemas.ts` does not have a specific purpose in the
 - **auxiliary-table:** a database-table which supports another: (i.e user_avatars holds image metadata for users)
   - **join-table:** an auxiliary-entity which supports multiple tables together. User plural for both tables in the name: i.e. `projects_users`
 - **derived-type:** is a type which builds off of an entity-type.
-- **data-transfer-object (DTO):** is an object created for moving IO-data.
-  - A good convention is to append their types with `DTO` at the end: ie `IUserDTO`.
 - An **audit-column** is a database-key which holds meta-data about an entity's lifecycle: i.e. `createdAt`, `createdBy`.
 
 #### Documenting with comment @tags
@@ -664,19 +651,15 @@ Terminology:
   - **domain:** high-level business feature for grouping smaller features:
     - For example: if _Signup_ and _Login_ are features for a website, _Auth_ could be a domain.
   - **layer:** is a specific level of an application that data moves through.
-    - Layers are typically grouped as: 
-      - **repository:** service-layer which talks to the persistence-layer
-        - If you have multiple persistence-layers (i.e. and database and a file storage third party tool). I like to use plain `repo` when referring to the database and then `"persistence layer" + "repo"` for something else: i.e "UserRepo.ts" (talks to the database) and "UserAssetRepo.ts" (fetches user file data from s3).
-      - **service:** business logic (server-side) or API calls (client-side)
-      - **controller:** handle incoming requests from the client (server-side)
-      - **middleware:** logic typically passed to the framework to format/validate incoming requests
-      - Additional notes:
-        - layers are not an exact science and you'll find many applications which take various approaches to the above.
-        - **infra:**
-          - server-side: if you need to wrap tools which talk to the persistance layer (i.e. `infra/s3.ts` or `infra/db.ts`).
-          - client-side: if you need to wrap tools which trigger API calls and is called by the service-layer (infra/http.ts).
 
-Use **layer-based** based architecture for simple (single developer) applications
+Layers overview:
+  - **repository:** service-layer which talks to the persistence-layer
+    - If you have multiple persistence-layers (i.e. and database and a file storage third party tool). I like to use plain `repo` when referring to the database and then `"persistence layer" + "repo"` for something else: i.e "UserRepo.ts" (talks to the database) and "UserAssetRepo.ts" (fetches user file data from s3).
+  - **service:** business logic (server-side) or API calls (client-side)
+  - **controller:** handle incoming requests from the client (server-side)
+  - **middleware:** logic typically passed to the framework to format/validate incoming requests
+
+Use **layer-based** based architecture for simple (single developer) applications:
   - Easier mental map
   - Folder names show clear intent
   - Doesn't scale well though
@@ -686,6 +669,8 @@ Use **layer-based** based architecture for simple (single developer) application
 - src/
   - config/
   - repos/
+    - db/
+      - db.ts <-- setup and return database handler
     - UserRepos.ts
     - PostRepos.ts
   - routes/ (aka controllers)
@@ -694,13 +679,15 @@ Use **layer-based** based architecture for simple (single developer) application
   - services/
     - UserServices/
       - UserService.ts
-      - UserImageInterService.ts <-- Created later: for uploading avatar to remote storage (i.e S3).
+      - UserImageAssetService.ts <-- Created later: for uploading avatar to remote storage (i.e S3).
     - PostService.ts
   - main.ts
   - server.ts
 - package.json
 - tsconfig.json
 ```
+
+You might be wondering why we gave the files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section.
 
 Use **domain-based** architecture for large applications:
 - Scales better
@@ -715,16 +702,22 @@ Use **domain-based** architecture for large applications:
   - common/
   - domain/
     - users/
+      - local/
+        - constants/
+          - errors.ts
+        - types
+          - schemas.ts
       - UserRepo.ts
       - UserService.ts
-      - UserImageInterService.ts
+      - UserImageAssetService.ts
       - UserController.ts
     - posts/
       - PostRepo.ts
       - PostService.ts
       - PostController.ts
-  - infra/ <-- Talking to the persistence layer. 
+  - infra/ <-- Talking directly to the persistence layer (server or client-side). 
     - db.ts
+    - session.ts
   - routers/
     - middleware/
     - user.router.ts
@@ -741,5 +734,6 @@ Use **domain-based** architecture for large applications:
 
 ##### Keys points
 - In the above layer-based example, you can see that when we needed to add another module for `UserService`, we had to add a folder to the services-layer, move UserService.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service-layer domains.
-- You might be wondering why we gave the certain files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section. The files ending in `*.router.ts`, are linear-scripts for adding controller functions to an express `Router()` instance and then returning that instance to the root express-instance.
-- The examples demonstrated architecture using a typical back-end web server. For a client-side example of domain-based architecture, see: [React-Ts-Best-Practices](https://github.com/seanpmaxwell/React-Ts-Best-Practices).
+- For domain-based architecture, keep only layer-files (i.e. `UserRepo.ts`) directly in the domain's root folder. Make use of the `local/internal/external` folders discussed earlier under [Organizing shared code](#organizing-shared-code) for helper files (i.e. `constants.ts`).
+ 
+> The examples demonstrated architecture using a typical back-end web server. For a client-side example of domain-based architecture, see: [React-Ts-Best-Practices](https://github.com/seanpmaxwell/React-Ts-Best-Practices).
