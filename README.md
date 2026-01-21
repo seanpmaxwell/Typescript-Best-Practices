@@ -548,7 +548,7 @@ Folders under `common/` and files/folders under `local/` are not confined to com
 - `@testOnly`: for testing only and never in production (any item not just functions).
 - `@cronJob`: functions only for cron-jobs and not user-initiated.
 - `@dummyData`: functions only used by dummy-data scripts.
-- `@autoRun`: functions run at startup-time not request-time.
+- `@startupTime`: functions run at startup-time not request-time. Not really necessary for libraries or automation scripts but for user-heavy based applications like web-servers.
 
 ##### Working with relational-databases
 
