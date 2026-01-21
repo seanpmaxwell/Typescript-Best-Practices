@@ -67,6 +67,7 @@ So things are more clear down the line let's first clarify some terminology.
   - **readonly:** neither keys or values can change (typically done with `as const`).
 - **namespace-objects:** readonly object-literals used for organizing related code.
 - **lookup-table:** object-literal for storing related values and their labels (never functions).
+- **plain-objects:** objects which inherit directly from the root `Object` class and nothing else.
  
 ### Functions
 - **embedded-functions:** functions declared in object literals and the functionName is the object key.
@@ -136,7 +137,7 @@ Objects are collections of key/value pairs created via:
 <a id="object-literals"></a>
 #### `Object Literals`
 
-Readonly object-literals are ideal as namespaces and are often preferable to classes.
+Object-literals are convenient templates for initialzing plain-objects. Readonly object-literals are ideal as namespaces and are often preferable to classes.
 
 ```ts
 export default {
@@ -148,7 +149,7 @@ export default {
 <a id="classes"></a>
 #### `Classes`
 
-OOP can be achieved in TypeScript/JavaScript with classes or factory-functions.
+OOP can be achieved in TypeScript/JavaScript with classes or factory-functions. Object-literals cannot follow OOP because they lack encapsulation. 
 
 People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
 
@@ -666,9 +667,9 @@ Use **layer-based** based architecture for simple (single developer) application
   - Doesn't scale well though
 
 ```markdown
-- tests/
+- config/
 - src/
-  - config/
+  - assets/
   - repos/
     - db/
       - db.ts <-- setup and return database handler
@@ -684,6 +685,9 @@ Use **layer-based** based architecture for simple (single developer) application
     - PostService.ts
   - main.ts
   - server.ts
+- tests/
+  - users.test.ts
+  - posts.test.ts
 - package.json
 - tsconfig.json
 ```
@@ -700,6 +704,7 @@ Use **domain-based** architecture for large applications:
 ```markdown
 - config/
 - src/
+  - asssets/
   - common/
   - domain/
     - users/
