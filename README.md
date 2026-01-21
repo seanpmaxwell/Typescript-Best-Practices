@@ -544,6 +544,8 @@ Folders under `common/` and files/folders under `local/` are not confined to com
 
 #### Documenting with comment @tags
 
+Because TypeScript let's us type the return value and parameters, traditional `jsDoc` comments like `@returns`/`@param` are excessive; however, there are still some comment-tags which can be pretty useful. 
+
 ##### Misc
 - `@private`: functions never used outside of their file.
   - Below `@private` can also add `@see nameOfTheFunctionUsingIt`  
