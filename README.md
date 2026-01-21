@@ -544,10 +544,11 @@ Folders under `common/` and files/folders under `local/` are not confined to com
 #### Documenting with comment @tags
 
 ##### Misc
-- `@private`: functions never used outside of their file
-- `@testOnly`: for testing only and never in production
-- `@cronJob`: functions only for cron-jobs and not user-initiated
+- `@private`: functions never used outside of their file.
+- `@testOnly`: for testing only and never in production (any item not just functions).
+- `@cronJob`: functions only for cron-jobs and not user-initiated.
 - `@dummyData`: functions only used by dummy-data scripts.
+- `@autoRun`: functions run at startup-time not request-time.
 
 ##### Working with relational-databases
 
