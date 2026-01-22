@@ -412,6 +412,19 @@ return {
 } as const;
 ```
 
+### Helper types
+- If you have a long lengths of code and you both can and want shorten it by assigning a long type name to a shorter name then that's okay. Just may sure the shorter name isn't used anywhere other than the code it's close to. If the type is declared directly in a file, I advise using acronyms to prevent collisions. 
+
+```
+/**
+ * Fetch user scriptions whose status is suspended and suspension-reason type is 'failed-payment'.
+ */
+type sffps = ISuspendedForFailedPaymentSubscription;
+function fetchSubscriptionsWhichAreSuspendedDueToFailedPayments(): Promise<sffps[]> {
+  return database('subscriptions').where({ ... }).returning('*');
+}
+```
+
 #### Linear Script Exceptions
 - For large linear scripts, you don't have to follow strict section placement for items, but you should group large linear scripts into **sections** and place constants at the top of their respective section/block.
 
