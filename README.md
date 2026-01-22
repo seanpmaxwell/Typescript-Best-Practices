@@ -70,10 +70,11 @@ So things are more clear down the line let's first clarify some terminology.
 - **plain-objects:** objects which inherit directly from the root `Object` class and nothing else.
  
 ### Functions
-- **embedded-functions:** functions declared in object literals and the functionName is the object key.
-- **validator-functions:** accepts and unknown variable and returns a type-predicate
 - **function-declarations:** functions declared with `function functionName`.
-- **configured-functions:** functions returned from some other function call: `const parseUser = parseObject(UserSchema)`.
+- **function-expressions:** functions assigned to a variable `const foo = ...some function`
+  - **configured-functions:** function-expressions set by returning a function from some other function call: `const parseUser = parseObject(UserSchema)`.
+- **embedded-functions:** functions declared in object-literals and the functionName is the object key.
+- **validator-functions:** accepts and unknown variable and returns a type-predicate
 
 ### Types
 - **type-aliases**: any type declared with `type TypeName = ...`.
@@ -249,7 +250,7 @@ Due to how hoisting works, regions in a file should be in this order top-to-bott
   3. `Types`  
   4. `Run (or Setup)`: (if it runs at start-up time I like to say "Setup" but if it's at request-time I'll say "Run") 
   5. `Components`: (if applicable `.jsx` / `.tsx`)  
-  6. `Functions`
+  6. `Functions` (function-declarations)
   7. `Classes`: Classes generally should go in their own file but small locally used ones are okay. 
   8. `Export`: imports should generally go at the bottom unless it's an inventory-script
 
@@ -264,16 +265,24 @@ Separate regions with:
 **Regions** can be divided further into **sections**:
 
 ```ts
-// ---------------------- Accessor Functions --------------------------- //
+// -------------------------- Setup middleware --------------------------- //
 // Note: if you to add some comments for a Section or Region separator
 // place them here, directly below the separator.
 
-function getUserName(userId: number) { isValidUser(id) ...do stuff }
-function getUserEmail(userId: number) { isValidUser(id) ...do stuff }
+const app = express();
 
-// ----------------------- Helper Functions --------------------------- //
+app.use(middleware1);
+app.use(middleware2);
 
-function isValidUser(id: number) { ...do stuff }
+do stuff....
+
+// ----------------------- Configure Front-End --------------------------- //
+const FRONT_END_DIRECTORY_PATH = __dir + '/client/html';
+
+app.views(FRONT_END_DIRECTORY_PATH + '/views');
+app.static(FRONT_END_DIRECTORY_PATH + '/static');
+
+do more stuff...
 ```
 
 **Sections** can be divided into **blocks**:
@@ -284,7 +293,7 @@ function isValidUser(id: number) { ...do stuff }
 // ----------------------- Add User Routes  --------------------------- //
 const loginRouter = Router.new();
 
-// -- Local Login -- //
+// -- Local Login -- // <-- Separate blocks with this
 // Login with username and password
 
 const localRouter = Router.new();
@@ -296,10 +305,13 @@ loginRouter.use('/login', localRouter);
 // -- Google Login -- //
 // Login with Google credentials
 
-more stuff...
+do stuff...
 ```
 
 > If you find your region/section separators getting off center over time there is the [center-comment-headers script](center-comment-headers.js) which can adjust them for you.
+
+#### Function-expressions
+- Use function-declarations as much as you for hoisting and better error handling. Sometimes we do have to deal with functions assigned to variables though (i.e. configured-functions) which aren't hoisted. If you're script has a **Setup/Run** section (which is above the functions section as it should be) you won't be able to use 
 
 #### Linear Script Exception
 - For large linear scripts, you don't necessarily have to place all constants in their own region and the top, but you should group large linear scripts into **sections** and place constants at the top of their respective section/block.
