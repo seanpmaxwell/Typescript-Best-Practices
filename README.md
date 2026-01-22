@@ -246,7 +246,7 @@ Reasons:
 #### Top-down ordering
 Due to how hoisting works, regions in a file should be in this order top-to-bottom:
   1. `Docs`
-  2. `Constants`  
+  2. `Constants` (static values, function-expressions)
   3. `Types`  
   4. `Run (or Setup)`: (if it runs at start-up time I like to say "Setup" but if it's at request-time I'll say "Run") 
   5. `Components`: (if applicable `.jsx` / `.tsx`)  
@@ -310,8 +310,36 @@ do stuff...
 
 > If you find your region/section separators getting off center over time there is the [center-comment-headers script](center-comment-headers.js) which can adjust them for you.
 
-#### Function-expressions
-- Use function-declarations as much as you for hoisting and better error handling. Sometimes we do have to deal with functions assigned to variables though (i.e. configured-functions) which aren't hoisted. If you're script has a **Setup/Run** section (which is above the functions section as it should be) you won't be able to use 
+#### The Constants section and function-expressions
+- Use function-declarations as much as you can for hoisting and better error handling: error stack-tracing will only print the function name for function-declarations. However, sometimes we do have to deal with function-expressions (i.e. when we need a configured-functions) which aren't hoisted. If your script has a **Setup/Run** section (which is above the functions section as it should be) you won't be able to hoist any needed function-expressions so place them at the bottom of the **Constants** section. I'd also recommend using a section-separator for function-expressions in the constants section.
+
+Order the constants section like this:
+  1. primitives
+  2. objects 
+  3. function-expressions
+
+```ts
+/******************************************************************************
+                                   Constants
+******************************************************************************/
+
+const EMAIL_FILE_PATH = __dir + '../assests/email';
+
+const Modes = {
+  ON: 1,
+  OFF: 2,
+};
+
+// --------------------------- Function-Expressions ------------------------ //
+
+const isValidEmail = parseObject({
+  to: isNonEmptyString,
+  from: isNonEmptyString,
+  subject: isString,
+  body: isString,
+}); 
+
+```
 
 #### Linear Script Exception
 - For large linear scripts, you don't necessarily have to place all constants in their own region and the top, but you should group large linear scripts into **sections** and place constants at the top of their respective section/block.
