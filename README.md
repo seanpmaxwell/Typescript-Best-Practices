@@ -65,15 +65,27 @@ So things are more clear down the line let's first clarify some terminology.
   - **static:** values can change but not keys (default for TypeScript).
   - **dynamic:** keys and values can change (default for JavaScript).
   - **readonly:** neither keys or values can change (typically done with `as const`).
+- **plain-objects:** objects which inherit directly from the root `Object` class and nothing else. 
 - **namespace-objects:** readonly object-literals used for organizing related code.
-- **lookup-table:** object-literal for storing related values and their labels (never functions).
-- **plain-objects:** objects which inherit directly from the root `Object` class and nothing else.
+  - **value-object:** namespace-object for storing static values
+    - **lookup-table:** value-object which stores the labels for values as well (never functions).
+    - **configured-value-object:** a value-object returned from a function call: (i.e. most enum replacement libraries could fall into this category)
  
 ### Functions
-- **function-declarations:** functions declared with `function functionName`.
-- **function-expressions:** functions assigned to a variable `const foo = ...some function`
-  - **configured-functions:** function-expressions set by returning a function from some other function call: `const parseUser = parseObject(UserSchema)`.
+- **function-declarations:** any function declared with `function functionName`.
+- **arrow-functions:** any function declared with `() => { ... }`
 - **embedded-functions:** functions declared in object-literals and the functionName is the object key.
+```
+const User = {
+  getError(name: string): string {
+    return `The user name is ${name}`;
+  }
+};
+```
+- **function-expressions:** any function assigned to a variable `const foo = ...some function`
+- **factory-function:** a function whose primary purpose is to initialize some other function/object rather than perform actions.
+  - **value-factory-functions:** a factory-function meant for returning mostly static-data (i.e. const GetDefaults => {...} using a function so we get a deep-clone everytime).
+- **configured-functions:** function-expressions returned by a factory-function: `const parseUser = parseObject(UserSchema)`.
 - **validator-functions:** accepts and unknown variable and returns a type-predicate
 
 ### Types
@@ -110,9 +122,8 @@ Understand **type-coercion**: when calling methods on primitives, JavaScript tem
 <a id="functions"></a>
 ### Functions
 
-- Prefer **function-declarations** at the file level to take advantage of hoisting.
+- Prefer **function-declarations** at the file level to take advantage of hoisting and better error handling: error stack-tracing will only print the function name for function-declarations.
 - Use **arrow-functions** for callbacks and inline logic.
-- **configured-functions** should go above **function-declarations** in the functions section: see [File Organization](#file-organization).
 
 ```ts
 const 
@@ -246,13 +257,15 @@ Reasons:
 #### Top-down ordering
 Due to how hoisting works, regions in a file should be in this order top-to-bottom:
   1. `Docs`
-  2. `Constants` (static values, function-expressions)
-  3. `Types`  
-  4. `Run (or Setup)`: (if it runs at start-up time I like to say "Setup" but if it's at request-time I'll say "Run") 
-  5. `Components`: (if applicable `.jsx` / `.tsx`)  
-  6. `Functions` (function-declarations)
-  7. `Classes`: Classes generally should go in their own file but small locally used ones are okay. 
-  8. `Export`: imports should generally go at the bottom unless it's an inventory-script
+  2. `Constants`
+  4. `Types`  
+  5. `Run (or Setup)`
+  6. `Components`: (if applicable `.jsx` / `.tsx`)  
+  7. `Functions` (function-declarations)
+  8. `Classes`: Classes generally should go in their own file but small locally used ones are okay. 
+  9. `Export`: imports should generally go at the bottom unless it's an inventory-script
+
+> Note: **Constants** should be primarily for static data but could also include functions/objects which primarily handle static-data. See **Constants nuances** below.
 
 Separate regions with:
 
@@ -310,39 +323,97 @@ do stuff...
 
 > If you find your region/section separators getting off center over time there is the [center-comment-headers script](center-comment-headers.js) which can adjust them for you.
 
-#### The Constants section and function-expressions
-- Use function-declarations as much as you can for hoisting and better error handling: error stack-tracing will only print the function name for function-declarations. However, sometimes we do have to deal with function-expressions (i.e. when we need a configured-functions) which aren't hoisted. If your script has a **Setup/Run** section (which is above the functions section as it should be) you won't be able to hoist any needed function-expressions so place them at the bottom of the **Constants** section. I'd also recommend using a section-separator for function-expressions in the constants section.
-
-Order the constants section like this:
-  1. primitives
-  2. objects 
-  3. function-expressions
-
+#### *Constants section* nuances
+- Value-factory-functions (see [Terminology](#terminology) above) and configured-value-objects can also go at the bottom of the **Constants** section.
+- Although function-declarations are preferred for functions in most situations, use function-expressions for value-factory-functions so they are more inline with other content in the **Constants** section.
 ```ts
-/******************************************************************************
-                                   Constants
-******************************************************************************/
+// bottom of the *Constants* section
 
-const EMAIL_FILE_PATH = __dir + '../assests/email';
+// Value-factory-function: we wrapped the defaults in a function so we get a current datatime each time
+const GetDefaults = (): IUser => ({
+  id: 0,
+  name: '',
+  createdAt: new Date(),
+});
 
-const Modes = {
-  ON: 1,
-  OFF: 2,
-};
+// Configured-value-object
+const Roles = SomeEnumLibrary({
+  Basic: { value: 1, label: 'Basic' },
+  Admin: { value: 2, label: 'Administrator' },
+});
 
-// --------------------------- Function-Expressions ------------------------ //
-
-const isValidEmail = parseObject({
-  to: isNonEmptyString,
-  from: isNonEmptyString,
-  subject: isString,
-  body: isString,
-}); 
-
+...
 ```
 
-#### Linear Script Exception
-- For large linear scripts, you don't necessarily have to place all constants in their own region and the top, but you should group large linear scripts into **sections** and place constants at the top of their respective section/block.
+#### Configured-functions nuances
+- Because areas of a script above the **Functions** section maybe depend on configured-functions (but they are not hoisted), a common practice is to wrap them with helper function-declarations when hoisting is needed. This allows us to keep our script clean by keeping all functions (other than value-factory-functions of course) together in one section.
+- Here is the recommended way to do this in more detail:
+  - Place configured-functions above all functions declarations in the **Functions** section, and separate them with a *section-separator* if you have both.
+  - Create a *hoist* helper function which accepts a configured-function's name and returns it with a switch-case.
+  - If a configured-function does not need to be hoisted, you do not need a switch case for it.
+
+Hoisting configured-functions example:
+```ts
+// UserModel.ts
+
+/******************************************************************************
+                                      Setup                                  
+******************************************************************************/
+
+// Setup validators object
+const UserSchema = {
+  isName: isValidString,
+  isEmail: hoist('isURL'),
+};
+
+/******************************************************************************
+                                   Functions                                   
+******************************************************************************/
+
+const isEmail = isValidString({
+  maxLength: 255,
+  regex: ...some regex,
+});
+
+// Does not need hoisting so we don't add a switch case for it.
+const isValidURL = isValidString({
+  maxLength: 255,
+  regex: ...some regex,
+});
+
+// --------------------- Function-Declarations ---------------------------- //
+
+/**
+ * Use a function-declaration since we don't need hoisting.
+ */
+function isValidString(arg: unknown): arg is string {
+  return typeof arg === 'string';
+}
+
+/**
+ * @private
+ */
+function hoist(name: string) {
+  switch (name) {
+    case 'isEmail':
+      return isEmail;
+    default:
+      throw new Error('Unknown declaration');
+  }
+}
+
+/******************************************************************************
+                                   Export                                   
+******************************************************************************/
+
+return {
+  schema: UserSchema
+  isValidURL,
+} as const;
+```
+
+#### Linear Script Exceptions
+- For large linear scripts, you don't have to follow strict section placement for items, but you should group large linear scripts into **sections** and place constants at the top of their respective section/block.
 
 #### Comments in functions:
 - Generally you should not put spaces in functions and separate chunks of logic with a single inline comment.
@@ -400,9 +471,9 @@ function normalFunction() {
 - **Readonly**:
   - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
   - **Objects**:
-    - For object-literals used as a namespace for a collection of readonly values `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys.
-    - If an object is readonly but the entire object is being passed as as value (it's not simply a namespace) and you need specific key names, UPPER_SNAKE_CASE is preferred for the object name.
-    - For the objects of namespace-object scripts:
+    - For value-objects, use `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys holding readonly values.
+    - If an object is readonly but not a namespace-object (the whole is being passed as  value) and you need specific key names, UPPER_SNAKE_CASE is preferred for the object name.
+    - For the objects exported from namespace-object scripts:
       - If its functions are mostly static-logic (no initialization at startup-time), prefer `PascalCase`: i.e `import DateUtils from 'DateUtils.ts;`.
       - If its functions require initialization, prefer `camelCase`: i.e `import db from '@src/infra/db.ts;`.
 - **All variables declared inside of functions except for type declarations**: `camelCase`
@@ -434,7 +505,7 @@ function normalFunction() {
 <a id="comments"></a>
 ## 💬 Comments
 
-- Place `/** */` above all **function-declarations** always, `//` or no comment is okay for **configured-functions**.
+- Place `/** */` above all **function-declarations** always, `//` or no comment is okay for **function-expressions**.
 - I would also recommend `/** */` for utility-types as they can become pretty complex.
 - Place a `@testOnly` tag for items not meant to be used in production. 
 - Use `//` for inline explanations.
