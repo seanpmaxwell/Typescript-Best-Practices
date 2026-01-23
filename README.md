@@ -497,10 +497,12 @@ function normalFunction() {
     - Functions just meant to return mostly static data with simple formatting (i.e. return an error message and interpolate a value) can be `PascalCase`.
   - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch` (i.e. `getTimeAsUTC()`,`async fetchUserRecords()`).
   - Prepend **validator-functions** with an `is`: `isValidUser(arg: unknown): arg is IUser`.
-- **Classes / Types**: `PascalCase`
-  - Aside from using PascalCase, there are some other common patterns used; however, these are not established conventions:
+- **Classes:** `PascalCase`
+- **Types**: `PascalCase`
+  - Aside from using PascalCase, there are some other common patterns used:
     - Prepend interfaces with an `I`. I like to do this because I mostly used interfaces for structured-types and it helps to avoid naming collisions with classes/namespace-objects.
-    - Prepend type-aliases with a `T. I don't usually do this unless I specific value I'm trying to distinguish the type from. 
+    - Prepend type-aliases with a `T. I don't usually do this unless I need a specific value I'm trying to distinguish the type from.
+    - The suffix `_raw` is useful for indicating types which **MUST** be processed before being used (i.e. `IUserAvatar_raw` -> "service layer" -> `IUserAvatar`).
 - **Booleans**: prefix with `is`
 
 **Abbreviations** and **Acronyms**:
