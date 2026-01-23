@@ -497,7 +497,7 @@ function normalFunction() {
     - Functions just meant to return mostly static data with little or no formatting (i.e. validator-factory-functions) can be `PascalCase`.
   - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch` (i.e. `getTimeAsUTC()`,`async fetchUserRecords()`).
   - Prepend **validator-functions** with an `is`: `isValidUser(arg: unknown): arg is IUser`.
-  - If you need to distinguish functions meant to throw an error from a counterpart function, append `OrThrows`: i.e. `findUserById` (IUser | null) vs `findUserByIdOrThrows` (IUser).
+  - If you need to distinguish functions meant to throw an error from a counterpart function, append `OrThrow`: i.e. `findUserById` (IUser | null) vs `findUserByIdOrThrow` (IUser).
 - **Classes:** `PascalCase`
 - **Types**: `PascalCase`
   - Aside from using PascalCase, there are some other common patterns used:
