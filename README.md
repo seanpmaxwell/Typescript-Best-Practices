@@ -494,7 +494,7 @@ function normalFunction() {
   - `camelCase`: most of the time
   - `PascalCase`: for certain situations
     - JSX Elements
-    - Functions just meant to return mostly static data with simple formatting (i.e. return an error message and interpolate a value) can be `PascalCase`.
+    - Functions just meant to return mostly static data with little or no formatting (i.e. validator-factory-functions) can be `PascalCase`.
   - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch` (i.e. `getTimeAsUTC()`,`async fetchUserRecords()`).
   - Prepend **validator-functions** with an `is`: `isValidUser(arg: unknown): arg is IUser`.
 - **Classes:** `PascalCase`
