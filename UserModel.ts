@@ -1,5 +1,5 @@
 /**
- * This module is meant to handle IUser IO data items and demo proper naming 
+ * This module is meant to handle User IO data items and demo proper naming 
  * conventions.
  */
 
@@ -21,7 +21,7 @@ const UserRoles = {
 // Using a function so we always get fresh datetime objects. "GetDefaults" is
 // "PascalCase" because its just meant to return a static object and not process
 // any logic.
-const GetDefaults = (): IUser => ({
+const GetDefaults = (): User => ({
   id: 0,
   name: '',
   role: UserRoles.NONE,
@@ -49,22 +49,22 @@ type ValueOf<T extends object> = T[keyof T];
 /**
  * @entity users
  */
-interface IUser {
+type User = {
   id: number; // @PK
   name: string;
   role: UserRoles;
   createdAt: Date | ISOString; // @AC
-}
+};
 
 /******************************************************************************
                                 Functions
 ******************************************************************************/
 
 /**
- * Because "new" is a built-in keyword, to create new "IUser" items, we pad the
+ * Because "new" is a built-in keyword, to create new "User" items, we pad the
  * name with "__". That way we can call "User.new()".
  */
-function __new__(partial?: Partial<IUser>): IUser {
+function __new__(partial?: Partial<User>): User {
   // "camelCase" for variables declared in functions.
   const newUser = { ...GetDefaults(), ...partial };
   if (!isUser(newUser)) {
@@ -77,7 +77,7 @@ function __new__(partial?: Partial<IUser>): IUser {
  * "camelCase" for standard function declarations. "prepending" with an "is" 
  * since this is a validator-function.
  */
-function isUser(arg: unknown): arg is IUser {
+function isUser(arg: unknown): arg is User {
   return (
     typeof arg === 'object' &&
     arg !== null &&
