@@ -76,7 +76,7 @@ So things are more clear down the line let's first clarify some terminology.
 - **arrow-functions:** any function declared with `() => { ... }`
 - **embedded-functions:** functions declared in object-literals and the functionName is the object key.
 ```
-const User = {
+const UserErrors = {
   getError(name: string): string {
     return `The user name is ${name}`;
   }
