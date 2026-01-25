@@ -1,15 +1,15 @@
-## Design Rules: Class vs Factory vs Module
+## Design Rules: Class vs Factory-Function vs Module
 
 > While there are multiple approaches to doing OOP in TypeScript, to keep things simple and consistent, use procedural programming by default (and in most situations) and use classes for OOP. The following sections explain scenarios about when to use each with examples.
 
-> **Note:** there is a sub-paradigm of procedural programming called **procedural-modular** programming (PMP) which means grouping functions together into some kinda of container (i.e. `namespace` keyword in C). Most large procedural applcations will use this as well. 
+> **Note:** there is a sub-paradigm of procedural programming called **procedural-modular** programming (PMP) which means grouping functions together into a container (i.e. `namespace` keyword in C). Most large procedural applcations will use this as well. 
 
 ---
 
 ### ✅ Use a **class (OOP)** when **all (or most)** of these are true
 
 - The object represents a **specific instance** (a "thing")
-- That instance has **internal state that evolves over time**
+- That instance has an **internal state that evolves over time**
 - Methods **act on and mutate** that state
 - Recreating the object would **lose meaningful information**
 - You would naturally say **"this instance"** in conversation
@@ -74,18 +74,18 @@ function createLogger(level: "info" | "debug") {
 - Operations are stateless or procedural
 - There is no instance identity at all
 - Classes would just end up acting as namespaces
-- Data is described with interfaces/types, not behavior
+- Data is described with types, not behavior
 
 **Example**
 ```ts
-// User.ts
+// UserModel.ts
 
-export interface IUser {
+export type User = {
   id: string;
   name?: string;
-}
+};
 
-function printName(user: IUser): void {
+function printName(user: User): void {
   console.log(user.name ?? '--');
 }
 
