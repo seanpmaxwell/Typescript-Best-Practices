@@ -90,9 +90,9 @@ const User = {
 
 ### Types
 - **type-aliases**: any type declared with `type TypeName = ...`.
-- **interfaces**: types declared with `interface SomeInterfaceName { ... }`.
+  - **structured-type:** type-aliases used describe the entries of an object.
+- **interfaces**: types declared with `interface ISomeInterfaceName { ... }`.
 - **utility-types:** type-aliases with generics used for resolving other types.
-- **structured-types:** type-aliases or interfaces used to describe the entries of an object.
 
 <br/><b>***</b><br/>
 
@@ -170,7 +170,7 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
 - **Note:** I would also recommend avoiding classes for **handling IO-data** (even when you feel tempted to use OOP), because this often leads to:
   - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of identical `public static` functions
   - IO-data should just be 'acted upon' not do things.
-  - Use **namespace-object scripts** for handling IO-data and describe the data-items with **interfaces**.
+  - Use **namespace-object scripts** for handling IO-data and describe the data-items with **type-aliases**.
 
 > You can see a more thorough list of design rules [here](Design-Rules.md). 
 
@@ -196,18 +196,39 @@ const basic: UserRoles = UserRoles.BASIC;
 <a id="types-link"></a>
 ### Types
 
-- Prefer `interface` for object shapes.
-- Use `type` for unions, primitives, and utility-types.
-- Place type aliases above interfaces.
+Type-alias and interfaces are the two most ways to create types. There's a lot of debate on when to use an interface vs a structured-type (see [Terminology](#terminology) above). Remember that interfaces represent an open system and support declaration merging whereas structured-types are a closed system.  Here's a good mental model on when to use each:
 
+> Use interface when other code should be allowed to add to or implement the shape (i.e. classes). Use type-aliases when you want a closed, exact definition.
+
+#### Type vs Interface – Decision Table
+
+| Scenario                     | Prefer        |
+|------------------------------|---------------|
+| Extensible contract          | `interface`   |
+| Class implements it          | `interface`   |
+| Public API surface           | `interface`   |
+| Framework / module augmentation | `interface` |
+| Closed data shape            | `type`        |
+| DTO / API response           | `type`        |
+| Union / XOR / mapped types   | `type`        |
+| Internal domain models       | `type`        |
+
+In case the purpose is not entirely clear, here's a good rule of thumb to follow: **prefer structured-types for data and prefer interfaces for augmenting code (unless union or mapped types are required)**.
+
+To put this into perspective, here's an example an issue we'd face if when using an interface where a structured-type would be better: 
 ```ts
-type Roles = "basic" | "admin";
-
 interface IUser {
   id: number;
   name: string;
-  role: Roles;
 }
+
+function printDataEntries(item: Record<string, unknown>): void {
+  console.log(Object.entries(item))
+}
+
+const user: IUser = { id: 1, name: 'joe' };ƒ
+
+printDataEntries(user); // TYPE-ERROR: IUser cannot be used to index type 'string'
 ```
 
 <br/><b>***</b><br/>
@@ -501,7 +522,7 @@ function normalFunction() {
 - **Classes:** `PascalCase`
 - **Types**: `PascalCase`
   - Aside from using PascalCase, there are some other common patterns used:
-    - Prepend interfaces with an `I`. I like to do this because I mostly used interfaces for structured-types and it helps to avoid naming collisions with classes/namespace-objects.
+    - Prepend interfaces with an `I`. I like to do this because it helps to avoid naming collisions with classes.
     - Prepend type-aliases with a `T. I don't usually do this unless I need a specific value I'm trying to distinguish the type from.
     - The suffix `_raw` is useful for indicating types which **MUST** be processed before being used (i.e. `IUserAvatar_raw` -> "service layer" -> `IUserAvatar`).
 - **Booleans**: prefix with `is`
@@ -511,7 +532,7 @@ function normalFunction() {
   - Well-establish abbreviations (i.e. URL, API) and acronyms (i.e. Pwd, Req => Request) are usually okay.
   - Use **ALL CAPS** for well-established acronyms: i.e `insertIntoURL()`.
   - Avoid both when when doing `UPPER_SNAKE_CASE` unless it's a well-establish acronym.
-  - For a long variable-names that could be cumbersome to use (are used widely throughout your application) an abbreviation/acronym is probably okay; however, the core layer describing them (i.e. the database table and its interface) should refrain from doing so unless it's a well-establish acronym.
+  - For a long variable-names that could be cumbersome to use (are used widely throughout your application) an abbreviation/acronym is probably okay; however, the core layer describing them (i.e. the database table and its typer) should refrain from doing so unless it's a well-establish acronym.
   - For very narrowly-scoped items, abbreviate/use-acronyms are usually okay.
 
 > The namespace-object script [User.ts](User.ts) has some good examples on standard naming conventions.
@@ -662,7 +683,7 @@ Folders under `common/` and files/folders under `local/` are not confined to com
 #### Terminology
 - **model-layer:** is an architecture-layer for describing/handling the shape of database-tables.
 - **comment-tags:** keyword in a comment that starts with `@`.
-- **entity-type:** an interface or structured-type-alias used to describe the shape of a raw database-table.
+- **entity-type:** an structured-type used to describe the shape of a raw database-table.
   - People also use the term **record** when referring to database-rows, but for TypeScript I advise against this to avoid confusion with the type **Record<>**
 - **auxiliary-table:** a database-table which supports another: (i.e user_avatars holds image metadata for users)
   - **join-table:** an auxiliary-entity which supports multiple tables together. User plural for both tables in the name: i.e. `projects_users`
@@ -690,7 +711,7 @@ Because TypeScript let's us type the return value and parameters, traditional `j
 /**
  * @entity users
  */
-interface IUser { name: string; };
+type User = { name: string; };
 ```
 
 - `@entity table_name` + `@auxiliaryOf table_it_compliments`, auxiliary-tables:
@@ -720,30 +741,30 @@ interface IUser { name: string; };
 
 #### User model snippet
 ```ts
-interface IEntity {
+type Entity = {
   id: number; // @PK
   createdAt: Date | string; // @AC
   updatedAt: Date | string; // @AC
-}
+};
 
 /**
  * @entity users
  */
-interface IUser extends IEntity {
+type User = Entity & {
   name: string;
-}
+};
 
 /**
  * @entity user_avatars
  * @auxiliaryOf users
  */
-interface IUserAvatar extends IEntity {
+type UserAvatar = Entity & {
   fileName: string | null;
   userId: number; // @FK 1-1
 }
 
 // This is setup in the services layer
-interface IUserAvatarDTO extends IUserAvatar {
+type UserAvatarDTO = UserAvatar & {
   data: Blob; // Place this here instead of IUser
 }
 
