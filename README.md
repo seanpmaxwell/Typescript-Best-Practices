@@ -242,9 +242,7 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
   Exports a single declared item (e.g., a large function, enum, or configuration object).
 
 - **Namespace-Object**  
-  Exports a default object-literal that groups closely related logic/readonly-values.
-
-> Note: the term **module** can be used interchangeably with a namespace-object script's default export, because in JavaScript a module also refers to a file. So if we have a namespace-object script called `User.ts` we could say (in referring to the default export) "that's the User module" OR "that's the User namespace-object". 
+  Exports a default object-literal that groups closely related logic/readonly-values. 
 
 - **Inventory**  
   Exports multiple independent declarations, such as shared types or small utility functions.
@@ -535,7 +533,7 @@ function normalFunction() {
   - For a long variable-names that could be cumbersome to use (are used widely throughout your application) an abbreviation/acronym is probably okay; however, the core layer describing them (i.e. the database table and its typer) should refrain from doing so unless it's a well-establish acronym.
   - For very narrowly-scoped items, abbreviate/use-acronyms are usually okay.
 
-> The namespace-object script [User.ts](User.ts) has some good examples on standard naming conventions.
+> The namespace-object script [UserModel.ts](UserModel.ts) has some good examples on standard naming conventions.
 
 <br/><b>***</b><br/>
 
