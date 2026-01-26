@@ -647,6 +647,8 @@ Folders under `common/` and files/folders under `local/` are not confined to com
   - **classes** - I rarely implement new classes but I'll create a folder for them if I do: (i.e. creating custom `Error` objects).
   - **schemas** - structured-types which describe data relevant to the persistance-layer, although not directly mapping to database tables (i.e. DTOs data-transfer-objects).
 
+Files under `common/local/internal/external` should never talk to persistance-layers/fetch-IO-data. Use the layers of your application (i.e. Service layer) for that.
+
 <br/><b>***</b><br/>
 
 <a id="philosophy"></a>
