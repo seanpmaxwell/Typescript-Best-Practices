@@ -196,9 +196,7 @@ const basic: UserRoles = UserRoles.BASIC;
 <a id="types-link"></a>
 ### Types
 
-Type-alias and interfaces are the two most ways to create types. There's a lot of debate on when to use an interface vs a structured-type (see [Terminology](#terminology) above). Remember that interfaces represent an open system and support declaration merging whereas structured-types are a closed system.  Here's a good mental model on when to use each:
-
-> Use interface when other code should be allowed to add to or implement the shape (i.e. classes). Use type-aliases when you want a closed, exact definition.
+Type-alias and interfaces are the two primary ways to create types. There's a lot of debate on when to use an interface vs a structured-type (see [Terminology](#terminology) above) to describe objects. Remember that interfaces represent an open system and support declaration merging whereas structured-types are a closed system.  Here's a good mental model on when to use each: *"Use an interface when other code should be allowed to add to or implement the shape (i.e. classes). Use type-aliases when you want a closed, exact definition".*
 
 #### Type vs Interface – Decision Table
 
@@ -213,7 +211,7 @@ Type-alias and interfaces are the two most ways to create types. There's a lot o
 | Union / XOR / mapped types   | `type`        |
 | Internal domain models       | `type`        |
 
-In case the purpose is not entirely clear, here's a good rule of thumb to follow: **prefer structured-types for data and prefer interfaces for augmenting code (unless union or mapped types are required)**.
+In case the purpose is not entirely clear, here's another good rule of thumb to follow: **prefer structured-types for data and prefer interfaces for augmenting code (unless union or mapped types are required)**.
 
 To put this into perspective, here's an example an issue we'd face if when using an interface where a structured-type would be better: 
 ```ts
@@ -230,6 +228,8 @@ const user: IUser = { id: 1, name: 'joe' };ƒ
 
 printDataEntries(user); // TYPE-ERROR: IUser cannot be used to index type 'string'
 ```
+
+In the above example, because `IUser` could be augmented with declaration merging, we can't always assume that its keys will always be a string; therefore, `Record<string, unknown>` will not accept interfaces.
 
 <br/><b>***</b><br/>
 
