@@ -405,7 +405,7 @@ return {
 /**
  * Fetch user scriptions whose status is suspended and suspension-reason type is 'failed-payment'.
  */
-type sffps = ISuspendedForFailedPaymentSubscription;
+type sffps = SuspendedForFailedPaymentSubscription;
 function fetchSubscriptionsWhichAreSuspendedDueToFailedPayments(): Promise<sffps[]> {
   return database('subscriptions').where({ ... }).returning('*');
 }
@@ -677,7 +677,7 @@ Because TypeScript let's us type the return value and parameters, traditional `j
 /**
  * @entity users
  */
-type User = { name: string; };
+interface User = { name: string; }
 ```
 
 - `@entity table_name` + `@auxiliaryOf table_it_compliments`, auxiliary-tables:
@@ -707,30 +707,30 @@ type User = { name: string; };
 
 #### User model snippet
 ```ts
-type Entity = {
+interface Entity {
   id: number; // @PK
   createdAt: Date | string; // @AC
   updatedAt: Date | string; // @AC
-};
+}
 
 /**
  * @entity users
  */
-type User = Entity & {
+interface User extends Entity {
   name: string;
-};
+}
 
 /**
  * @entity user_avatars
  * @auxiliaryOf users
  */
-type UserAvatar = Entity & {
+interface UserAvatar extends Entity {
   fileName: string | null;
   userId: number; // @FK 1-1
 }
 
 // This is setup in the services layer
-type UserAvatarDTO = UserAvatar & {
+interface UserAvatarDTO extends UserAvatar {
   data: Blob; // Place this here instead of IUser
 }
 
