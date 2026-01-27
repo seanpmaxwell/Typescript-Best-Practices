@@ -49,12 +49,12 @@ type ValueOf<T extends object> = T[keyof T];
 /**
  * @entity users
  */
-type User = {
+interface User {
   id: number; // @PK
   name: string;
   role: UserRoles;
   createdAt: Date | ISOString; // @AC
-};
+}
 
 /******************************************************************************
                                 Functions
@@ -64,7 +64,7 @@ type User = {
  * Because "new" is a built-in keyword, to create new "User" items, we pad the
  * name with "__". That way we can call "User.new()".
  */
-function __new__(partial?: Partial<User>): User {
+function getNewUser(partial?: Partial<User>): User {
   // "camelCase" for variables declared in functions.
   const newUser = { ...GetDefaults(), ...partial };
   if (!isUser(newUser)) {
@@ -133,6 +133,6 @@ function isValidDateOrISOString(
 
 // We will import the User module as "User" in other files (i.e. "User.new()"")
 export default {
-  new: __new__,
+  new: getNewUser,
   isUser,
 } as const;
