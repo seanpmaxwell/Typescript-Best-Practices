@@ -21,7 +21,7 @@ const UserRoles = {
 // Using a function so we always get fresh datetime objects. "GetDefaults" is
 // "PascalCase" because its just meant to return a static object and not process
 // any logic.
-const GetDefaults = (): User => ({
+const GetDefaults = (): IUser => ({
   id: 0,
   name: '',
   role: UserRoles.NONE,
@@ -48,8 +48,11 @@ type ValueOf<T extends object> = T[keyof T];
 
 /**
  * @entity users
+ *
+ * Note: prepending with `I` to distinguish the data-item from the "User" model 
+ * namespace-object script.
  */
-interface User {
+interface IUser {
   id: number; // @PK
   name: string;
   role: UserRoles;
@@ -64,7 +67,7 @@ interface User {
  * Because "new" is a built-in keyword, to create new "User" items, we pad the
  * name with "__". That way we can call "User.new()".
  */
-function getNewUser(partial?: Partial<User>): User {
+function getNewUser(partial?: Partial<IUser>): IUser {
   // "camelCase" for variables declared in functions.
   const newUser = { ...GetDefaults(), ...partial };
   if (!isUser(newUser)) {
@@ -77,7 +80,7 @@ function getNewUser(partial?: Partial<User>): User {
  * "camelCase" for standard function declarations. "prepending" with an "is" 
  * since this is a validator-function.
  */
-function isUser(arg: unknown): arg is User {
+function isUser(arg: unknown): arg is IUser {
   return (
     typeof arg === 'object' &&
     arg !== null &&
