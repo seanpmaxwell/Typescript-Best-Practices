@@ -196,7 +196,7 @@ const basic: UserRoles = UserRoles.BASIC;
 <a id="types-link"></a>
 ### Types
 
-Type-alias and interfaces are the two primary ways to create types. There's a lot of debate on when to use an interface vs a structured-type (see [Terminology](#terminology) above) to describe objects. Remember that interfaces represent an open system and support declaration merging whereas structured-types are a closed system.  Here's a good mental model on when to use each: *"Use an interface when other code should be allowed to add to or implement the shape (i.e. classes). Use type-aliases when you want a closed, exact definition".*
+Type-alias and interfaces are the two primary ways to create types. There's a lot of debate on when to use an interface vs a structured-type (see [Terminology](#terminology) above) to describe objects. Remember that interfaces represent an open system and support declaration merging whereas structured-types are a closed system. Think of interfaces vs structured-types as *contracts vs computation*. In other words, use an interface when you’re naming a stable, extensible object contract; use a type-alias when the object is a computed or closed shape (derived, unioned, or transformed).
 
 #### Type vs Interface – Decision Table
 
@@ -207,11 +207,9 @@ Type-alias and interfaces are the two primary ways to create types. There's a lo
 | Public API surface           | `interface`   |
 | Framework / module augmentation | `interface` |
 | Closed data shape            | `type`        |
-| DTO / API response           | `type`        |
 | Union / XOR / mapped types   | `type`        |
 | Internal domain models       | `type`        |
-
-In case the purpose is not entirely clear, here's another good rule of thumb to follow: **prefer structured-types for data and prefer interfaces for augmenting code (unless union or mapped types are required)**.
+| Create renamed or specialized generic | `type` |
 
 To put this into perspective, here's an example an issue we'd face if when using an interface where a structured-type would be better: 
 ```ts
@@ -224,7 +222,7 @@ function printDataEntries(item: Record<string, unknown>): void {
   console.log(Object.entries(item))
 }
 
-const user: IUser = { id: 1, name: 'joe' };ƒ
+const user: IUser = { id: 1, name: 'joe' };
 
 printDataEntries(user); // TYPE-ERROR: IUser cannot be used to index type 'string'
 ```
