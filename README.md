@@ -487,8 +487,8 @@ function normalFunction() {
 - **Classes:** `PascalCase`
 - **Types**: `PascalCase`
   - Aside from using PascalCase, there are some other common patterns used:
-    - Traditionally, interfaces would be prepended with an `I` and type-aliases with a `T` but these have fallen out of favor. I'd recommend prepending interfaces with an `I` still ONLY if it's describing a class and you want to avoid naming collisions with the class (i.e. IUser for class User).
-    - The suffix `_raw` is useful for indicating types which **MUST** be processed before being used (i.e. `IUserAvatar_raw` -> "service layer" -> `IUserAvatar`).
+    - Traditionally, interfaces would be prepended with an `I` and type-aliases with a `T` but these have fallen out of favor. I'd still recommend prepending interfaces with an `I` ONLY if you need prevent name collisions between an interface and some other counterpart class/object. 
+    - The suffix `_raw` is useful for indicating types which **MUST** be processed before being used (i.e. `UserAvatar_raw` -> "service layer" -> `UserAvatar`).
 - **Booleans**: prefix with `is`
 
 **Abbreviations** and **Acronyms**:
@@ -499,7 +499,7 @@ function normalFunction() {
   - For a long variable-names that could be cumbersome to use (are used widely throughout your application) an abbreviation/acronym is probably okay; however, the core layer describing them (i.e. the database table and its typer) should refrain from doing so unless it's a well-establish acronym.
   - For very narrowly-scoped items, abbreviate/use-acronyms are usually okay.
 
-> The namespace-object script [UserModel.ts](UserModel.ts) has some good examples on standard naming conventions.
+> The namespace-object script [User.ts](User.ts) has some good examples on standard naming conventions.
 
 <br/><b>***</b><br/>
 
