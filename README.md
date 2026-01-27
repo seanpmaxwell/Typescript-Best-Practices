@@ -91,7 +91,7 @@ const UserErrors = {
 ### Types
 - **type-aliases**: any type declared with `type TypeName = ...`.
   - **structured-type:** type-aliases used describe the entries of an object.
-- **interfaces**: types declared with `interface ISomeInterfaceName { ... }`.
+- **interfaces**: types declared with `interface SomeInterfaceName { ... }`.
 - **utility-types:** type-aliases with generics used for resolving other types.
 
 <br/><b>***</b><br/>
@@ -196,24 +196,7 @@ const basic: UserRoles = UserRoles.BASIC;
 <a id="types-link"></a>
 ### Types
 
-Type-alias and interfaces are the two primary ways to describe object-types and there's a lot of debate on when to use each. The recommendation from the official TypeScript documentation is to use interfaces until you need to use a type. However, there's not a universal consensus about this amongst the TypeScript community. Types are much more versatile and the only features interfaces have that types don't is declaration merging and implementing classes. Also interfaces can cause issues when transforming data too (due to possible declaration-merging they can't be passed to `Record<PropertyKey, unknown>`) so my personal recommendation is this: *use type-aliases until you need to use an interface (classes and declaration-merging)*.
-
-To put this into perspective, here's an example of an issue we'd face if we used an interface where a structured-type would be better:
-
-```ts
-interface User {
-  id: number;
-  name: string;
-}
-
-function printDataEntries(item: Record<string, unknown>): void {
-  console.log(Object.entries(item))
-}
-
-const user: User = { id: 1, name: 'joe' };
-
-printDataEntries(user); // TYPE-ERROR: IUser cannot be used to index type 'string'
-```
+Type-alias and interfaces are the two primary ways to describe object-types and there's a lot of debate on when to use each. The recommendation from the official TypeScript documentation is to use interfaces until you need to use a type. That's because interfaces transpile faster and more closely align with how runtime object behave. If you're unsure about when to use, each go with the official TypeScript recommendation. 
 
 <br/><b>***</b><br/>
 
