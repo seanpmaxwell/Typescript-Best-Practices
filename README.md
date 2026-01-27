@@ -196,20 +196,10 @@ const basic: UserRoles = UserRoles.BASIC;
 <a id="types-link"></a>
 ### Types
 
-Type-alias and interfaces are the two primary ways to create types. There's a lot of debate on when to use an interface vs a structured type-alias to describe objects. Remember that interfaces represent an open system via declaration merging whereas structured-types are a closed system with a lot of fancy ways for deriving a type; therefore, think of interfaces vs structured-types as *contracts vs computation*. In other words, if you want an open, augmentable contract that others may extend (i.e. JSX component properties), use an interface. If you want a closed and/or computed shape (i.e. IO-data), use a type-alias.
+Type-alias and interfaces are the two primary ways to describe object-types and there's a lot of debate on when to use each. The recommendation from the official TypeScript documentation is to use interfaces until you need to use a type. However, there's not a universal consensus about this amongst the TypeScript community. Types are much more versatile and the only features interfaces have that types don't is declaration merging and implementing classes. Also interfaces can cause issues when transforming data too (due to possible declaration-merging they can't be passed to `Record<PropertyKey, unknown>`) so my personal recommendation is this: *use type-aliases until you need to use an interface (classes and declaration-merging)*.
 
-#### Type vs Interface – Decision Table
+To put this into perspective, here's an example of an issue we'd face if we used an interface where a structured-type would be better:
 
-| Scenario                     | Prefer        |
-|------------------------------|---------------|
-| Extensible contract          | `interface`   |
-| Class implements it          | `interface`   |
-| Framework / module augmentation | `interface` |
-| Closed data shape            | `type`        |
-| Union / XOR / mapped types   | `type`        |
-| Create renamed or specialized generic | `type` |
-
-To put this into perspective, here's an example an issue we'd face if when using an interface where a structured-type would be better: 
 ```ts
 interface User {
   id: number;
@@ -224,8 +214,6 @@ const user: User = { id: 1, name: 'joe' };
 
 printDataEntries(user); // TYPE-ERROR: IUser cannot be used to index type 'string'
 ```
-
-In the above example, because `User` could be augmented with declaration merging, we can't always assume that its keys will always be a string; therefore, `Record<string, unknown>` will not accept interfaces.
 
 <br/><b>***</b><br/>
 
