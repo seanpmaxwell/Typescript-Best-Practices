@@ -196,7 +196,7 @@ const basic: UserRoles = UserRoles.BASIC;
 <a id="types-link"></a>
 ### Types
 
-Type-alias and interfaces are the two primary ways to create types. There's a lot of debate on when to use an interface vs a structured-type (see [Terminology](#terminology) above) to describe objects. Remember that interfaces represent an open system and support declaration merging whereas structured-types are a closed system. Think of interfaces vs structured-types as *contracts vs computation*. In other words, use an interface when you’re naming a stable, extensible object contract; use a type-alias when the object is a computed or closed shape (derived, unioned, or transformed).
+Type-alias and interfaces are the two primary ways to create types. There's a lot of debate on when to use an interface vs a structured type-alias to describe objects. Remember that interfaces represent an open system via declaration merging whereas structured-types are a closed system with a lot of fancy ways for deriving a type; therefore, think of interfaces vs structured-types as *contracts vs computation*. In other words, if you want an open, augmentable contract that others may extend (i.e. JSX component properties), use an interface. If you want a closed and/or computed shape (i.e. IO-data), use a type-alias.
 
 #### Type vs Interface – Decision Table
 
@@ -204,16 +204,14 @@ Type-alias and interfaces are the two primary ways to create types. There's a lo
 |------------------------------|---------------|
 | Extensible contract          | `interface`   |
 | Class implements it          | `interface`   |
-| Public API surface           | `interface`   |
 | Framework / module augmentation | `interface` |
 | Closed data shape            | `type`        |
 | Union / XOR / mapped types   | `type`        |
-| Internal domain models       | `type`        |
 | Create renamed or specialized generic | `type` |
 
 To put this into perspective, here's an example an issue we'd face if when using an interface where a structured-type would be better: 
 ```ts
-interface IUser {
+interface User {
   id: number;
   name: string;
 }
@@ -222,12 +220,12 @@ function printDataEntries(item: Record<string, unknown>): void {
   console.log(Object.entries(item))
 }
 
-const user: IUser = { id: 1, name: 'joe' };
+const user: User = { id: 1, name: 'joe' };
 
 printDataEntries(user); // TYPE-ERROR: IUser cannot be used to index type 'string'
 ```
 
-In the above example, because `IUser` could be augmented with declaration merging, we can't always assume that its keys will always be a string; therefore, `Record<string, unknown>` will not accept interfaces.
+In the above example, because `User` could be augmented with declaration merging, we can't always assume that its keys will always be a string; therefore, `Record<string, unknown>` will not accept interfaces.
 
 <br/><b>***</b><br/>
 
@@ -518,8 +516,7 @@ function normalFunction() {
 - **Classes:** `PascalCase`
 - **Types**: `PascalCase`
   - Aside from using PascalCase, there are some other common patterns used:
-    - Prepend interfaces with an `I`. I like to do this because it helps to avoid naming collisions with classes.
-    - Prepend type-aliases with a `T. I don't usually do this unless I need a specific value I'm trying to distinguish the type from.
+    - Traditionally, interfaces would be prepended with an `I` and type-aliases with a `T` but these have fallen out of favor. I'd recommend prepending interfaces with an `I` still ONLY if it's describing a class and you want to avoid naming collisions with the class (i.e. IUser for class User).
     - The suffix `_raw` is useful for indicating types which **MUST** be processed before being used (i.e. `IUserAvatar_raw` -> "service layer" -> `IUserAvatar`).
 - **Booleans**: prefix with `is`
 
@@ -643,7 +640,7 @@ Various focused directories in a React project:
 
 Folders under `common/` and files/folders under `local/` are not confined to common-category names. You can create your own categories too for something used heavily throughout your codebase. Common-categories are more for storing items which don't fit into a specific place. Some other categories I commonly create are:
   - **classes** - I rarely implement new classes but I'll create a folder for them if I do: (i.e. creating custom `Error` objects).
-  - **schemas** - structured-types which describe data relevant to the persistance-layer, although not directly mapping to database tables (i.e. DTOs data-transfer-objects).
+  - **entities** - types used to describe database table.
 
 Files under `common/local/internal/external` should never talk to persistance-layers/fetch-IO-data. Use the layers of your application (i.e. Service layer) for that.
 
