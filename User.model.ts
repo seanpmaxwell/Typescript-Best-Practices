@@ -64,10 +64,10 @@ interface IUser {
 ******************************************************************************/
 
 /**
- * Because "new" is a built-in keyword, to create new "User" items, we pad the
- * name with "__". That way we can call "User.new()".
+ * Because "new" is a built-in keyword, to create new "User" items, we apppend
+ * the name with "_". That way we can call "User.new()".
  */
-function getNewUser(partial?: Partial<IUser>): IUser {
+function new_(partial?: Partial<IUser>): IUser {
   // "camelCase" for variables declared in functions.
   const newUser = { ...GetDefaults(), ...partial };
   if (!isUser(newUser)) {
@@ -136,6 +136,6 @@ function isValidDateOrISOString(
 
 // We will import the User module as "User" in other files (i.e. "User.new()"")
 export default {
-  new: getNewUser,
+  new: new_,
   isUser,
 } as const;
