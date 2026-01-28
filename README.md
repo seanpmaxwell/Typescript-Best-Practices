@@ -90,7 +90,7 @@ const UserErrors = {
 
 ### Types
 - **type-aliases**: any type declared with `type TypeName = ...`.
-  - **structured-type:** type-aliases used describe the entries of an object.
+  - **object-type-literal:** type-aliases used describe the shape of an object.
 - **interfaces**: types declared with `interface SomeInterfaceName { ... }`.
 - **utility-types:** type-aliases with generics used for resolving other types.
 
@@ -650,7 +650,7 @@ Files under `common/local/internal/external` should never talk to persistance-la
 #### Terminology
 - **model-layer:** is an architecture-layer for describing/handling the shape of database-tables.
 - **comment-tags:** keyword in a comment that starts with `@`.
-- **entity-type:** an structured-type used to describe the shape of a raw database-table.
+- **entity-type:** a type used to describe the shape of a raw database-table.
   - People also use the term **record** when referring to database-rows, but for TypeScript I advise against this to avoid confusion with the type **Record<>**
 - **auxiliary-table:** a database-table which supports another: (i.e user_avatars holds image metadata for users)
   - **join-table:** an auxiliary-entity which supports multiple tables together. User plural for both tables in the name: i.e. `projects_users`
