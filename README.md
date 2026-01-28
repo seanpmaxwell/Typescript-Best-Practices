@@ -458,17 +458,17 @@ function normalFunction() {
 
 - **Folders**: `kebab-case` (default) or name them after the primary declared item they are meant to export.
 - **Files**:
-  - **Linear scripts**: `kebab-case`
-    - Can also use kebab-case in conjunction with `.` to differentiate sibling scripts with similar purposes: i.e `user.router.ts` and `post.router.ts`.
-  - **Declaration scripts**: Name them after the item being exported.
+  - **Linear scripts:** `kebab-case`
+  - **Declaration scripts:** Name them after the item being exported.
   - **Namespace-object scripts:** Name them after the object that's used in the code. Usually this is PascalCase but not always. See object naming below.
   - **Inventory:** `kebab-case`
   - **index.ts** and **main.ts** 
     - Reserve the filename `index.ts` for **barrel-files**. Barrel-files are for creating a single entry point for a folder.
     - Use the filename `main.ts` for a file meant to be the starting point of an application (in contrast to a library).
-    - Think of `index.ts` as the entry point for libraries and `main.ts` the starting point for applications. 
+    - Think of `index.ts` as the entry point for libraries and `main.ts` the starting point for applications.
+  - **file suffixes:** If you follow these conventions but a file's intention is still not clear through the name, consider appending a suffix (i.e. `User.model.ts` for `import User from '@src/models/User.model.ts'`).
 - **Readonly**:
-  - **Primitives/Arrays**: `UPPER_SNAKE_CASE`
+  - **Primitives/Arrays:** `UPPER_SNAKE_CASE`
   - **Objects**:
     - For value-objects, use `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys holding readonly values.
     - If an object is readonly but not a namespace-object (the whole is being passed as  value) and you need specific key names, UPPER_SNAKE_CASE is preferred for the object name.
