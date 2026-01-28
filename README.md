@@ -484,6 +484,7 @@ function normalFunction() {
   - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch` (i.e. `getTimeAsUTC()`,`async fetchUserRecords()`).
   - Prepend **validator-functions** with an `is`: `isValidUser(arg: unknown): arg is IUser`.
   - If you need to distinguish functions meant to throw an error from a counterpart function, append `OrThrow`: i.e. `findUserById` (IUser | null) vs `findUserByIdOrThrow` (IUser).
+  - If you want to avoid collision with a built-in keyword (i.e. `new`/`delete`) append with an underscore (i.e. function new_(): IUser ...` in `User.model.ts`).
 - **Classes:** `PascalCase`
 - **Types**: `PascalCase`
   - Aside from using PascalCase, there are some other common patterns used:
@@ -499,7 +500,7 @@ function normalFunction() {
   - For a long variable-names that could be cumbersome to use (are used widely throughout your application) an abbreviation/acronym is probably okay; however, the core layer describing them (i.e. the database table and its typer) should refrain from doing so unless it's a well-establish acronym.
   - For very narrowly-scoped items, abbreviate/use-acronyms are usually okay.
 
-> The namespace-object script [User.ts](User.ts) has some good examples on standard naming conventions.
+> The namespace-object script [User.model.ts](User.model.ts) has some good examples on standard naming conventions.
 
 <br/><b>***</b><br/>
 
