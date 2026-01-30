@@ -480,29 +480,28 @@ function normalFunction() {
   - `camelCase`: most of the time
   - `PascalCase`: for certain situations
     - JSX Elements
-    - Functions just meant to return mostly static data with little or no formatting (i.e. validator-factory-functions) can be `PascalCase`.
-  - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch` (i.e. `getTimeAsUTC()`,`async fetchUserRecords()`).
+    - Functions just meant to return mostly static data with little or no formatting: i.e. validator-factory-functions can be `PascalCase`.
+  - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch`: i.e. `getDateAsString()`, `async fetchUserRecords()`.
   - Prepend **validator-functions** with an `is`: `isValidUser(arg: unknown): arg is IUser`.
-  - If you need to distinguish functions meant to throw an error from a counterpart function, append `OrThrow`: i.e. `findUserById` (IUser | null) vs `findUserByIdOrThrow` (IUser).
+  - If you need to distinguish functions meant to throw an error from a counterpart function, append `OrThrow`: i.e. `findUserById(id: number): IUser | null` vs `findUserByIdOrThrow(id: number): IUser`.
   - If you want to avoid collision with a built-in keyword (i.e. `new`/`delete`) append with an underscore (i.e. function new_(): IUser ...` in `User.model.ts`).
 - **Classes:** `PascalCase`
-- **Types**: `PascalCase`
-  - Aside from using PascalCase, there are some other common patterns used:
-    - Traditionally, interfaces would be prepended with an `I` and type-aliases with a `T` but these have fallen out of favor. I'd still recommend prepending interfaces with an `I` ONLY if you need prevent name collisions between an interface and some other counterpart class/object. 
+- **Types**: `PascalCase`. NOTE: traditionally it was common to prepend interfaces with an `I` and type-aliases with a `T` but these have fallen out of favor. I still recommend prepending interfaces with an `I` ONLY if you need prevent naming collisions between an interface and some other class/object counterpart. 
 - **Booleans**: prefix with `is`
-- **Suffixes**: these could work for type or variable naming:
-  - `Raw`: objects which **MUST** be processed before being used (i.e. `UserInfoRaw` -> "service layer" -> `UserInfo`).
-  - `View`: items specifically meant for going from server to client. Although adding this suffix for most client data is probably overkill, it can be useful if you need to distinguish it from a counterpart object (i.e. `UserInfoRaw` -> `UserInfo` -> `UserInfoView`).
-  - `DTO` (data-transfer-object): objects which only exist in memory and are specifically for moving IO data around. As with `Views` you don't always need to use this but it's useful for distinguishing from counter-part objects (i.e. `IUser` <-- database entity, `UserDTO` <-- fields sent to the client)
-  - `Label`: When you need to distinguish a `string` value, specifically meant for rendering, from the non-string value it was processed from: (i.e. `IUser['createdAt']` <-- a Date object, `UserDTO['createdAtLabel']` <-- string formatted as `"MM/DD/YYYY"`). Can be for object-keys or primitive variable names. DO NOT use for object names, use `View` for that.
 
-**Abbreviations** and **Acronyms**:
-- This is not an exact science and abbreviations/acronyms should generally be avoided for clarity BUT there are plenty of exceptions:
-  - Well-establish abbreviations (i.e. URL, API) and acronyms (i.e. Pwd, Req => Request) are usually okay.
-  - Use **ALL CAPS** for well-established acronyms: i.e `insertIntoURL()`.
-  - Avoid both when when doing `UPPER_SNAKE_CASE` unless it's a well-establish acronym.
-  - For a long variable-names that could be cumbersome to use (are used widely throughout your application) an abbreviation/acronym is probably okay; however, the core layer describing them (i.e. the database table and its typer) should refrain from doing so unless it's a well-establish acronym.
-  - For very narrowly-scoped items, abbreviate/use-acronyms are usually okay.
+**Abbreviations** and **Acronyms**: This is not an exact science and abbreviations/acronyms should generally be avoided for clarity BUT there are plenty of exceptions:
+- Well-establish acronyms (i.e. `URL`, `API`) and common abbreviations (i.e. `Pwd`, `Img`) are usually okay.
+- Using **ALL CAPS** for well-established acronyms is okay: i.e `insertIntoURL()`.
+- Avoid abbreviations for `UPPER_SNAKE_CASE` variable names.
+- Uncommon abbreviations/acronyms are okay if they are used widely throughout your project and it's clear to others what their purpose is. 
+ 
+**Suffixes**:
+- `Raw`: objects which **MUST** be processed before being used (i.e. database -> `UserInfoRaw` -> "service layer" -> `UserInfo`).
+- `View`: items specifically meant for going from server to client and rendering in a UI. Although adding this suffix for most client data is probably overkill, it can be useful if you need to distinguish it from a counterpart object (i.e. `UserInfoRaw` -> `UserInfo` -> `UserInfoView`).
+- `DTO` (data-transfer-object): objects which only exist in memory and are specifically for moving data around. As with `Views` you don't always need to use this but it's useful for distinguishing from counterpart objects (i.e. `IUser` <-- database entity, `UserDTO` <-- movement around your backend).
+- `Label`: When you need to distinguish a `string` value, specifically meant for rendering from the value it was processed from: (i.e. `IUser['createdAt']` <-- an iso-string object, `UserView['createdAtLabel']` <-- string formatted as `"MM/DD/YYYY"`).
+  - Can be for object-keys or primitive variable names. DO NOT use for object names; use `View` for that.
+- `Payload`: An object created for movement through an API call.
 
 > The namespace-object script [User.model.ts](User.model.ts) has some good examples on standard naming conventions.
 
