@@ -331,7 +331,7 @@ const Roles = SomeEnumLibrary({
 ...
 ```
 
-#### Configured-functions nuances
+#### *Configured-functions* nuances
 - Because areas of a script above the **Functions** section maybe depend on configured-functions (but they are not hoisted), a common practice is to wrap them with helper function-declarations when hoisting is needed. This allows us to keep our script clean by keeping all functions (other than value-factory-functions of course) together in one section.
 - Here is the recommended way to do this in more detail:
   - Place configured-functions above all functions declarations in the **Functions** section, and separate them with a *section-separator* if you have both.
