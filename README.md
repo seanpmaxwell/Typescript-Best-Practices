@@ -494,7 +494,7 @@ function normalFunction() {
   - `Raw`: objects which **MUST** be processed before being used (i.e. `UserInfoRaw` -> "service layer" -> `UserInfo`).
   - `View`: items specifically meant for going from server to client. Although adding this suffix for most client data is probably overkill, it can be useful if you need to distinguish it from a counterpart object (i.e. `UserInfoRaw` -> `UserInfo` -> `UserInfoView`).
   - `DTO` (data-transfer-object): objects which only exist in memory and are specifically for moving IO data around. As with `Views` you don't always need to use this but it's useful for distinguishing from counter-part objects (i.e. `IUser` <-- database entity, `UserDTO` <-- fields sent to the client)
-  - `Label`: Can be for object-keys or variable/type names. `Label` is useful for when you need to distinguish a `string` value from the non-string value it was processed from: (i.e. `IUser['createdAt']` <-- a Date object, `UserDTO['createdAtLabel']` <-- string formatted as `"MM/DD/YYYY"`).
+  - `Label`: Can be for object-keys or variable/type names. `Label` is useful for when you need to distinguish a `string` value, specifically meant for rendering, from the non-string value it was processed from: (i.e. `IUser['createdAt']` <-- a Date object, `UserDTO['createdAtLabel']` <-- string formatted as `"MM/DD/YYYY"`).
 
 **Abbreviations** and **Acronyms**:
 - This is not an exact science and abbreviations/acronyms should generally be avoided for clarity BUT there are plenty of exceptions:
