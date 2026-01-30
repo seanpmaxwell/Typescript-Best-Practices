@@ -496,12 +496,11 @@ function normalFunction() {
 - Uncommon abbreviations/acronyms are okay if they are used widely throughout your project and it's clear to others what their purpose is. 
  
 **Suffixes**:
-- `Raw`: objects which **MUST** be processed before being used (i.e. database -> `UserInfoRaw` -> "service layer" -> `UserInfo`).
-- `View`: items specifically meant for going from server to client and rendering in a UI. Although adding this suffix for most client data is probably overkill, it can be useful if you need to distinguish it from a counterpart object (i.e. `UserInfoRaw` -> `UserInfo` -> `UserInfoView`).
-- `DTO` (data-transfer-object): objects which only exist in memory and are specifically for moving data around. As with `Views` you don't always need to use this but it's useful for distinguishing from counterpart objects (i.e. `IUser` <-- database entity, `UserDTO` <-- movement around your backend).
-- `Label`: When you need to distinguish a `string` value, specifically meant for rendering from the value it was processed from: (i.e. `IUser['createdAt']` <-- an iso-string object, `UserView['createdAtLabel']` <-- string formatted as `"MM/DD/YYYY"`).
+- `View`: objects specifically formatted for going from server to client and rendering in a UI: i.e. `UserInfo` -> `UserInfoView`.
+- `DTO` (data-transfer-object): objects which only exist in memory and are for moving data around. They may or may not be for IO calls: i.e. `IUser` <-- database entity, `UserDTO` <-- movement around your backend.
+- `Label`: When you need to distinguish a `string` value, specifically meant for rendering, from the value it was processed from: (i.e. `IUser['createdAt']` <-- an ISOString, `UserView['createdAtLabel']` <-- string formatted as `"MM/DD/YYYY"`).
   - Can be for object-keys or primitive variable names. DO NOT use for object names; use `View` for that.
-- `Payload`: An object created for movement through an API call.
+- `Payload`: An object formatted for movement through an API call.
 
 > The namespace-object script [User.model.ts](User.model.ts) has some good examples on standard naming conventions.
 
