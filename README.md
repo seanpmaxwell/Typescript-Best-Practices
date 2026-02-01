@@ -66,10 +66,12 @@ So things are more clear down the line let's first clarify some terminology.
   - **dynamic:** keys and values can change (default for JavaScript).
   - **readonly:** neither keys or values can change (typically done with `as const`).
 - **plain-objects:** objects which inherit directly from the root `Object` class and nothing else. 
-- **namespace-objects:** readonly object-literals used for organizing related code.
+- **namespace-objects:** readonly object-literals used for code organization.
   - **value-object:** namespace-object for storing static values
-    - **lookup-table:** value-object which stores the labels for values as well (never functions).
+    - **lookup-table:** value-object which stores values and their counterpart labels for displaying in a UI.
     - **configured-value-object:** a value-object returned from a function call: (i.e. most enum replacement libraries could fall into this category)
+  - **module-object** the namespace-object which is the `export default` from a file.
+    - **module** is another name for file in JavaScript, so we say **module-object** because it is an object which represents a file.
  
 ### Functions
 - **function-declarations:** any function declared with `function functionName`.
@@ -149,12 +151,14 @@ Objects are collections of key/value pairs created via:
 <a id="object-literals"></a>
 #### `Object Literals`
 
-Object-literals are convenient templates for initialzing plain-objects. Readonly object-literals are ideal as namespaces and are often preferable to classes.
+Object-literals are convenient templates for initialzing plain-objects. Readonly object-literals are ideal as namespaces and often preferable to classes if there's no internal *dynamic* data.
 
 ```ts
-export default {
-  someFunction,
-  someOtherFunction,
+const Errors = {
+  NameMissing: 'The value for name cannot be falsey',
+  InvalidEmail(val: string): string {
+    return `The value "${val}" is not a valid email format.`;
+  },
 } as const;
 ```
 
@@ -165,12 +169,12 @@ OOP can be achieved in TypeScript/JavaScript with classes or factory-functions. 
 
 People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situtations. Here are some basic guidelines:
 
-- **Use a class** when you have an object with an internal state and methods which modify that internal state.
+- **Use a class** when you have an object with an internal state and methods which modify that internal state over time.
 - **Don't use a class** soley as a namespace or when you're **assembling and returning an object whose behavior is fully determined at instantiation** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
 - **Note:** I would also recommend avoiding classes for **handling IO-data** (even when you feel tempted to use OOP), because this often leads to:
   - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of identical `public static` functions
   - IO-data should just be 'acted upon' not do things.
-  - Use **namespace-object scripts** for handling IO-data and describe the data-items with **type-aliases**.
+  - Use **module-object scripts** for handling IO-data.
 
 > You can see a more thorough list of design rules [here](Design-Rules.md). 
 
@@ -208,8 +212,8 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 - **Declaration**  
   Exports a single declared item (e.g., a large function, enum, or configuration object).
 
-- **Namespace-Object**  
-  Exports a default object-literal that groups closely related logic/readonly-values. 
+- **Module-Object**  
+  Export default is a namespace-object which organizes the values/logic for a particular file. 
 
 - **Inventory**  
   Exports multiple independent declarations, such as shared types or small utility functions.
@@ -219,8 +223,8 @@ Every file should have a clear purpose. Most scripts fall into one of the follow
 
 You can see a full list of script examples [here](Script-Examples.md).
 
-#### Namespace-object scripts are great for organization
-I believe that for the backbone of all application logic, which is static after startup-time (both server and client-side, with the exception of JSX elements), namespace-object scripts are preferred.
+#### Module-object scripts are great for organization
+I believe that for the backbone of all application logic, which is static after startup-time (both server and client-side, with the exception of JSX elements), module-object scripts are preferred.
 
 Reasons:
 - That way we only need one import at the top
@@ -460,7 +464,7 @@ function normalFunction() {
 - **Files**:
   - **Linear scripts:** `kebab-case`
   - **Declaration scripts:** Name them after the item being exported.
-  - **Namespace-object scripts:** Name them after the object that's used in the code. Usually this is PascalCase but not always. See object naming below.
+  - **Module-object scripts:** Name them after the module-object that's used in the code. Usually this is PascalCase but not always. See object naming below.
   - **Inventory:** `kebab-case`
   - **index.ts** and **main.ts** 
     - Reserve the filename `index.ts` for **barrel-files**. Barrel-files are for creating a single entry point for a folder.
@@ -471,22 +475,23 @@ function normalFunction() {
   - **Primitives/Arrays:** `UPPER_SNAKE_CASE`
   - **Objects**:
     - For value-objects, use `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys holding readonly values.
-    - If an object is readonly but not a namespace-object (the whole is being passed as  value) and you need specific key names, UPPER_SNAKE_CASE is preferred for the object name.
-    - For the objects exported from namespace-object scripts:
-      - If its functions are mostly static-logic (no initialization at startup-time), prefer `PascalCase`: i.e `import DateUtils from 'DateUtils.ts;`.
-      - If its functions require initialization, prefer `camelCase`: i.e `import db from '@src/infra/db.ts;`.
+    - If an object is readonly but not a namespace-object (the whole object is being passed as  value) and you need specific key names, UPPER_SNAKE_CASE is preferred for the object name.
+    - Ultimately, name module-object scripts the same way the object is named in the code. Here are some tips for naming module-objects:
+      - Prefer `PascalCase` by default: i.e `import DateUtils from '@src/utils/DateUtils.ts;`.
+      - If its functions require a heavy amount of initialization (i.e. infrastructure-level scripts) and the module-object is used widely throughout your application, prefer `camelCase`: i.e `import db from '@src/infra/db.ts;`.
 - **All variables declared inside of functions except for type declarations**: `camelCase`
 - **Functions**:
   - `camelCase`: most of the time
   - `PascalCase`: for certain situations
     - JSX Elements
-    - Functions just meant to return mostly static data with little or no formatting: i.e. validator-factory-functions can be `PascalCase`.
+    - Functions just meant to return mostly static data with little or no formatting: i.e. value-factory-functions can be `PascalCase`.
   - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch`: i.e. `getDateAsString()`, `async fetchUserRecords()`.
   - Prepend **validator-functions** with an `is`: `isValidUser(arg: unknown): arg is IUser`.
   - If you need to distinguish functions meant to throw an error from a counterpart function, append `OrThrow`: i.e. `findUserById(id: number): IUser | null` vs `findUserByIdOrThrow(id: number): IUser`.
-  - If you want to avoid collision with a built-in keyword (i.e. `new`/`delete`) append with an underscore (i.e. function new_(): IUser ...` in `User.model.ts`).
+  - If you want to avoid collisions with a built-in keyword (i.e. `new`/`delete`) append with an underscore (i.e. function new_(): IUser ...` in `User.model.ts`).
 - **Classes:** `PascalCase`
-- **Types**: `PascalCase`. NOTE: traditionally it was common to prepend interfaces with an `I` and type-aliases with a `T` but these have fallen out of favor. I still recommend prepending interfaces with an `I` ONLY if you need prevent naming collisions between an interface and some other class/object counterpart. 
+- **Types**: `PascalCase`
+  - Traditionally it was common to prepend interfaces with an `I` and type-aliases with a `T` but these have fallen out of favor. I still recommend prepending interfaces with an `I` ONLY if you need prevent naming collisions between an interface and some other class/object counterpart: i.e. `IUser` <-- the database entity and `User` from 'User.module.ts` <-- `User` is a module-object. 
 - **Booleans**: prefix with `is`
 
 **Abbreviations** and **Acronyms**: This is not an exact science and abbreviations/acronyms should generally be avoided for clarity BUT there are plenty of exceptions:
@@ -498,11 +503,11 @@ function normalFunction() {
 **Suffixes**:
 - `View`: objects specifically formatted for going from server to client and rendering in a UI: i.e. `UserInfo` -> `UserInfoView`.
 - `DTO` (data-transfer-object): objects which only exist in memory and are for moving data around. They may or may not be for IO calls: i.e. `IUser` <-- database entity, `UserDTO` <-- movement around your backend.
-- `Label`: When you need to distinguish a `string` value, specifically meant for rendering, from the value it was processed from: (i.e. `IUser['createdAt']` <-- an ISOString, `UserView['createdAtLabel']` <-- string formatted as `"MM/DD/YYYY"`).
+- `Label`: When you need to distinguish a `string` value, specifically meant for rendering in a UI, from the value it was processed from: (i.e. `IUser['createdAt']` <-- an ISOString, `UserView['createdAtLabel']` <-- string formatted as `"MM/DD/YYYY"`).
   - Can be for object-keys or primitive variable names. DO NOT use for object names; use `View` for that.
 - `Payload`: An object formatted for movement through an API call.
 
-> The namespace-object script [User.model.ts](User.model.ts) has some good examples on standard naming conventions.
+> The module-object script [User.model.ts](User.model.ts) has some good examples on standard naming conventions.
 
 <br/><b>***</b><br/>
 
@@ -812,7 +817,7 @@ Use **layer-based** based architecture for simple (single developer) application
 - tsconfig.json
 ```
 
-You might be wondering why we gave the files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **namespace-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section.
+You might be wondering why we gave the files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **module-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section.
 
 Use **domain-based** architecture for large applications:
 - Scales better
