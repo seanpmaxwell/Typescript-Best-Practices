@@ -1,6 +1,10 @@
+/******************************************************************************
+                                 Docs
+******************************************************************************/
+
 /**
- * This module is meant to handle User IO data items and demo proper naming 
- * conventions.
+ * This module-object script is meant to handle User IO data items and demo
+ * proper naming conventions.
  */
 
 /******************************************************************************
@@ -42,15 +46,11 @@ export type ISOString =
 // "PascalCase" for utility-types
 type ValueOf<T extends object> = T[keyof T];
 
-// "PascalCase" for types. Prepending with an "I" to distinguish it from the 
-// "User" namespace-object. `@entity "users"` means this describes the "users" database
-// table
-
 /**
  * @entity users
  *
- * Note: prepending with `I` to distinguish the data-item from the "User" model 
- * namespace-object script.
+ * Note: prepending with `I` to distinguish the data-item from the "User" 
+ * module-object script. `@entity` let's us know it's a database table.
  */
 interface IUser {
   id: number; // @PK
@@ -134,7 +134,8 @@ function isValidDateOrISOString(
                                   Export
 ******************************************************************************/
 
-// We will import the User module as "User" in other files (i.e. "User.new()"")
+// We will import the User module-object script as "User" in other files
+// (i.e. import User from '@src/domains/users/User.model.ts' and "User.new()"")
 export default {
   new: new_,
   isUser,
