@@ -1,6 +1,6 @@
 ## Script Examples
 
-### Namespace-Object Script
+### Module-Object Script
 
 ```ts
 // utils/MailUtils.ts
