@@ -539,7 +539,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 ### Shared categories
 - Let's consider **utils**, **types**, and **constants** the 3 main **shared-categories**. And a 4th category **ui** for those working with JSX elements.
-  - **utils** runtime logic. Functions under `utils` should not fetch IO-data, talk to persistance layers, or import runtime logic from anywhere else other than third-party-libraries or other utility functions in the same directory. This helps to prevent dependency loops.
+  - **utils** runtime logic. Functions under `utils` should not fetch IO-data, talk to persistance layers, or import runtime logic from anywhere else other than third-party-libraries or other utility functions in the same file. This helps to prevent dependency loops.
   - **constants**: organzing readonly values but can also include functions which return mostly readonly values after some simple formatting (function which returns an error message string with the username inserted into it).
   - **types**: standalone compile-time items (type-aliases and interfaces, never runtime items) that don't need to be coupled with runtime logic in the shared area.
   - **ui:** Any file ending with a `.jsx/.tsx` extension.
@@ -783,7 +783,7 @@ Layers overview:
   - **repository (suffix `Repo`):** service-layer which talks to the persistence-layer
     - If you have multiple persistence-layers (i.e. and database and a *file storage third party tool*), I like to use plain `repo` when referring to the database and then `"persistence layer" + Repo` for something else: i.e "UserRepo.ts" (talks to the database) and "UserAssetRepo.ts" (fetches user file data from s3).
   - **service:** business logic (server-side) or API calls (client-side)
-    -  Server-side the service-layer can call the persistence layers **BUT SHOULD NEVER CALL THEM DIRECTLY**. They should do this indirectly through the repo/infrastructure layers.
+    -  Server-side, the service-layer can call the persistence layers **BUT SHOULD NEVER CALL THEM DIRECTLY**. They should do this indirectly through the repo/infrastructure layers.
   - **operations (suffix `Ops`):** business-logic (client-side only)
   - **controller:** handle incoming requests from the client (server-side)
   - **middleware:** logic typically passed to the framework to format/validate incoming requests
