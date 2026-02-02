@@ -780,9 +780,11 @@ Terminology:
   - **layer:** is a specific level of an application that data moves through.
 
 Layers overview:
-  - **repository:** service-layer which talks to the persistence-layer
-    - If you have multiple persistence-layers (i.e. and database and a file storage third party tool). I like to use plain `repo` when referring to the database and then `"persistence layer" + "repo"` for something else: i.e "UserRepo.ts" (talks to the database) and "UserAssetRepo.ts" (fetches user file data from s3).
+  - **repository (suffix `Repo`):** service-layer which talks to the persistence-layer
+    - If you have multiple persistence-layers (i.e. and database and a *file storage third party tool*), I like to use plain `repo` when referring to the database and then `"persistence layer" + Repo` for something else: i.e "UserRepo.ts" (talks to the database) and "UserAssetRepo.ts" (fetches user file data from s3).
   - **service:** business logic (server-side) or API calls (client-side)
+    -  Server-side the service-layer can call the persistence layers **BUT SHOULD NEVER CALL THEM DIRECTLY**. They should do this indirectly through the repo/infrastructure layers.
+  - **operations (suffix `Ops`):** business-logic (client-side only)
   - **controller:** handle incoming requests from the client (server-side)
   - **middleware:** logic typically passed to the framework to format/validate incoming requests
 
@@ -806,7 +808,7 @@ Use **layer-based** based architecture for simple (single developer) application
   - services/
     - UserServices/
       - UserService.ts
-      - UserImageAssetService.ts <-- Created later: for uploading avatar to remote storage (i.e S3).
+      - UserAssetService.ts <-- Created later: for uploading avatar to remote storage (i.e S3).
     - PostService.ts
   - main.ts
   - server.ts
