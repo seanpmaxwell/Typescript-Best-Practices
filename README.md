@@ -774,12 +774,12 @@ express.get('/api/posts/:userId', fetchPostsByUserId);
 <a id="architecture"></a>
 ### Architecture
 
-Terminology:
+#### Terminology:
   - **domain:** high-level business feature for grouping smaller features:
     - For example: if _Signup_ and _Login_ are features for a website, _Auth_ could be a domain.
   - **layer:** is a specific level of an application that data moves through.
 
-Layers overview:
+#### Layers overview:
   - **repository (suffix `Repo`):** service-layer which talks to the persistence-layer
     - If you have multiple persistence-layers (i.e. and database and a *file storage third party tool*), I like to use plain `repo` when referring to the database and then `"persistence layer" + Repo` for something else: i.e "UserRepo.ts" (talks to the database) and "UserAssetRepo.ts" (fetches user file data from s3).
   - **service:** business logic (server-side) or API calls (client-side)
@@ -789,10 +789,10 @@ Layers overview:
   - **controller:** handle incoming requests from the client (server-side)
   - **middleware:** logic typically passed to the framework to format/validate incoming requests
 
-*Not established conventions but what I like to do*:
+#### Not established conventions but what I like to do:
   - Only services (files appended with `Service`) layer can talk to the persistance layers and contain business logic.
-  - **auxilliary-services** (`...Service.aux.ts`): Auxilliary services can contain business logic and talk to other persistance layers but **CANNOT** be called by the controller-layers. Only the primary service layer file for a domain called be called by the controller: i.e. `UserService.ts` (called by the controller), `UserAssetService.aux.ts` fetching user avatars which requires calling the repo-layer and binary-storage handler. This helps to keep your architecture clean by creating a single entry point for controllers.
-  - **static auxilliary-services** (`"...".saux.ts`): These can contain business logic but are not allowed to talk to any persistance-layers. `.saux.ts` files are useful for large features where separating the static business logic out makes sense to keep other service files clean. Don't put your business logic in files marked `...Utils.ts` or under `utils/` folders. Try to keep utility files/functions for more generic non-application specific logic. Also, for `saux` files you leave off the `...Service` suffix if the file name can demonstrate clear intentent without it. 
+  - **auxilliary-services** (`...Service.aux.ts`): Auxilliary services can contain business logic and talk to other persistance layers but **CANNOT** be called by the controller-layers. Only the primary service layer file for a domain can be called by the controller: i.e. `UserService.ts` (called by the controller), `UserAssetService.aux.ts` fetching user avatars which requires calling the repo-layer and binary-storage handler. This helps to keep your architecture clean by creating a single entry point for controllers.
+  - **static auxilliary-services** (`"Some Service".saux.ts`): These can contain business logic but are not allowed to talk to any persistance-layers. `.saux.ts` files are useful for large features where separating the static business logic out makes sense to keep other service files clean. Don't put your business logic in files marked `...Utils.ts` or under `utils/` folders. Try to keep utility files/functions for more generic non-application specific logic. Also, for `saux` files you leave off the `...Service` suffix if the file name can demonstrate clear intentent without it. 
 
 
 Use **layer-based** based architecture for simple (single developer) applications:
