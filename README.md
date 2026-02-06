@@ -785,8 +785,15 @@ Layers overview:
   - **service:** business logic (server-side) or API calls (client-side)
     -  Server-side, the service-layer can call the persistence layers **BUT SHOULD NEVER CALL THEM DIRECTLY**. They should do this indirectly through the repo/infrastructure layers.
   - **operations (suffix `Ops`):** business-logic (client-side only)
+  - **cronjobs:** logic which runs at intervals (server-side only)
   - **controller:** handle incoming requests from the client (server-side)
   - **middleware:** logic typically passed to the framework to format/validate incoming requests
+
+*~Not established conventions but what I like to do~*:
+  - Only services (files appended with `Service`) layer can talk to the persistance layers and contain business logic.
+  - **auxilliary-services** (`...Service.aux.ts`): Auxilliary services can contain business logic and talk to other persistance layers but **CANNOT** be called by the controller-layers. Only the primary service layer file for a domain called be called by the controller: i.e. `UserService.ts` (called by the controller), `UserAssetService.aux.ts` fetching user avatars which requires calling the repo-layer and binary-storage handler. This helps to keep your architecture clean by creating a single entry point for controllers.
+  - **static auxilliary-services** (`"...".saux.ts`): These can contain business logic but are not allowed to talk to any persistance-layers. `.saux.ts` files are useful for large features where separating the static business logic out makes sense to keep other service files clean. Don't put your business logic in files marked `...Utils.ts` or under `utils/` folders. Try to keep utility files/functions for more generic non-application specific logic. Also, for `saux` files you leave off the `...Service` suffix if the file name can demonstrate clear intentent without it. 
+
 
 Use **layer-based** based architecture for simple (single developer) applications:
   - Easier mental map
@@ -797,6 +804,7 @@ Use **layer-based** based architecture for simple (single developer) application
 - config/
 - src/
   - assets/
+  - cronjobs/
   - repos/
     - db/
       - db.ts <-- setup and return database handler
@@ -808,7 +816,7 @@ Use **layer-based** based architecture for simple (single developer) application
   - services/
     - UserServices/
       - UserService.ts
-      - UserAssetService.ts <-- Created later: for uploading avatar to remote storage (i.e S3).
+      - UserAssetService.aux.ts <-- Created later: for uploading avatar to remote storage (i.e S3).
     - PostService.ts
   - main.ts
   - server.ts
@@ -826,13 +834,14 @@ Use **domain-based** architecture for large applications:
 - Less risk of circular dependencies
 - Avoids bloated services layer
 - Avoids merge-conflicts
-- Intent less clear so harder to demo for smaller projects tutorials
+- Intent less clear so harder to demo for smaller projects/tutorials
 
 ```markdown
 - config/
 - src/
   - asssets/
   - common/
+  - cronjobs/
   - domain/
     - users/
       - local/
@@ -842,9 +851,11 @@ Use **domain-based** architecture for large applications:
           - schemas.ts
       - UserRepo.ts
       - UserService.ts
-      - UserImageAssetService.ts
+      - UserAssetService.aux.ts
       - UserController.ts
     - posts/
+      - internal/
+        - PostToPDF.saux.ts <-- If user wants to download a post as a PDF file
       - PostRepo.ts
       - PostService.ts
       - PostController.ts
@@ -866,7 +877,7 @@ Use **domain-based** architecture for large applications:
 ```
 
 ##### Keys points
-- In the above layer-based example, you can see that when we needed to add another module for `UserService`, we had to add a folder to the services-layer, move UserService.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service-layer domains.
-- For domain-based architecture, keep only layer-files (i.e. `UserRepo.ts`) directly in the domain's root folder. Make use of the `local/internal/external` folders discussed earlier under [Organizing shared code](#organizing-shared-code) for helper files (i.e. `constants.ts`).
+- Now you can see why layer-based architecture does not scale well. In the above layer-based example, you can see that when we needed to add another module for `UserService`, we had to add a folder to the services-layer, move UserService.ts inside of it, and now for the root of the `services/` folder, we have a mixture of files and folders to list the different service-layer domains.
+- For domain-based architecture, keep only layer-files (i.e. `UserRepo.ts`) directly in the domain's root folder. Make use of the `local/internal/external` folders discussed earlier under [Organizing shared code](#organizing-shared-code) for helper files (i.e. `constants.ts`). Although layer files can go in `internal/external` where it makes sense: (i.e. `PostToPDF.saux.ts`).
  
 > The examples demonstrated architecture using a typical back-end web server. For a client-side example of domain-based architecture, see: [React-Ts-Best-Practices](https://github.com/seanpmaxwell/React-Ts-Best-Practices).
