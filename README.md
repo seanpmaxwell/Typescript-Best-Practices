@@ -632,9 +632,9 @@ Files under `common/local/internal/external` should never talk to persistance-la
 ### Testing
 
 #### Testing Terminology
-- **unit-tests:** logic in isolation, do not talk to any persistance layers
-- **integration-tests:** multiple layers of an application (including persistance layers) but do not test back-end and front-end logic together.
-- **e2e (end-to-end) -tests:** tests client and server together (simulates live user workflows)
+- **unit-tests:** tests portions workflows in isolation. Could involve multiple-layers (see <a href="#architecture">Architecture</a> for more about layers) but not typically.
+- **integration-tests:** tests workflows involving all the layers of an application but not the back-end and front-end together (i.e. tests which call server routes).
+- **e2e (end-to-end)-tests:** tests client and server together (simulates live user interaction)
 
 #### Testing tips and conventions
 - Unit-tests don't have to cover all theoretical scenarios but should cover all workflows a user can trigger.
