@@ -630,10 +630,19 @@ Files under `common/local/internal/external` should never talk to persistance-la
 
 <a id="testing"></a>
 ### Testing
-- Unit-test all user-driven behavior.
-- Developers should write their own tests.
-- Integration tests should be focused and minimal early on.
-- Tests improve readability as well as correctness.
+
+#### Testing Terminology
+- **unit-tests:** logic in isolation, do not talk to any persistance layers
+- **integration-tests:** multiple layers of an application (including persistance layers) but do not test back-end and front-end logic together.
+- **e2e (end-to-end) -tests:** tests client and server together (simulates live user workflows)
+
+#### Testing tips and conventions
+- Unit-tests don't have to cover all theoretical scenarios but should cover all workflows a user can trigger.
+- Developers should write their own unit-tests and integration-tests even in rapid-development cycles.
+  - Note: requiring developers to write their own unit-tests not only improves correctness but also results in a proofreading step improving code readability.
+- e2e-tests are vital to long-term application maintainability but are time-consuming and typically require advanced knowledge of the framework in use (i.e. *cypress*).
+  - Tip 1: e2e testing can be skipped in early development phases (as long as unit/itegration testing is done).
+  - Tip 2: It's okay for teams to have a dedicated integration tester and not require each developer write their own unit-tests: having an extra set of eyes on the code can improve its quality. 
 
 --- 
 
