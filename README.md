@@ -65,18 +65,21 @@ So things are more clear down the line let's first clarify some terminology.
   - **static:** values can change but not keys (default for TypeScript).
   - **dynamic:** keys and values can change (default for JavaScript).
   - **readonly:** neither keys or values can change (typically done with `as const`).
-- **plain-objects:** objects which inherit directly from the root `Object` class and nothing else. 
+- **plain-objects:** objects which inherit directly from the root `Object` class and nothing else OR objects created with `Object.create(null)`.
+  - Type is commonly `NonNullable<object>` although there is no way to enforce a plain-object type at compile-time.
+- **dictonaries:** plain-objects whose type is `Record<string, unknown>`.
+  - In code, the type-alias is often shorted to `Dict`, (i.e. `type Dict = Record<string, unknown>`).
 - **namespace-objects:** readonly object-literals used for code organization.
   - **value-object:** namespace-object for storing static values
-    - **lookup-table:** value-object which stores values and their counterpart labels for displaying in a UI.
+    - **lookup-table:** value-object which stores static values and their label counterparts for displaying in a UI.
     - **configured-value-object:** a value-object returned from a function call: (i.e. most enum replacement libraries could fall into this category)
-  - **module-object** the namespace-object which is the `export default` from a file.
+  - **module-object** a namespace-object which is the `export default` from a file.
     - **module** is another name for file in JavaScript, so we say **module-object** because it is an object which represents a file.
  
 ### Functions
 - **function-declarations:** any function declared with `function functionName`.
 - **arrow-functions:** any function declared with `() => { ... }`
-- **embedded-functions:** functions declared in object-literals and the functionName is the object key.
+- **embedded-functions:** functions declared in object-literals and the function-name is the object key.
 ```
 const UserErrors = {
   getError(name: string): string {
