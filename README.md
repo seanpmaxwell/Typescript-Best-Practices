@@ -37,6 +37,8 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
 
 So things are more clear down the line let's first clarify some terminology.
 
+---
+
 ### Projects/Packages
 - **Package**: any JavaScript/TypeScript project with a `package.json` is a **package**.
 - **Application**: packages mean to be executed.
@@ -120,6 +122,8 @@ This guide revolves around four fundamental language features:
 - **Functions**
 - **Objects**
 - **Types**
+
+---
 
 <a id="primitives"></a>
 ### Primitives 
