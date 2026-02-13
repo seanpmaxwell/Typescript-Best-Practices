@@ -108,6 +108,7 @@ const UserErrors = {
   - **object-type-literal:** type-aliases used describe the shape of an object.
 - **interfaces**: types declared with `interface SomeInterfaceName { ... }`.
 - **utility-types:** type-aliases with generics used for resolving other types.
+
 <br/><b>***</b><br/>
 
 <a id="core-language-features"></a>
