@@ -42,6 +42,8 @@ So things are more clear down the line let's first clarify some terminology.
 - **Application**: packages mean to be executed.
 - **Library**: shared packages to be used by applications or other libraries.
 
+---
+
 ### Files/Folders
 - **root**: The highest level folder in a package.
 - **branch-directory**: a directory other than the root with a broad focus and multiple nested directories of its own.
@@ -52,13 +54,17 @@ So things are more clear down the line let's first clarify some terminology.
   2.  `src/` <-- branch
   3.  `components/` <-- branch
   4.  `Login/` <-- focused
-  5.  `local/` <-- leaf 
+  5.  `local/` <-- leaf
+ 
+---
 
 ### Lifecycles
 - **Compile-time:** Even though TypeScript is technically a _transpiled_ (not compiled) language we still use the term **compile-time** to refer to period before a program starts.
 - **Runtime:** Everything that happens after compilation is runtime. Runtime can be futher divided into:
   - **Startup-time:** When the application boots up.
   - **Request-time:** Code runs in response to input (i.e. a user triggers and API call).
+ 
+---
 
 ### Objects
 - **States**: Objects can be **static**, **readonly**, or **dynamic**.
@@ -75,6 +81,8 @@ So things are more clear down the line let's first clarify some terminology.
     - **configured-value-object:** a value-object returned from a function call: (i.e. most enum replacement libraries could fall into this category)
   - **module-object** a namespace-object which is the `export default` from a file.
     - **module** is another name for file in JavaScript, so we say **module-object** because it is an object which represents a file.
+   
+---
  
 ### Functions
 - **function-declarations:** any function declared with `function functionName`.
@@ -93,12 +101,13 @@ const UserErrors = {
 - **configured-functions:** function-expressions returned by a factory-function: `const parseUser = parseObject(UserSchema)`.
 - **validator-functions:** accepts and unknown variable and returns a type-predicate
 
+---
+
 ### Types
 - **type-aliases**: any type declared with `type TypeName = ...`.
   - **object-type-literal:** type-aliases used describe the shape of an object.
 - **interfaces**: types declared with `interface SomeInterfaceName { ... }`.
 - **utility-types:** type-aliases with generics used for resolving other types.
-
 <br/><b>***</b><br/>
 
 <a id="core-language-features"></a>
