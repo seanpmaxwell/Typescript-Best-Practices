@@ -74,9 +74,10 @@ So things are more clear down the line let's first clarify some terminology.
   - **dynamic:** keys and values can change (default for JavaScript).
   - **readonly:** neither keys or values can change (typically done with `as const`).
 - **plain-objects:** objects which inherit directly from the root `Object` class and nothing else OR objects created with `Object.create(null)`.
-  - Type is commonly `NonNullable<object>` although there is no way to enforce a plain-object type at compile-time.
-- **dictonary:** plain-objects whose type is `Record<string, unknown>`.
+  - Type is commonly `Record<PropertyKey, unknown>` although there is no way to enforce a plain-object type at compile-time.
+- **dictonary:** plain-objects whose type is narrowed `Record<string, unknown>`.
   - In code, the type-alias is often shorted to `Dict`, (i.e. `type Dict = Record<string, unknown>`).
+  - Note: while a plain-object could technically include symbols, most object-iterator functions (i.e. `Object.keys()`) ingore symbols and numbers are converted to strings when used as keys, so you'll sometimes hear the term plain-object and dictonary used interchangeably. 
 - **plain-data-object:** plain-objects which can only contain types that are easily serializable: i.e. `primitives`, `arrays`, `Dates`, and nested `plain-data-objects`.
   - Note: `Dates` when being serialized will be converted to ISOStrings.
   - You can see a full implementation for the `PlainDataObject` type [here](./types-reference.ts#L5).
