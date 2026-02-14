@@ -75,8 +75,11 @@ So things are more clear down the line let's first clarify some terminology.
   - **readonly:** neither keys or values can change (typically done with `as const`).
 - **plain-objects:** objects which inherit directly from the root `Object` class and nothing else OR objects created with `Object.create(null)`.
   - Type is commonly `NonNullable<object>` although there is no way to enforce a plain-object type at compile-time.
-- **dictonaries:** plain-objects whose type is `Record<string, unknown>`.
+- **dictonary:** plain-objects whose type is `Record<string, unknown>`.
   - In code, the type-alias is often shorted to `Dict`, (i.e. `type Dict = Record<string, unknown>`).
+- **plain-data-object:** plain-objects which can only contain types that are easily serializable: i.e. `primitives`, `arrays`, `Dates`, and nested `plain-data-objects`.
+  - Note: `Dates` when being serialized will be converted to ISOStrings.
+  - You can see a full implementation for the `PlainDataObject` type [here](./types-reference.ts#L5).
 - **namespace-objects:** readonly object-literals used for code organization.
   - **value-object:** namespace-object for storing static values
     - **lookup-table:** value-object which stores static values and their label counterparts for displaying in a UI.
