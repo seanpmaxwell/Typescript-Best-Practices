@@ -505,7 +505,8 @@ function normalFunction() {
   - `camelCase`: most of the time
   - `PascalCase`: for certain situations
     - JSX Elements
-    - Functions just meant to return mostly static data with little or no formatting: i.e. value-factory-functions can be `PascalCase`.
+    - Constructor functions: `new User()`
+    - Value-factory-functions: `const GetDefaults = () => ...`
   - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch`: i.e. `getDateAsString()`, `async fetchUserRecords()`.
   - Prepend **validator-functions** with an `is`: `isValidUser(arg: unknown): arg is IUser`.
   - If you need to distinguish functions meant to throw an error from a counterpart function, append `OrThrow`: i.e. `findUserById(id: number): IUser | null` vs `findUserByIdOrThrow(id: number): IUser`.
