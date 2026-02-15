@@ -18,7 +18,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
     - [Classes](#classes)
     - [Enums](#enums)
   - [Types](#types-link)
-- [Script Types](#script-types)
+- [File Types](#file-types)
 - [File Organization](#file-organization)
 - [Naming Conventions](#naming-conventions)
 - [Comments](#comments)
@@ -195,7 +195,7 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
 - **Note:** I would also recommend avoiding classes for **handling IO-data** (even when you feel tempted to use OOP), because this often leads to:
   - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of identical `public static` functions
   - IO-data should just be 'acted upon' not do things.
-  - Use **module-object scripts** for handling IO-data.
+  - Use **module-object** for handling IO-data.
 
 > You can see a more thorough list of design rules [here](Design-Rules.md). 
 
@@ -225,27 +225,24 @@ Type-alias and interfaces are the two primary ways to describe object-types and 
 
 <br/><b>***</b><br/>
 
-<a id="script-types"></a>
-## 📄 Script Types
+<a id="file-types"></a>
+## 📄 File Types and Categories
 
-Every file should have a clear purpose. Most scripts fall into one of the following categories:
+Important, even though the terms file, script, and module are used interchangeably, there is technically a difference between them.
 
-- **Declaration**  
-  Exports a single declared item (e.g., a large function, enum, or configuration object).
+File _types_:
+  - **module**: any file which has imports/exports. TypeScript will locally scope all declarations inside a module so they will not be accessible ot other files unless exported.
+  - **script**: if a file contains not imports/exports, then it's a _script_ and TypeScript will globally scope all it's contents so other files can see them without importing them. 
 
-- **Module-Object**  
-  Export default is a namespace-object which organizes the values/logic for a particular file. 
+File _categories_:
+  - **declaration:** exports a single declared item (e.g., a large function, enum, or configuration object).
+  - **module-object:** `export default` is a namespace-object which organizes the values/logic for a particular file.
+  - **inventory:** exports multiple independent declarations, such as shared types or small utility functions.
+  - **linear:** executes a series of commands, often for **startup-time** logic.
+  - You can see a full list of file-category examples [here](File-Category-Examples.md).
 
-- **Inventory**  
-  Exports multiple independent declarations, such as shared types or small utility functions.
-
-- **Linear**  
-  Executes a series of commands, often for **startup-time** logic.
-
-You can see a full list of script examples [here](Script-Examples.md).
-
-#### Module-object scripts are great for organization
-I believe that for the backbone of all application logic, which is static after startup-time (both server and client-side, with the exception of JSX elements), module-object scripts are preferred.
+#### Module-object files are great for organization
+I believe that for the backbone of all application logic, which is static after startup-time (both server and client-side, with the exception of JSX elements), module-object files are preferred.
 
 Reasons:
 - That way we only need one import at the top
@@ -263,7 +260,7 @@ Reasons:
   2. `Files` (aka modules)
   3. `Regions`
   4. `Sections`
-  5. `Blocks` (uncommon except in maybe linear scripts)
+  5. `Blocks` (uncommon except in maybe linear files)
 
 #### Top-down ordering
 Due to how hoisting works, regions in a file should be in this order top-to-bottom:
@@ -312,7 +309,7 @@ do more stuff...
 **Sections** can be divided into **blocks**:
 
 ```ts
-// apiRouter.ts <-- Linear script
+// apiRouter.ts <-- Linear file
 
 // ----------------------- Add User Routes  --------------------------- //
 const loginRouter = Router.new();
@@ -357,7 +354,7 @@ const Roles = SomeEnumLibrary({
 ```
 
 #### *Configured-functions* nuances
-- Because areas of a script above the **Functions** section maybe depend on configured-functions (but they are not hoisted), a common practice is to wrap them with helper function-declarations when hoisting is needed. This allows us to keep our script clean by keeping all functions (other than value-factory-functions of course) together in one section.
+- Because areas of a file above the **Functions** section maybe depend on configured-functions (but they are not hoisted), a common practice is to wrap them with helper function-declarations when hoisting is needed. This allows us to keep our file clean by keeping all functions (other than value-factory-functions of course) together in one section.
 - Here is the recommended way to do this in more detail:
   - Place configured-functions above all functions declarations in the **Functions** section, and separate them with a *section-separator* if you have both.
   - Create a *hoist* helper function which accepts a configured-function's name and returns it with a switch-case.
@@ -436,8 +433,8 @@ function fetchSubscriptionsWhichAreSuspendedDueToFailedPayments(): Promise<sffps
 }
 ```
 
-#### Linear Script Exceptions
-- For large linear scripts, you don't have to follow strict section placement for items, but you should group large linear scripts into **sections** and place constants at the top of their respective section/block.
+#### Linear File Exceptions
+- For large linear-files, you don't have to follow strict section placement for items, but you should group large linear-files into **sections** and place constants at the top of their respective section/block.
 
 #### Comments in functions:
 - Generally you should not put spaces in functions and separate chunks of logic with a single inline comment.
@@ -456,7 +453,7 @@ function normalFunction() {
   whatever();
 }
 
-// Lage self executing startup script that needs to be wrapped
+// Lage self executing startup file that needs to be wrapped
 // in and async function so we use away
 (async () => {
   try {
@@ -483,10 +480,10 @@ function normalFunction() {
 
 - **Folders**: `kebab-case` (default) or name them after the primary declared item they are meant to export.
 - **Files**:
-  - **Linear scripts:** `kebab-case`
-  - **Declaration scripts:** Name them after the item being exported.
-  - **Module-object scripts:** Name them after the module-object that's used in the code. Usually this is PascalCase but not always. See object naming below.
-  - **Inventory:** `kebab-case`
+  - **Linear-file:** `kebab-case`
+  - **Declaration-files:** Name them after the item being exported.
+  - **Module-object files:** Name them after the module-object that's used in the code. Usually this is PascalCase but not always. See object naming below.
+  - **Inventory-files:** `kebab-case`
   - **index.ts** and **main.ts** 
     - Reserve the filename `index.ts` for **barrel-files**. Barrel-files are for creating a single entry point for a folder.
     - Use the filename `main.ts` for a file meant to be the starting point of an application (in contrast to a library).
@@ -497,9 +494,9 @@ function normalFunction() {
   - **Objects**:
     - For value-objects, use `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys holding readonly values.
     - If an object is readonly but not a namespace-object (the whole object is being passed as  value) and you need specific key names, UPPER_SNAKE_CASE is preferred for the object name.
-    - Ultimately, name module-object scripts the same way the object is named in the code. Here are some tips for naming module-objects:
+    - Ultimately, name module-object files the same way the object is named in the code. Here are some tips for naming module-objects:
       - Prefer `PascalCase` by default: i.e `import DateUtils from '@src/utils/DateUtils.ts;`.
-      - If its functions require a heavy amount of initialization (i.e. infrastructure-level scripts) and the module-object is used widely throughout your application, prefer `camelCase`: i.e `import db from '@src/infra/db.ts;`.
+      - If its functions require a heavy amount of initialization (i.e. infrastructure-level files) and the module-object is used widely throughout your application, prefer `camelCase`: i.e `import db from '@src/infra/db.ts;`.
 - **All variables declared inside of functions except for type declarations**: `camelCase`
 - **Functions**:
   - `camelCase`: most of the time
@@ -529,7 +526,7 @@ function normalFunction() {
   - Can be for object-keys or primitive variable names. DO NOT use for object names; use `View` for that.
 - `Payload`: An object formatted for movement through an API call.
 
-> The module-object script [User.model.ts](User.model.ts) has some good examples on standard naming conventions.
+> The module-object file [User.model.ts](User.model.ts) has some good examples on standard naming conventions.
 
 <br/><b>***</b><br/>
 
@@ -704,8 +701,8 @@ Because TypeScript let's us type the return value and parameters, traditional `j
   - Below `@private` can also add `@see nameOfTheFunctionUsingIt`  
 - `@testOnly`: for testing only and never in production (any item not just functions).
 - `@cronJob`: functions only for cron-jobs and not user-initiated.
-- `@dummyData`: functions only used by dummy-data scripts.
-- `@startupTime`: functions run at startup-time not request-time. Not really necessary for libraries or automation scripts but for user-heavy based applications like web-servers.
+- `@dummyData`: functions only used by dummy-data files.
+- `@startupTime`: functions run at startup-time not request-time. Not really necessary for libraries or automation files but for user-heavy based applications like web-servers.
 
 ##### Working with relational-databases
 
@@ -858,7 +855,7 @@ Use **layer-based** based architecture for simple (single developer) application
 - tsconfig.json
 ```
 
-You might be wondering why we gave the files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **module-object scripts** not **inventory-scripts**: see the [Naming Conventions](#naming-conventions) section.
+You might be wondering why we gave the files names like `UserRepo.ts` instead of `user.repo.ts`. That's because these are **module-object files** not **inventory-files**: see the [Naming Conventions](#naming-conventions) section.
 
 Use **domain-based** architecture for large applications:
 - Scales better
