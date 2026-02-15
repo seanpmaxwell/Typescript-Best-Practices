@@ -1,6 +1,6 @@
-## Script Examples
+## File-Category Examples
 
-### Module-Object Script
+### Module-Object File
 
 ```ts
 // utils/MailUtils.ts
@@ -24,7 +24,7 @@ export default {
 
 ---
 
-### Inventory Script
+### Inventory File
 
 ```tsx
 // common/components/buttons.tsx
@@ -44,7 +44,7 @@ export function CloseButton() {
 
 ---
 
-### Linear Script
+### Linear File
 
 ```ts
 // server.ts
@@ -64,7 +64,7 @@ export default app;
 
 ---
 
-### Declaration Script
+### Declaration File
 
 ```typescript
 // EnvVars.ts
