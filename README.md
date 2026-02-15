@@ -18,7 +18,7 @@ Patterns and best practices for **procedural TypeScript / JavaScript development
     - [Classes](#classes)
     - [Enums](#enums)
   - [Types](#types-link)
-- [File Types](#file-types)
+- [File Types and Categories](#file-types)
 - [File Organization](#file-organization)
 - [Naming Conventions](#naming-conventions)
 - [Comments](#comments)
