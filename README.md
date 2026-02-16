@@ -91,7 +91,7 @@ So things are more clear down the line let's first clarify some terminology.
     - **lookup-table:** value-object which stores static values and their label counterparts for displaying in a UI.
     - **configured-value-object:** a value-object returned from a function call: (i.e. most enum replacement libraries could fall into this category)
   - **module-object** a namespace-object which is the `export default` from a file.
-    - **module** is another name for file in JavaScript, so we say **module-object** because it is an object which represents a file.
+    - **module** is a type of file in JavaScript (see [File Types and Categories](#file-types) below), so we say **module-object** because it is an object which represents a file.
    
 ---
  
