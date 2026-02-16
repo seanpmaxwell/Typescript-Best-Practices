@@ -73,8 +73,12 @@ So things are more clear down the line let's first clarify some terminology.
   - **static:** values can change but not keys (default for TypeScript).
   - **dynamic:** keys and values can change (default for JavaScript).
   - **readonly:** neither keys or values can change (typically done with `as const`).
-- **plain-objects:** objects which inherit directly from the root `Object` class and nothing else OR objects created with `Object.create(null)`.
+- **classes:** Template for describing objects using "Object-Oriented-Programming".  
+- **object-literal:** bracket notation `{}` for describing and instatiating objects.
+- **plain-objects:** objects which inherit directly from the root `Object` class and nothing else OR objects created with `Object.create(null)` (aka null-prototype objects).
   - Type is commonly `Record<PropertyKey, unknown>` although there is no way to enforce a plain-object type at compile-time.
+  - 3 ways to implement: object-literals, constructor-functions `new Object()`, or `Object.create(null)`.
+  - Note that instances of the Object class (i.e. object-literals) will inherit methods like `.hasOwnProperty`. _null-prototype objects_ inherit from nothing so cannot use these functions.
 - **dictonary:** plain-objects whose type is narrowed `Record<string, unknown>`.
   - In code, the type-alias is often shorted to `Dict`, (i.e. `type Dict = Record<string, unknown>`).
   - Note: while a plain-object could technically include symbols, most object-iterator functions (i.e. `Object.keys()`) ingore symbols and numbers are converted to strings when used as keys, so you'll sometimes hear the term plain-object and dictonary used interchangeably. 
@@ -164,7 +168,7 @@ function parentFn(param: string) {
 
 Objects are collections of key/value pairs created via:
 
-- Object literals
+- Object-literals
 - Classes
 - Enums 
 > Avoid legacy constructor functions (`new Fn()`) in favor of modern class syntax.
