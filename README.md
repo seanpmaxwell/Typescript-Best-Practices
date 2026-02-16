@@ -258,7 +258,7 @@ Reasons:
 <br/><b>***</b><br/>
 
 <a id="file-organization"></a>
-## 🗂️ File (script) Organization
+## 🗂️ File Organization
 
 #### Project heirarchy summery: 
   1. `Folders` (aka directories)
