@@ -68,7 +68,8 @@ So things are more clear down the line let's first clarify some terminology.
  
 ---
 
-### Objects
+<a id="terminology-objects"></a>
+### Objects 
 - **States**: Objects can be **static**, **readonly**, or **dynamic**.
   - **static:** values can change but not keys (default for TypeScript).
   - **dynamic:** keys and values can change (default for JavaScript).
