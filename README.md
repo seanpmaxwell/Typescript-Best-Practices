@@ -236,8 +236,8 @@ Type-alias and interfaces are the two primary ways to describe object-types and 
 Important, even though the terms file, script, and module are used interchangeably, there is technically a difference between them.
 
 File _types_:
-  - **module**: any file which has imports/exports. TypeScript will locally scope all declarations inside a module so they will not be accessible ot other files unless exported.
-  - **script**: if a file contains not imports/exports, then it's a _script_ and TypeScript will globally scope all it's contents so other files can see them without importing them. 
+  - **module**: Any file which has imports/exports. TypeScript will locally scope all declarations inside a module so they will not be accessible to other files unless exported.
+  - **script**: A file which does not contain any imports/exports. TypeScript will globally scope all its contents so other files can see them without importing them. 
 
 File _categories_:
   - **declaration:** exports a single declared item (e.g., a large function, enum, or configuration object).
@@ -274,9 +274,9 @@ Due to how hoisting works, regions in a file should be in this order top-to-bott
   4. `Types`  
   5. `Run (or Setup)`
   6. `Components`: (if applicable `.jsx` / `.tsx`)  
-  7. `Functions` (function-declarations)
+  7. `Functions`
   8. `Classes`: Classes generally should go in their own file but small locally used ones are okay. 
-  9. `Export`: imports should generally go at the bottom unless it's an inventory-script
+  9. `Export`: For declaration, module-objects, and linear files, group all your exports together at the bottom. For inventory-files you can export items on the line they are declared; this makes it easier to see what's public. 
 
 > Note: **Constants** should be primarily for static data but could also include functions/objects which primarily handle static-data. See **Constants nuances** below.
 
