@@ -25,12 +25,7 @@ const UserRoles = {
 // Using a function so we always get fresh datetime objects. "GetDefaults" is
 // "PascalCase" because its just meant to return a static object and not process
 // any logic.
-const GetDefaults = (): IUser => ({
-  id: 0,
-  name: '',
-  role: UserRoles.NONE,
-  created: new Date(),
-});
+const GetDefaults = (): IUser => ();
 
 /******************************************************************************
                                 Types
@@ -64,10 +59,10 @@ interface IUser {
 ******************************************************************************/
 
 /**
- * Because "new" is a built-in keyword, to create new "User" items, we apppend
- * the name with "_". That way we can call "User.new()".
+ * `.from` is a common factory function name when copying/coverting from another
+ * object.
  */
-function new_(partial?: Partial<IUser>): IUser {
+function from(partial?: Partial<IUser>): IUser {
   // "camelCase" for variables declared in functions.
   const newUser = { ...GetDefaults(), ...partial };
   if (!isUser(newUser)) {
@@ -77,10 +72,23 @@ function new_(partial?: Partial<IUser>): IUser {
 }
 
 /**
+ * `.of` is a common factory-function name when creating an instance from
+ * a certain number of variables.
+ */
+function of(): IUser {
+  return {
+    id: 0,
+    name: '',
+    role: UserRoles.NONE,
+    created: new Date(),
+  };
+}
+
+/**
  * "camelCase" for standard function declarations. "prepending" with an "is" 
  * since this is a validator-function.
  */
-function isUser(arg: unknown): arg is IUser {
+function is(arg: unknown): arg is IUser {
   return (
     typeof arg === 'object' &&
     arg !== null &&
@@ -137,6 +145,7 @@ function isValidDateOrISOString(
 // We will import the User module-object script as "User" in other files
 // (i.e. import User from '@src/domains/users/User.model.ts' and "User.new()"")
 export default {
-  new: new_,
-  isUser,
+  of,
+  from,
+  is,
 } as const;
