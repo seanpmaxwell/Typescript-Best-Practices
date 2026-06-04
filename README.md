@@ -201,6 +201,7 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
   - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of identical `public static` functions
   - IO-data should just be 'acted upon' not do things.
   - Use **module-object** for handling IO-data.
+- **Tip:** If you feel tempted to use classes cause you like making constructor calls, these can easiy be replaced by the factory functions `.of`, `.from`, and `.is`: see [User.model.ts](User.model.ts).
 
 > You can see a more thorough list of design rules [here](Design-Rules.md). 
 
