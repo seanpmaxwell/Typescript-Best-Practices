@@ -22,11 +22,6 @@ const UserRoles = {
   ADMIN: 2,
 } as const;
 
-// Using a function so we always get fresh datetime objects. "GetDefaults" is
-// "PascalCase" because its just meant to return a static object and not process
-// any logic.
-const GetDefaults = (): IUser => ();
-
 /******************************************************************************
                                 Types
 ******************************************************************************/
@@ -73,14 +68,14 @@ function from(partial?: Partial<IUser>): IUser {
 
 /**
  * `.of` is a common factory-function name when creating an instance from
- * a certain number of variables.
+ * one or more parameter.
  */
-function of(): IUser {
+function of(id?: number, name?: string, role?: UserRoles, created?: Date | ISOString): IUser {
   return {
-    id: 0,
-    name: '',
-    role: UserRoles.NONE,
-    created: new Date(),
+    id: id ?? 0,
+    name: name ?? '',
+    role: role ?? UserRoles.NONE,
+    created: new Date(created),
   };
 }
 
