@@ -266,7 +266,9 @@ Reasons:
   2. `Files` (aka modules)
   3. `Regions`
   4. `Sections`
-  5. `Blocks` (uncommon except in maybe linear files)
+  5. `Blocks`
+    5a. `File Blocks`: blocks directly within files
+    5b. `Function Blocks`: blocks within functions
 
 #### Top-down ordering
 Due to how hoisting works, regions in a file should be in this order top-to-bottom:
@@ -284,15 +286,15 @@ Due to how hoisting works, regions in a file should be in this order top-to-bott
 Separate regions with:
 
 ```ts
-/******************************************************************************
-                        "Region Name" (i.e. Constants)
-******************************************************************************/
+// ========================================================================= //
+//                      "Region Name" (i.e. Constants)                       //
+// ========================================================================= //
 ```
 
 **Regions** can be divided further into **sections**:
 
 ```ts
-// -------------------------- Setup middleware --------------------------- //
+// ============================ Setup middleware =========================== //
 // Note: if you to add some comments for a Section or Region separator
 // place them here, directly below the separator.
 
@@ -303,7 +305,7 @@ app.use(middleware2);
 
 do stuff....
 
-// ----------------------- Configure Front-End --------------------------- //
+// ========================== Configure Front-End ========================== //
 const FRONT_END_DIRECTORY_PATH = __dir + '/client/html';
 
 app.views(FRONT_END_DIRECTORY_PATH + '/views');
@@ -317,10 +319,10 @@ do more stuff...
 ```ts
 // apiRouter.ts <-- Linear file
 
-// ----------------------- Add User Routes  --------------------------- //
+// ============================ Add User Routes ============================ //
 const loginRouter = Router.new();
 
-// -- Local Login -- // <-- Separate blocks with this
+// ==== Local Login ==== // <-- Separate "file blocks" with this
 // Login with username and password
 
 const localRouter = Router.new();
@@ -329,13 +331,23 @@ localRouter.use('/reset-passowrd-request', sendLink);
 
 loginRouter.use('/login', localRouter);
 
-// -- Google Login -- //
+// ==== Google Login ==== //
 // Login with Google credentials
 
-do stuff...
+/**
+ * Example of "function block" separators
+ */
+function someLargeFunction() {
+
+  // -- Block 1-- //
+  ...do stuff
+
+  // -- Block 2 -- //
+  ..do more stuff
+}
 ```
 
-> If you find your region/section separators getting off center over time there is the [center-comment-headers script](center-comment-headers.js) which can adjust them for you.
+> If adding **region**/**section** separators with perfectly centered labels seems a little tedious (which it is), you copy the [insert-separators script](insert-separators.js) script of this repo into your project, which looks for `// r~~ "label text"` and `// s~~ "label text"` tags and adds the separators for you.
 
 #### *Constants section* nuances
 - Value-factory-functions (see [Terminology](#terminology) above) and configured-value-objects can also go at the bottom of the **Constants** section.
@@ -370,9 +382,10 @@ Hoisting configured-functions example:
 ```ts
 // UserModel.ts
 
-/******************************************************************************
-                                      Setup                                  
-******************************************************************************/
+// ========================================================================= //
+//                                   Setup                                   //
+// ========================================================================= //
+
 
 // Setup validators object
 const UserSchema = {
@@ -380,9 +393,9 @@ const UserSchema = {
   isEmail: hoist('isURL'),
 };
 
-/******************************************************************************
-                                   Functions                                   
-******************************************************************************/
+// ========================================================================= //
+//                                 Functions                                 //
+// ========================================================================= //
 
 const isEmail = isValidString({
   maxLength: 255,
@@ -395,7 +408,7 @@ const isValidURL = isValidString({
   regex: ...some regex,
 });
 
-// --------------------- Function-Declarations ---------------------------- //
+// ========================= Function Declarations ========================= //
 
 /**
  * Use a function-declaration since we don't need hoisting.
@@ -416,9 +429,9 @@ function hoist(name: string) {
   }
 }
 
-/******************************************************************************
-                                   Export                                   
-******************************************************************************/
+// ========================================================================= //
+//                                  Export                                   //
+// ========================================================================= //
 
 return {
   schema: UserSchema

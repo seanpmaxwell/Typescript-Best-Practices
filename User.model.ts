@@ -1,15 +1,15 @@
-/******************************************************************************
-                                 Docs
-******************************************************************************/
+// ========================================================================= //
+//                                   Docs                                    //
+// ========================================================================= //
 
 /**
  * This module-object script is meant to handle User IO data items and demo
  * proper naming conventions.
  */
 
-/******************************************************************************
-                              Constants
-******************************************************************************/
+// ========================================================================= //
+//                                 Constants                                 //
+// ========================================================================= //
 
 // Because this is a "readonly" string primitive, we use "UPPER_SNAKE_CASE".
 const INVALID_USER_ERROR = 'Not a valid user object';
@@ -22,9 +22,9 @@ const UserRoles = {
   ADMIN: 2,
 } as const;
 
-/******************************************************************************
-                                Types
-******************************************************************************/
+// ========================================================================= //
+//                                   Types                                   //
+// ========================================================================= //
 
 // "PascalCase" standard for type-aliases
 type UserRoles = typeof UserRoles[keyof typeof UserRoles];
@@ -49,9 +49,9 @@ interface IUser {
   createdAt: Date | ISOString; // @AC
 }
 
-/******************************************************************************
-                                Functions
-******************************************************************************/
+// ========================================================================= //
+//                                 Functions                                 //
+// ========================================================================= //
 
 /**
  * `.from` is a common factory function name when copying/coverting from another
@@ -59,8 +59,8 @@ interface IUser {
  */
 function from(partial?: Partial<IUser>): IUser {
   // "camelCase" for variables declared in functions.
-  const newUser = { ...GetDefaults(), ...partial };
-  if (!isUser(newUser)) {
+  const newUser = { ...of(), ...partial };
+  if (!is(newUser)) {
     throw new Error(INVALID_USER_ERROR);
   }
   return newUser;
@@ -70,12 +70,12 @@ function from(partial?: Partial<IUser>): IUser {
  * `.of` is a common factory-function name when creating an instance from
  * one or more parameter.
  */
-function of(id?: number, name?: string, role?: UserRoles, created?: Date | ISOString): IUser {
+function of(id?: number, name?: string, role?: UserRoles, createdAt?: Date | ISOString): IUser {
   return {
     id: id ?? 0,
     name: name ?? '',
     role: role ?? UserRoles.NONE,
-    created: new Date(created),
+    createdAt: createdAt ? new Date(createdAt) : new Date(),
   };
 }
 
@@ -133,9 +133,9 @@ function isValidDateOrISOString(
   return false;
 }
 
-/******************************************************************************
-                                  Export
-******************************************************************************/
+// ========================================================================= //
+//                                  Export                                   //
+// ========================================================================= //
 
 // We will import the User module-object script as "User" in other files
 // (i.e. import User from '@src/domains/users/User.model.ts' and "User.new()"")
