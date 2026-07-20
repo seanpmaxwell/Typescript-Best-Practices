@@ -3,8 +3,6 @@
 [![GitHub stars](https://img.shields.io/github/stars/seanpmaxwell/Typescript-Best-Practices?style=flat-square)](https://github.com/seanpmaxwell/Typescript-Best-Practices/stargazers)
 
 Patterns and best practices for **procedural TypeScript / JavaScript development**, guided by the **Rule of 4** principle.
-
-> This guide is intentionally opinionated. It prioritizes clarity, consistency, and long-term maintainability over abstraction or novelty.
 <br/>
 
 ## 📚 Table of Contents
