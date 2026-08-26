@@ -270,6 +270,9 @@ Reasons:
 Due to how hoisting works, regions in a file should be in this order top-to-bottom:
   1. `Docs`
   2. `Constants`
+     2a. Primitive-constants
+     2b. Object-constants
+     2c. Value-factory functions
   3. `Types`  
   4. `Run (or Setup)`
   5. `Components`: (if applicable `.jsx` / `.tsx`)  
@@ -368,19 +371,27 @@ const Roles = SomeEnumLibrary({
 ```
 
 #### *Configured-functions* nuances
-- Because areas of a file above the **Functions** section may depend on configured-functions (but they are not hoisted), a common practice is to wrap them with helper function-declarations when hoisting is needed. This allows us to keep our file clean by keeping all functions (other than value-factory-functions of course) together in one section.
+- Because areas of a file above the **Functions** section may depend on configured-functions (which are not hoisted), a common practice is to wrap them with hfunction-declarations when hoisting is needed. This allows us to keep our files clean by keeping all functions together (other than value-factory-functions of course) in one section.
 - Here is the recommended way to do this in more detail:
-  - Place configured-functions above all function declarations in the **Functions** section, and separate them with a *section-separator* if you have both.
-  - Create a *hoist* helper function which returns a holder object containing all hoisted function.
-  - If a configured-function does not need to be hoisted, you do not need a switch case for it.
+  - Lazy-load your configured-functions inside of function-declarations and attach the reference (of the configured-function) as a property to the surrounding function-declaration.
+  - TypeScript will complain this new property doesn't exist on functions which is why I've include the utility-type `AttachConfiguredFn` below.
 
 Hoisting configured-functions example:
 ```ts
+// In your utility files
+
+// A symbol helps avoid collision with existing keys
+export const CONFIGURED_FN = Symbol('configuredFunction');
+
+export type AttachConfiguredFn<T extends (...args: any[]) => any> = T & {
+  [CONFIGURED_FN]?: T;
+};
+```
+
+```ts
 // UserModel.ts
 import { isValidString } from 'some-validator-lib';
-
-const hoisted = hoist();
-...
+import { CONFIGURED_FN, type AttachConfiguredFn } from './some-local-util-file';
 
 // ========================================================================= //
 //                                   Setup                                   //
@@ -388,33 +399,28 @@ const hoisted = hoist();
 
 // Setup validators object
 const UserSchema = {
-  isHomePage: hoisted.isValidURL,
-  isEmail: hoisted.isEmail,
+  isHomePage: isValidUrl, // now our configured-functions are hoisted. 
+  isEmail: isEmail,
 };
 
 // ========================================================================= //
 //                                 Functions                                 //
 // ========================================================================= //
 
-const isEmail = isValidString({
-  maxLength: 255,
-  regex: ...some regex,
-});
-
-// Does not need hoisting so we don't add a switch case for it.
-const isValidURL = isValidString({
-  maxLength: 255,
-  regex: ...some regex,
-});
-
-// ========================= Function Declarations ========================= //
-
-/**
- * @private
- */
-function hoist(name: string) {
-  return { isEmail, isValidURL };
+// Lazy-loading configured functions so they are both hoisted AND not
+// re-implemented on every function call.
+function isEmail(...params: [string]): boolean {
+  const self = isEmail as AttachConfiguredFn<typeof isEmail>;
+  self[CONFIGURED_FN] ??= isValidString({ maxLength: 255, regex: /* ... */ });
+  return self[CONFIGURED_FN](...params);
 }
+
+function isValidUrl(...params: [string]): boolean {
+  const self = isValidUrl as AttachConfiguredFn<typeof isValidUrl>;
+  self[CONFIGURED_FN] ??= isValidString({ maxLength: 255, regex: /* ... */ });
+  return self[CONFIGURED_FN](...params);
+}
+
 
 // ========================================================================= //
 //                                  Export                                   //
@@ -422,7 +428,6 @@ function hoist(name: string) {
 
 export default {
   schema: UserSchema,
-  isValidURL,
 } as const;
 ```
 
