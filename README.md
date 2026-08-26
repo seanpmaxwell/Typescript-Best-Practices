@@ -371,22 +371,25 @@ const Roles = SomeEnumLibrary({
 - Because areas of a file above the **Functions** section may depend on configured-functions (but they are not hoisted), a common practice is to wrap them with helper function-declarations when hoisting is needed. This allows us to keep our file clean by keeping all functions (other than value-factory-functions of course) together in one section.
 - Here is the recommended way to do this in more detail:
   - Place configured-functions above all function declarations in the **Functions** section, and separate them with a *section-separator* if you have both.
-  - Create a *hoist* helper function which accepts a configured-function's name and returns it with a switch-case.
+  - Create a *hoist* helper function which returns a holder object containing all hoisted function.
   - If a configured-function does not need to be hoisted, you do not need a switch case for it.
 
 Hoisting configured-functions example:
 ```ts
 // UserModel.ts
+import { isValidString } from 'some-validator-lib';
+
+const hoisted = hoist();
+...
 
 // ========================================================================= //
 //                                   Setup                                   //
 // ========================================================================= //
 
-
 // Setup validators object
 const UserSchema = {
-  isName: isValidString,
-  isEmail: hoist('isEmail'),
+  isHomePage: hoisted.isValidURL,
+  isEmail: hoisted.isEmail,
 };
 
 // ========================================================================= //
@@ -407,22 +410,10 @@ const isValidURL = isValidString({
 // ========================= Function Declarations ========================= //
 
 /**
- * Use a function-declaration since we don't need hoisting.
- */
-function isValidString(arg: unknown): arg is string {
-  return typeof arg === 'string';
-}
-
-/**
  * @private
  */
 function hoist(name: string) {
-  switch (name) {
-    case 'isEmail':
-      return isEmail;
-    default:
-      throw new Error('Unknown declaration');
-  }
+  return { isEmail, isValidURL };
 }
 
 // ========================================================================= //
