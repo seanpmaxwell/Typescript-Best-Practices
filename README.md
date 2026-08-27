@@ -376,85 +376,61 @@ const Roles = SomeEnumLibrary({
 
 Hoisting configured-functions example:
 ```ts
-// ConfiguredFnCache.ts
-
-const CONFIGURED_FN = Symbol('configuredFunction');
-
-/**
- * Augments a function type with a symbol-keyed property used to cache its
- * lazily-configured implementation. The cached implementation is assumed to
- * share the same call signature as `T` itself. Used internally to type `self`
- * when accessing a function's own cache slot.
- */
-type WithCache<T extends (...args: never[]) => unknown> = T & {
-  [key: symbol]: T | undefined;
-};
-
-/**
- * Get the cached, lazily-configured implementation stored on `fn`, or
- * `undefined` if `fn` hasn't been configured yet.
- */
-function getCache<T extends (...args: never[]) => unknown>(fn: T): T | undefined {
-  const self = fn as WithCache<T>;
-  return self[CONFIGURED_FN];
-}
-
-/**
- * Store `impl` as the cached, configured implementation for `fn`.
- */
-function setCache<T extends (...args: never[]) => unknown>(fn: T, impl: T): void {
-  const self = fn as WithCache<T>;
-  self[CONFIGURED_FN] = impl;
-}
-
-export default { get: getCache, set: setCache };
-```
-
-```ts
 // User.ts
 import { isValidString } from 'some-validation-library';
 
 // ========================================================================= //
-//                           Hoisting Example                                //
+//                                   Setup                                   //
 // ========================================================================= //
-// This works even though `isEmail` and its cache-backed implementation are
-// declared further down the file. Function declarations are hoisted fully
-// initialized (unlike `let`/`const`, which have a temporal dead zone), so
-// `isEmail` is already callable here — and since the cache lives as a
-// property on the `isEmail` function object itself (not a module-level
-// `let`/`const`), there's no TDZ risk on the cache slot either.
-//
-//   isEmail('test@example.com'); // ✅ true — safe to call from the very top
 
-import ConfiguredFnCache from './ConfiguredFnCache';
+// Eagerly build all configured functions up front, using the init factories
+// declared in Function Declarations below (safe due to function hoisting —
+// see note there). Grouping this at the top means every function,
+// including the factories, can live together at the bottom of the file.
+const ConfiguredFns = {
+  isEmail: initIsEmail(),
+  isURL: initIsURL(),
+} as const;
+
+// ========================================================================= //
+//                           Function Declarations                           //
+// ========================================================================= //
 
 /**
- * Check if a string is a valid email.
+ * Normalize an email address for comparison/storage — lowercases it and
+ * trims surrounding whitespace. Plain function, no lazy config needed.
  */
-function isEmail(...params: [string]): boolean {
-  let configured = ConfiguredFnCache.get(isEmail);
-  if (!configured) {
-    configured = isValidString({ maxLength: 255, regex: /* ... */ });
-    ConfiguredFnCache.set(isEmail, configured);
-  }
-  return configured(...params);
+function normalizeEmail(email: string): string {
+  return email.trim().toLowerCase();
 }
 
 /**
- * Check if a string is a valid URL.
+ * @private
+ *
+ * Build the configured `isEmail` implementation. Called once, at module load,
+ * via `configuredFns` above — safe to reference here despite appearing later
+ * in the file, since `function` declarations are hoisted fully initialized.
  */
-function isURL(...params: [string]): boolean {
-  let configured = ConfiguredFnCache.get(isURL);
-  if (!configured) {
-    configured = isValidString({ maxLength: 2048, regex: /* ... */ });
-    ConfiguredFnCache.set(isURL, configured);
-  }
-  return configured(...params);
+function initIsEmail() {
+  return isValidString({ maxLength: 255, regex: /* ... */ });
 }
+
+/**
+ * @private
+ *
+ * Build the configured `isURL` implementation.
+ */
+function initIsURL() {
+  return isValidString({ maxLength: 2048, regex: /* ... */ });
+}
+
+// ========================================================================= //
+//                                  Export                                   //
+// ========================================================================= //
 
 export default {
-  isEmail,
-  isURL,
+  ...ConfiguredFns,
+  normalizeEmail,
 } as const;
 ```
 
