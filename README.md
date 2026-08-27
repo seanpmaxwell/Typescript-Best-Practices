@@ -372,51 +372,89 @@ const Roles = SomeEnumLibrary({
 
 #### *Configured-functions* nuances
 - Because areas of a file above the **Functions** section may depend on configured-functions (which are not hoisted), a common practice is to wrap them with function-declarations when hoisting is needed. This allows us to keep our files clean by keeping all functions together (other than value-factory-functions of course) in one section.
-- To prevent a configured-function from being called before other items in the module are initialized, _lazy-load_ your configured-functions inside of function-declarations and set the references in a _cache object (i.e. `WeakMap`).
+- To prevent a configured-function from being called before other items in the module are initialized, _lazy-load_ your configured-functions inside of function-declarations and set the references (of the configured-functions) on the functions-declarations. 
 
 Hoisting configured-functions example:
 ```ts
-// UserModel.ts
-import { isValidString } from 'some-validator-lib';
+// ConfiguredFnCache.ts
 
-// ========================================================================= //
-//                                   Setup                                   //
-// ========================================================================= //
+const CONFIGURED_FN = Symbol('configuredFunction');
 
-const __cache = new WeakMap<Function, Function>();
-
-// Setup validators object
-const UserSchema = {
-  isHomePage: isValidUrl,
-  isEmail: isEmail,  // now our configured-function is hoisted. 
+/**
+ * Augments a function type with a symbol-keyed property used to cache its
+ * lazily-configured implementation. The cached implementation is assumed to
+ * share the same call signature as `T` itself. Used internally to type `self`
+ * when accessing a function's own cache slot.
+ */
+type WithCache<T extends (...args: never[]) => unknown> = T & {
+  [key: symbol]: T | undefined;
 };
 
-// ========================================================================= //
-//                                 Functions                                 //
-// ========================================================================= //
+/**
+ * Get the cached, lazily-configured implementation stored on `fn`, or
+ * `undefined` if `fn` hasn't been configured yet.
+ */
+function getCache<T extends (...args: never[]) => unknown>(fn: T): T | undefined {
+  const self = fn as WithCache<T>;
+  return self[CONFIGURED_FN];
+}
 
-// Lazy-loading configured functions so they are both hoisted AND not
-// re-implemented on every function call.
-function isEmail(param: unknown): boolean {
-  let isEmailBase = __cache.get(isEmail);
-  if (!configuredFn) { // <-- lazy-load here
-    isEmailBase = isValidString({ maxLength: 255, regex: /* ... */ });
-    _cache.set(isEmail, isEmailBase);
+/**
+ * Store `impl` as the cached, configured implementation for `fn`.
+ */
+function setCache<T extends (...args: never[]) => unknown>(fn: T, impl: T): void {
+  const self = fn as WithCache<T>;
+  self[CONFIGURED_FN] = impl;
+}
+
+export default { get: getCache, set: setCache };
+```
+
+```ts
+// User.ts
+import { isValidString } from 'some-validation-library';
+
+// ========================================================================= //
+//                           Hoisting Example                                //
+// ========================================================================= //
+// This works even though `isEmail` and its cache-backed implementation are
+// declared further down the file. Function declarations are hoisted fully
+// initialized (unlike `let`/`const`, which have a temporal dead zone), so
+// `isEmail` is already callable here — and since the cache lives as a
+// property on the `isEmail` function object itself (not a module-level
+// `let`/`const`), there's no TDZ risk on the cache slot either.
+//
+//   isEmail('test@example.com'); // ✅ true — safe to call from the very top
+
+import ConfiguredFnCache from './ConfiguredFnCache';
+
+/**
+ * Check if a string is a valid email.
+ */
+function isEmail(...params: [string]): boolean {
+  let configured = ConfiguredFnCache.get(isEmail);
+  if (!configured) {
+    configured = isValidString({ maxLength: 255, regex: /* ... */ });
+    ConfiguredFnCache.set(isEmail, configured);
   }
-  return isEmailBase(param);
+  return configured(...params);
 }
 
-function isValidUrl(param: unknown): boolean {
-  return RegExp.test(param);
+/**
+ * Check if a string is a valid URL.
+ */
+function isURL(...params: [string]): boolean {
+  let configured = ConfiguredFnCache.get(isURL);
+  if (!configured) {
+    configured = isValidString({ maxLength: 2048, regex: /* ... */ });
+    ConfiguredFnCache.set(isURL, configured);
+  }
+  return configured(...params);
 }
-
-
-// ========================================================================= //
-//                                  Export                                   //
-// ========================================================================= //
 
 export default {
-  schema: UserSchema,
+  isEmail,
+  isURL,
 } as const;
 ```
 
