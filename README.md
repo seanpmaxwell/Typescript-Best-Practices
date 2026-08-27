@@ -371,36 +371,24 @@ const Roles = SomeEnumLibrary({
 ```
 
 #### *Configured-functions* nuances
-- Because areas of a file above the **Functions** section may depend on configured-functions (which are not hoisted), a common practice is to wrap them with hfunction-declarations when hoisting is needed. This allows us to keep our files clean by keeping all functions together (other than value-factory-functions of course) in one section.
-- Here is the recommended way to do this in more detail:
-  - Lazy-load your configured-functions inside of function-declarations and attach the reference (of the configured-function) as a property to the surrounding function-declaration.
-  - TypeScript will complain this new property doesn't exist on functions which is why I've include the utility-type `AttachConfiguredFn` below.
+- Because areas of a file above the **Functions** section may depend on configured-functions (which are not hoisted), a common practice is to wrap them with function-declarations when hoisting is needed. This allows us to keep our files clean by keeping all functions together (other than value-factory-functions of course) in one section.
+- To prevent a configured-function from being called before other items in the module are initialized, _lazy-load_ your configured-functions inside of function-declarations and set the references in a _cache object (i.e. `WeakMap`).
 
 Hoisting configured-functions example:
 ```ts
-// In your utility files
-
-// A symbol helps avoid collision with existing keys
-export const CONFIGURED_FN = Symbol('configuredFunction');
-
-export type AttachConfiguredFn<T extends (...args: any[]) => any> = T & {
-  [CONFIGURED_FN]?: T;
-};
-```
-
-```ts
 // UserModel.ts
 import { isValidString } from 'some-validator-lib';
-import { CONFIGURED_FN, type AttachConfiguredFn } from './some-local-util-file';
 
 // ========================================================================= //
 //                                   Setup                                   //
 // ========================================================================= //
 
+const __cache = new WeakMap<Function, Function>();
+
 // Setup validators object
 const UserSchema = {
-  isHomePage: isValidUrl, // now our configured-functions are hoisted. 
-  isEmail: isEmail,
+  isHomePage: isValidUrl,
+  isEmail: isEmail,  // now our configured-function is hoisted. 
 };
 
 // ========================================================================= //
@@ -409,16 +397,17 @@ const UserSchema = {
 
 // Lazy-loading configured functions so they are both hoisted AND not
 // re-implemented on every function call.
-function isEmail(...params: [string]): boolean {
-  const self = isEmail as AttachConfiguredFn<typeof isEmail>;
-  self[CONFIGURED_FN] ??= isValidString({ maxLength: 255, regex: /* ... */ });
-  return self[CONFIGURED_FN](...params);
+function isEmail(param: unknown): boolean {
+  let isEmailBase = __cache.get(isEmail);
+  if (!configuredFn) { // <-- lazy-load here
+    isEmailBase = isValidString({ maxLength: 255, regex: /* ... */ });
+    _cache.set(isEmail, isEmailBase);
+  }
+  return isEmailBase(param);
 }
 
-function isValidUrl(...params: [string]): boolean {
-  const self = isValidUrl as AttachConfiguredFn<typeof isValidUrl>;
-  self[CONFIGURED_FN] ??= isValidString({ maxLength: 255, regex: /* ... */ });
-  return self[CONFIGURED_FN](...params);
+function isValidUrl(param: unknown): boolean {
+  return RegExp.test(param);
 }
 
 
