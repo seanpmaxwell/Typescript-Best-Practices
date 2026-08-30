@@ -274,7 +274,7 @@ Due to how hoisting works, regions in a file should be in this order top-to-bott
      2b. Object-constants
      2c. Value-factory functions
   3. `Types`  
-  4. `Run (or Setup)`
+  4. `Run`
   5. `Components`: (if applicable `.jsx` / `.tsx`)  
   6. `Functions`
   7. `Classes`: Classes generally should go in their own file but small locally used ones are okay. 
@@ -372,7 +372,6 @@ const Roles = SomeEnumLibrary({
 
 #### *Configured-functions* nuances
 - Because areas of a file above the **Functions** section may depend on configured-functions (which are not hoisted), a common practice is to wrap them with function-declarations when hoisting is needed. This allows us to keep our files clean by keeping all functions together (other than value-factory-functions of course) in one section.
-- To prevent a configured-function from being called before other items in the module are initialized, _lazy-load_ your configured-functions inside of function-declarations and set the references (of the configured-functions) on the functions-declarations. 
 
 Hoisting configured-functions example:
 ```ts
@@ -380,7 +379,7 @@ Hoisting configured-functions example:
 import { isValidString } from 'some-validation-library';
 
 // ========================================================================= //
-//                                   Setup                                   //
+//                                   Run                                     //
 // ========================================================================= //
 
 // Eagerly build all configured functions up front, using the init factories
@@ -436,23 +435,22 @@ export default {
 
 ### Helper types
 - If you have long stretches of code and you both can and want to shorten it by assigning a long type name to a shorter name then that's okay. Just make sure the shorter name isn't used anywhere other than the code it's close to. If the type is declared directly in a file, I advise using acronyms to prevent collisions. 
-
 ```
 /**
  * Fetch user subscriptions whose status is suspended and suspension-reason type is 'failed-payment'.
  */
-type sffps = SuspendedForFailedPaymentSubscription;
 function fetchSubscriptionsWhichAreSuspendedDueToFailedPayments(): Promise<sffps[]> {
   return database('subscriptions').where({ ... }).returning('*');
 }
+type sffps = SuspendedForFailedPaymentSubscription;
 ```
 
 #### Linear File Exceptions
-- For large linear-files, you don't have to follow strict section placement for items, but you should group large linear-files into **sections** and place constants at the top of their respective section/block.
+- For large linear-files, you don't have to follow strict section placement for items, but you should group large linear-files into **code-blocks** and place constants at the top of their respective block.
 
 #### Comments in functions:
 - Generally you should not put spaces in functions and separate chunks of logic with a single inline comment.
-- If you have a really large function that can't be broken up (i.e. React Component) then you can further separate functions with a space and `// ** "Info" ** //`
+- If you have a really large function that can't be broken up (i.e. React Component) then you can further separate functions with a space and `// -- "Info" -- //`
 
 ```ts
 /**
@@ -466,25 +464,24 @@ function normalFunction() {
   blah();
   whatever();
 }
+```
 
-// Large self-executing startup file that needs to be wrapped
-// in an async function so we use await
-(async () => {
+```ts
+{
   try {
-    // ** Do stuff ** //
+    // -- Do stuff -- //
     foo();
     bar();
     ...several more lines of code
 
-    // ** Do more stuff **//
+    // -- Do more stuff -- //
     blah();
     whatever();
     ...several more lines of code
-
   } catch (err) {
     handleErrorObject(err);
   }
-})()
+}
 ```
 
 <br/><b>***</b><br/>
