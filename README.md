@@ -379,46 +379,26 @@ Hoisting configured-functions example:
 import { isValidString } from 'some-validation-library';
 
 // ========================================================================= //
-//                                   Run                                     //
+//                                  Constants                                //
 // ========================================================================= //
 
-// Eagerly build all configured functions up front, using the init factories
-// declared in Function Declarations below (safe due to function hoisting —
-// see note there). Grouping this at the top means every function,
-// including the factories, can live together at the bottom of the file.
-const ConfiguredFns = {
-  isEmail: initIsEmail(),
-  isURL: initIsURL(),
-} as const;
+// Hoisted configured-functions
+const isEmail = initIsEmail();
+const isURL = initIsURL(),
 
 // ========================================================================= //
 //                           Function Declarations                           //
 // ========================================================================= //
 
-/**
- * Normalize an email address for comparison/storage — lowercases it and
- * trims surrounding whitespace. Plain function, no lazy config needed.
- */
 function normalizeEmail(email: string): string {
+  if (!isEmail(email)) throw new Error()
   return email.trim().toLowerCase();
 }
 
-/**
- * @private
- *
- * Build the configured `isEmail` implementation. Called once, at module load,
- * via `configuredFns` above — safe to reference here despite appearing later
- * in the file, since `function` declarations are hoisted fully initialized.
- */
 function initIsEmail() {
   return isValidString({ maxLength: 255, regex: /* ... */ });
 }
 
-/**
- * @private
- *
- * Build the configured `isURL` implementation.
- */
 function initIsURL() {
   return isValidString({ maxLength: 2048, regex: /* ... */ });
 }
@@ -428,7 +408,8 @@ function initIsURL() {
 // ========================================================================= //
 
 export default {
-  ...ConfiguredFns,
+  isEmail,
+  isUrl,
   normalizeEmail,
 } as const;
 ```
