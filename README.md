@@ -555,20 +555,20 @@ Here the terms **branch-directory** and **focused-directory** are important: see
   - **types**: standalone compile-time items (type-aliases and interfaces, never runtime items) that don't need to be coupled with runtime logic in the shared area.
   - **ui:** Any file ending with a `.jsx/.tsx` extension.
 
-### Branch-directories and the `common` folder
-- In a **branch-directory** with shared content create a subfolder named `common/`.
+### Branch-directories and the `_common` folder
+- In a **branch-directory** with shared content create a subfolder named `_common/`.
 - Avoid using **dumping-ground-names** for folders like `misc/`, `helpers/`, `shared/` etc. (except for the common-categories listed above) as their purpose is ambiguous and can quickly degrade your package's organization.
-- Within `common/` it's okay to group files by category but for files **DO NOT EVER** use dumping-ground names. In branch-directories (including `common/`) **filenames should always demonstrate clear intent**: (i.e. `src/common/types/utility-types.ts`).
-- You can have multiple levels of `common/` for nested branch-directories:
+- Within `_common/` it's okay to group folders by category but for files **DO NOT EVER** use dumping-ground names. In branch-directories (including `_common/`) **filenames should always demonstrate clear intent**: (i.e. `src/common/types/utility-types.ts`).
+- You can have multiple levels of `_common/` for nested branch-directories:
 ```markdown
 - public/
 - src/
   - assets/
-  - common/
+  - _common/
     - types/
       - utility-types.ts
   - components
-    - common/ <-- shared folder just for components
+    - _common/ <-- shared folder just for components
       - ui/
         - buttons.tsx
       - styles/
@@ -592,36 +592,36 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 
 > In the above markdown, `src/` and `components/` are examples of **branch-directories**, `Home/` and `Login/` are **focused-directories**. 
 
-### Focused-directories and the `local` folder
-- Use the folder name **local/** for shared content in a focused-directory.
-- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx`, etc are actually okay in the `local/` folder. However, **DO NOT** place files with dumping-ground-names directly in the focused-directory itself.
-- If there's focused-directory code which needs to be shared both locally and externally, you can place those items in `local/` as well **`local/` is not meant to be super strict**.
-- If a focused-directory has some shared code not used internally, **but it still makes sense to place that code in that particular focused-directory because it's very unique to that directory's purpose,** place those items in the **external/** folder.
-- If you want to be extra careful about some focused-directory items never being used externally, place them in a folder named **internal/**.
-- If some code in a focused directory isn't shared (that is, it's just used in one place but it was large enough to make a separate file for) but you'd like to keep it separated from the other files at a focused-directory's root, you can use `local/internal` for that as well: see the `sortTableData.ts` file in the example below.
+### Focused-directories and the `_local` folder
+- Use the folder name **_local/** for shared content in a focused-directory.
+- Because a file's purpose in a focused-directory has many layers of narrowing, dumping-ground names like `utils.ts`, `ui.tsx`, etc are actually okay in the `_local/` folder. However, **DO NOT** place files with dumping-ground-names directly in the focused-directory itself. For example, `"focused directory name"/_local/ui.ts` <-- OK, `"focused directory name"/ui.ts` <-- NOT OK, 
+- If there's focused-directory code which needs to be shared both locally and externally, you can place those items in `_local/` as well **`_local/` is not meant to be super strict**.
+- If a focused-directory has some shared code not used internally, **but it still makes sense to place that code in that particular focused-directory because it's very unique to that directory's purpose,** place those items in the **_external/** folder. For example, a folder exports a table component as well as some helper functions to manage it (i.e. sortByName).
+- If you want to be extra careful about some focused-directory items never being used externally, place them in a folder named **_internal/**.
+- If some code in a focused directory isn't shared (that is, it's just used in one place but it was large enough to make a separate file for) but you'd like to keep it separated from the other files at a focused-directory's root, you can use `_local/_internal` for that as well: see the `sortTableData.ts` file in the example below.
 
 Various focused directories in a React project:
 ```markdown
-- common/
+- _common/
   - ui/
     - DataTable/
-      - local/
+      - _local/
         - datatable-elements.tsx <-- shared inside and outside of DataTable/
-      - external/
+      - _external/
         - dataTableFilterToUrlString.ts <-- an external only helper function.
-      - internal/
+      - _internal/
         - sortTableData.ts <-- not shared, only called in one place in DataTable.ts
       - Datatable.tsx
       - Datatable.test.tsx
 - Login/
+  - _local/
+    - ui.tsx <-- stores JSX elements needed by both the `Login` component and the `ForgotPasswordDialog` component.
+    - constants.ts
   - dialogs/
-    - local/
+    - _local/
       - AuthDialog.tsx <-- base dialog for the other two
     - ForgotPasswordDialog.tsx
     - SignupInsteadDialog.tsx
-  - local/
-    - ui.tsx <-- stores JSX elements needed by both the `Login` component and the `ForgotPasswordDialog` component.
-    - constants.ts
   - Login.tsx
   - Login.test.tsx
 ```
@@ -765,7 +765,7 @@ interface UserAvatarDTO extends UserAvatar {
 /**
  * @testOnly
  */
-function getDummyUser() {
+function getDummy() {
   return {
     id: randomInt(10),
     name: 'John',
@@ -859,14 +859,14 @@ Use **domain-based** architecture for large applications:
 ```markdown
 - config/
 - src/
-  - assets/
-  - common/
+  - _assets/
+  - _common/
   - cronjobs/
   - domain/
     - users/
-      - local/
-        - constants/
-          - errors.ts
+      - _local/
+          - constants/
+            - errors.ts
         - types
           - schemas.ts
       - UserRepo.ts
@@ -874,7 +874,7 @@ Use **domain-based** architecture for large applications:
       - UserAssetService.aux.ts
       - UserController.ts
     - posts/
-      - internal/
+      - _internal/
         - PostToPDF.saux.ts <-- If user wants to download a post as a PDF file
       - PostRepo.ts
       - PostService.ts
