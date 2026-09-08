@@ -77,7 +77,7 @@ export default {
 ```
 
 
-### Method 2 - Using state-map. If performance is an issue with recreating closer-functions
+### Method 2 - Using WeakMap. If performance is an issue with recreating closer-functions
 > Unless you call `.bind` this approach will break when destructuring. 
 ```ts
 interface IUser {
