@@ -54,29 +54,35 @@ interface IUser {
 // ========================================================================= //
 
 /**
- * `.from` is a common factory function name when copying/coverting from another
- * object.
+ * `create` is a common factory function name creating from another object 
+ * with known parameters.
  */
-function from(partial?: Partial<IUser>): IUser {
-  // "camelCase" for variables declared in functions.
-  const newUser = { ...of(), ...partial };
-  if (!is(newUser)) {
-    throw new Error(INVALID_USER_ERROR);
-  }
-  return newUser;
+function create(partial?: Partial<IUser>): IUser {
+  return { ...of(), ...partial };
 }
 
 /**
- * `.of` is a common factory-function name when creating an instance from
- * one or more parameter.
+ * `of` is a common factory-function name when creating an instance from
+ * one or more parameters.
  */
-function of(id?: number, name?: string, role?: UserRoles, createdAt?: Date | ISOString): IUser {
+function of(name?: string, role?: UserRoles, createdAt?: Date | ISOString): IUser {
   return {
-    id: id ?? 0,
-    name: name ?? '',
+    id: uuid(),
+    name: name ?? '--',
     role: role ?? UserRoles.NONE,
     createdAt: createdAt ? new Date(createdAt) : new Date(),
   };
+}
+
+/**
+ * `from` is a common factory function name when coverting from another
+ * object.
+ */
+function from(param: unknown): IUser {
+  if (!is(param)) {
+    throw new Error(INVALID_USER_ERROR);
+  }
+  return create(param);
 }
 
 /**
@@ -140,6 +146,7 @@ function isValidDateOrISOString(
 // We will import the User module-object script as "User" in other files
 // (i.e. import User from '@src/domains/users/User.model.ts' and "User.new()"")
 export default {
+  create,
   of,
   from,
   is,
