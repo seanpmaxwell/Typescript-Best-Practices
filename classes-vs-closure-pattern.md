@@ -1,16 +1,25 @@
 
-### Method 1 - Using closer-functions. Fine for the vast majority of real-world scenarios
+### Method 1 - Using closure factory-functions. Fine for the vast majority of real-world scenarios
 ```ts
 interface IUser {
-  getId(): number;
-  getName(): string;
-  setName(name: string): void;
+  id: {
+    get: () => number;
+  };
+  name: {
+    get: () => string;
+    set: (_: string) => void;
+  };
 }
 
 interface UserState {
   id: number;
   name: string;
 }
+
+const Validators = {
+  id: (val: number) => validateId(val),
+  name: (val: string) => validateName(val), 
+} as const;
 
 // ================== Module Functions ========
 
@@ -19,8 +28,7 @@ function of(name: string): IUser {
 }
 
 function from(val: unknown): IUser {
-  if (!is(val)) throw new Error('val was not a valid User state');
-  const state = { ...val, id: getRandomNumber() };
+  if (!is(val)) throw new Error('val was not a valid UserState');
   return create(val);
 }
 
@@ -33,42 +41,40 @@ function create(other: Partial<Omit<UserState, 'id>> = {}): IUser {
 }
 
 function copy(other: UserState): IUser {
-  return _self(other);
-}
-
-function _self(state: UserState): IUser {
-  return {
-    getId(): string {
-      return state.id;
-    },
-    setName(val: string): void {
-      state.name = validateName(val);
-    },
-    getName(): string {
-      return state.name;
-    },
-  }
+  const state = { ...other };
+  return _self(state);
 }
 
 // 
 function is(val: unknown): val is UserState {
   if (val === null || typeof val !== 'object') return false;
   const obj = val as Record<string, unknown>;
-  if (!('id' in obj) || typeof obj.id !== 'number' || !Number.isInteger(obj.id) || obj.id < 0) {
+  if (!('id' in obj) || !Validators.id(obj.id)) {
     return false;
-  }
-  if (!('name' in obj) || typeof obj.name !== 'string' || obj.name.length === 0) {
+  } else if (!('name' in obj) || !Validators.name(obj.name)) {
     return false;
   }
   return true;
 }
 
+function validateId(val: number): number {
+  return !Number.isInteger(obj.id) || obj.id < 0;
+}
 
 function validateName(val: string): string {
-  if (typeof val !== 'string' || val.length === 0) {
-    throw new Error('name must be a non-empty string');
+  return typeof val !== 'string' || val.length === 0;
+}
+
+function _self(state: UserState): IUser {
+  return {
+    id: {
+      get: () => state.id,
+    },
+    name: {
+      get: () => state.name,
+      set: (val: string) => state.name = Validators.name(val);
+    },
   }
-  return val;
 }
 
 // ====================== Export ================
@@ -79,7 +85,12 @@ export default {
   create,
   copy,
   is,
+  validate: Validators
 } as const;
+
+
+
+const name = user.name.get();
 ```
 
 
