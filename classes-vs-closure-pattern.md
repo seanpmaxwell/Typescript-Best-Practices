@@ -2,10 +2,9 @@
 ### Method 1 - Using closer-functions. Fine for the vast majority of real-world scenarios
 ```ts
 interface IUser {
-  id(): number;
-  name(): string;
-  name(name: string): void;
-  name(name?: string): string | void;
+  getId(): number;
+  getName(): string;
+  setName(name: string): void;
 }
 
 interface UserState {
@@ -26,19 +25,29 @@ function from(val: unknown): IUser {
 }
 
 function create(other: Partial<Omit<UserState, 'id>> = {}): IUser {
-  const state: UserDTO = {
+  const state: UserState = {
     id: getRandomNumber(),
     name: other.name ?? '--',
   };
-  return {
-    id: () => state.id,
-    name: (val?: string) => name(state, val),
-  }
+  return _self(state);
 }
 
 function copy(other: UserState): IUser {
-  const _new = create(other);
-  return _new.id = other.id;
+  return _self(other);
+}
+
+function _self(state: UserState): IUser {
+  return {
+    getId(): string {
+      return state.id;
+    },
+    setName(val: string): void {
+      state.name = validateName(val);
+    },
+    getName(): string {
+      return state.name;
+    },
+  }
 }
 
 // 
@@ -54,15 +63,12 @@ function is(val: unknown): val is UserState {
   return true;
 }
 
-// ====================== Instance Functions ============ 
 
-function name(state: UserState, val?: string): string | void {
-  if (val === undefined) return state.name;
+function validateName(val: string): string {
   if (typeof val !== 'string' || val.length === 0) {
     throw new Error('name must be a non-empty string');
   }
-  state.name = val;
-  return;
+  return val;
 }
 
 // ====================== Export ================
@@ -77,7 +83,7 @@ export default {
 ```
 
 
-### Method 2 - Using WeakMap. If performance is an issue with recreating closer-functions
+### Method 2 - WeakMap + bind. Kinda hackey but m
 > Unless you call `.bind` this approach will break when destructuring. 
 ```ts
 interface IUser {
