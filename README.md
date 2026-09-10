@@ -191,14 +191,19 @@ OOP can be achieved in TypeScript/JavaScript with classes or factory-functions. 
 
 People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situations. Here are some basic guidelines:
 
-- **Use a class** when you have an object with an internal state and methods which modify that internal state over time. 
-- **Don't use a class** solely as a namespace or when you're **assembling and returning an object whose behavior is fully determined at instantiation** with no meaningful **lifecycle** or need for `this`. A **factory-function** would be more appropriate here.
-- **Note:** I would also recommend avoiding classes for **handling IO-data** (even when you feel tempted to use OOP), because this often leads to:
-  - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of `public static` modifiers. 
-  - IO-data should just be 'acted upon' not do things.
-  - Use **module-objects** for handling IO-data.
-- **Tip 1:** When writing classes, keep constructors private and prefer factory-functions `create`, `of`, `from` over constructors as they'll give you more flexibility.
-- **Tip 2:** Keep your class definitions clean. That is, if you have some large helper function which does not directly modify anything in the internal state (it just receives a state value and returns a different value) then place it in a function-declaration outside the class. Use class definitions to do what classes were meant for, binding together an internal state with functions. 
+- **DO use a class**
+  - When you have an object with an internal state and methods which modify that internal state over time.
+- **DO NOT use a class** 
+  - Solely as a **namespace**
+  - When you're **assembling and returning an object whose behavior is fully determined at instantiation** with no meaningful **lifecycle** or need for `this`.
+    - A **factory-function** would be more appropriate here.
+  - **Handling IO-data** (even when you feel tempted to use OOP), because this often leads to:
+    - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of `public static` modifiers. 
+    - IO-data should just be 'acted upon' not do things.
+    - Use **module-objects** for handling IO-data.
+- **Tips:**    
+  - **Tip 1:** When writing classes, keep constructors private and prefer factory-functions `create`, `of`, `from` over constructors as they'll give you more flexibility.
+  - **Tip 2:** Keep your class definitions clean. That is, if you have some large helper function which does not need to directly modify anything in the internal state (it can just receive a value/s and returns a different value) then place it in a function-declaration outside the class. Use class definitions to do what classes were meant for, binding together an internal state with functions.
 
 > You can see a more thorough list of design rules [here](Design-Rules.md). 
 
