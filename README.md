@@ -94,6 +94,7 @@ So that things are clearer down the line, let's first clarify some terminology.
 ---
  
 ### Functions
+- **top-level:** (aka module-level) Functions defined directly in a file and not nested in an other function, object, class, etc. 
 - **function-declarations:** any function declared with `function functionName`.
 - **arrow-functions:** any function declared with `() => { ... }`
 - **embedded-functions:** functions declared in object-literals and the function-name is the object key.
@@ -203,7 +204,7 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
     - Use **module-objects** for handling IO-data.
 - **Tips:**    
   - **Tip 1:** When writing classes, keep constructors private and prefer factory-functions `create`, `of`, `from` over constructors as they'll give you more flexibility.
-  - **Tip 2:** Keep your class definitions clean. That is, if you have some large helper function which does not need to directly modify anything in the internal state (it can just receive a value/s and returns a different value) then place it in a function-declaration outside the class. Use class definitions to do what classes were meant for, binding together an internal state with functions.
+  - **Tip 2:** Keep your class definitions clean. That is, for functions not needing `this`, place them in a top-level function below the class definition.
 
 > You can see a more thorough list of design rules [here](Design-Rules.md). 
 
