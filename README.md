@@ -204,7 +204,8 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
     - Use **module-objects** for handling IO-data.
 - **Tips:**    
   - **Tip 1:** When writing classes, keep constructors private and prefer factory-functions `create`, `of`, `from` over constructors as they'll give you more flexibility.
-  - **Tip 2:** Keep your class definitions clean. That is, for functions not needing `this`, place them in a top-level function below the class definition.
+    - What's also helpful, define interfaces or every class, prepend the class name with `I`, place only the instance only methods on the interface, and have the factory-functions export those. That way, as far as type-safety goes, there's a clear distinction between instance-methods and static-methods.
+  - **Tip 2:** Keep your class definitions clean. That is, for logic not needing `this`, place it in a top-level function-declaration below the class definition.
 
 > You can see a more thorough list of design rules [here](Design-Rules.md). 
 
@@ -321,6 +322,7 @@ do more stuff...
 ```
 
 **Sections** can be divided into **blocks**:
+- I use the same type of separator for file AND function blocks.
 
 ```ts
 // apiRouter.ts <-- Linear file
@@ -328,7 +330,7 @@ do more stuff...
 // ============================ Add User Routes ============================ //
 const loginRouter = Router.new();
 
-// ==== Local Login ==== // <-- Separate "file blocks" with this
+// ---- Local Login <-- Separate "blocks" with this
 // Login with username and password
 
 const localRouter = Router.new();
@@ -337,18 +339,18 @@ localRouter.use('/reset-password-request', sendLink);
 
 loginRouter.use('/login', localRouter);
 
-// ==== Google Login ==== //
+// ---- Google Login
 // Login with Google credentials
 
 /**
- * Example of "function block" separators
+ * Example of "function-block" separators
  */
 function someLargeFunction() {
 
-  // -- Block 1-- //
+  // ---- Block 1
   ...do stuff
 
-  // -- Block 2 -- //
+  // ---- Block 2
   ..do more stuff
 }
 ```
@@ -457,12 +459,12 @@ function normalFunction() {
 ```ts
 {
   try {
-    // -- Do stuff -- //
+    // ---- Do stuff
     foo();
     bar();
     ...several more lines of code
 
-    // -- Do more stuff -- //
+    // ---- Do more stuff
     blah();
     whatever();
     ...several more lines of code
@@ -558,7 +560,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 ### Shared categories
 - Let's consider **utils**, **types**, and **constants** the 3 main **shared-categories**. And a 4th category **ui** for those working with JSX elements.
   - **utils** runtime logic. Functions under `utils` should not fetch IO-data, talk to persistence layers, or import runtime logic from anywhere else other than third-party-libraries or other utility functions in the same file. This helps to prevent dependency loops.
-  - **constants**: organizing readonly values but can also include functions which return mostly readonly values after some simple formatting (function which returns an error message string with the username inserted into it).
+  - **constants**: organizing readonly values but can also include **value-factory-functions**.
   - **types**: standalone compile-time items (type-aliases and interfaces, never runtime items) that don't need to be coupled with runtime logic in the shared area.
   - **ui:** Any file ending with a `.jsx/.tsx` extension.
 
@@ -635,11 +637,11 @@ Various focused directories in a React project:
 
 ### Going further
 
-Folders under `common/` and files/folders under `local/` are not confined to common-category names. You can create your own categories too for something used heavily throughout your codebase. Common-categories are more for storing items which don't fit into a specific place. Some other categories I commonly create are:
+Folders under `_common/` and files/folders under `_local/` are not confined to common-category names. You can create your own categories too for something used heavily throughout your codebase. Common-categories are more for storing items which don't fit into a specific place. Some other categories I commonly create are:
   - **classes** - I rarely implement new classes but I'll create a folder for them if I do: (i.e. creating custom `Error` objects).
   - **entities** - types used to describe database tables.
 
-Files under `common/local/internal/external` should never talk to persistence-layers/fetch-IO-data. Use the layers of your application (i.e. Service layer) for that.
+Files under `_common`,`_local`,`_internal`,`_external` should never talk to persistence-layers/fetch-IO-data. Use the layers of your application (i.e. Service layer) for that.
 
 <br/><b>***</b><br/>
 
