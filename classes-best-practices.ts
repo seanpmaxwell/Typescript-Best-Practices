@@ -18,7 +18,7 @@ class CustomError extends Error {
    * Factory-Function: `of`
    */
   public of(message: string, code: number): CustomError {
-    const err = new CustomError(message);
+    return new CustomError(message);
   }
 
   /**
