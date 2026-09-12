@@ -95,7 +95,8 @@ So that things are clearer down the line, let's first clarify some terminology.
  
 ### Functions
 - **top-level:** (aka module-level) Functions defined directly in a file and not nested in an other function, object, class, etc. 
-- **function-declarations:** any function declared with `function functionName`.
+- **function-declarations:** any function declared with `function functionName(...) {...}`.
+  - NOTE: for the remainder of this tutorial we'll use the acronym FD to refer to function-declarations.
 - **arrow-functions:** any function declared with `() => { ... }`
 - **embedded-functions:** functions declared in object-literals and the function-name is the object key.
 ```
@@ -108,7 +109,7 @@ const UserErrors = {
 - **function-expressions:** any function assigned to a variable `const foo = ...some function`
 - **factory-function:** a function whose primary purpose is to initialize some other function/object rather than perform actions.
   - **value-factory-functions:** a factory-function meant for returning mostly static-data (i.e. const GetDefaults => {...} using a function so we get a deep-clone every time).
-  - NOTE: for the remainder of this tutorial we'll use the acronyms FF and VFF to refer to function-functions and value-factory-functions respectively. 
+  - NOTE: for the remainder of this tutorial we'll use the acronyms FF and VFF to refer to factory-functions and value-factory-functions respectively. 
 - **configured-functions:** function-expressions returned by a FF: `const parseUser = parseObject(UserSchema)`.
 - **validator-functions:** accepts an unknown variable and returns a type-predicate
 - **method:** function declared inside of a class
@@ -158,7 +159,7 @@ Understand **type-coercion**: when calling methods on primitives, JavaScript tem
 <a id="functions"></a>
 ### Functions
 
-- Prefer **function-declarations** at the file level to take advantage of hoisting and better error handling: error stack-tracing will only print the function name for function-declarations.
+- Prefer FDs at the file level to take advantage of hoisting and better error handling: error stack-tracing will only print the function name for FDs.
 - Use **arrow-functions** for callbacks and inline logic.
 
 ```ts
@@ -197,25 +198,35 @@ const Errors = {
 <a id="classes"></a>
 #### `Classes`
 
-OOP can be achieved in TypeScript/JavaScript with classes or FFs. Object-literals cannot follow OOP because they lack encapsulation. 
+OOP can be achieved in TypeScript/JavaScript with either classes or FFs. In both cases, encapsulation comes from the same place: closures for FFs, `private` members for classes. A bare object literal at module scope has neither, so it can hold *shared* state but not *private* state.
 
-People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situations. Here are some basic guidelines:
+People coming from strict OOP environments (like Java) tend to overuse classes, but classes do make sense in some situations. Here are some basic guidelines:
 
 - **DO use a class**
-  - When you have an object with an internal state and methods which modify that internal state over time.
-    - While you could technically achieve this using FFs, this isn't going to scale well because the methods being returned will be re-instantiated every time the FF is called. 
-- **DO NOT use a class** 
-  - Solely as a **namespace**
-  - When you're **assembling and returning an object whose behavior is fully determined at instantiation** with no meaningful **lifecycle** or need for `this`.
-    - Using a FF would be more appropriate here.
-  - **Handling IO-data** (even when you feel tempted to use OOP), because this often leads to:
-    - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of `public static` modifiers. 
-    - IO-data should just be 'acted upon' not do things.
-    - Use **module-objects** for handling IO-data.
-- **Tips:**    
-  - **Tip 1:** When writing classes, keep constructors private and prefer the factory-methods `create`, `of`, and `from` over constructors as they'll give you more flexibility.
-  - **Tip 2:** Keep your class definitions clean. That is, for logic not needing `this`, place it in a top-level function-declarations below the class definition.
-  - **Tip 3:** If a class is large enough to have it's own dedicated file, define an interface for it, prepend the class name with an `I`, place only the instance-methods on the interface, and have the factory-methods return the instance type. That way, as far as type-safety goes, there's a clear distinction between instance-methods and static-methods. For a bunch of smaller classes sharing a single file, this is probably overkill. 
+  - When you have an object with internal state and methods that modify that state over time.
+  - When you need inheritance from a template you don't control (e.g. the built-in `Error`), since `class X extends Error` handles the prototype wiring for you.
+- **DO NOT use a class**
+  - Solely as a **namespace**. Use a plain object literal instead.
+  - When you're **assembling and returning an object whose behavior is fully determined at instantiation**, with no meaningful **lifecycle** and no need for `this`.
+    - An FF is the better fit here.
+  - For **handling IO-data** (even when you feel tempted to model it as objects), because this often leads to:
+    - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of `public static` modifiers.
+    - IO-data should be *acted upon*, not do things. (This is the "plain data + functions" position; DDD proponents prefer rich domain objects. Pick one and be consistent.)
+    - Use **module-objects** for IO-data: a plain object literal of stateless functions that operate on plain data.
+- **Why not just use FFs for OOP?**
+  - You can, but there are two trade-offs:
+    - **Per-instance allocation:** if the FF returns an object-literal with methods defined inline, every instance gets its own copy of each method.
+       - This is technically avoidable — put methods on a shared prototype and return `Object.create(proto)` — but then those methods can no longer see closure-private state. Classes give you shared methods *and* `private` fields at the same time.
+    - **Inheritance:** FFs can inherit via the prototype chain (`Object.create`, `Object.setPrototypeOf`), or sidestep inheritance entirely via composition. But extending items which you can't modify (like the built-in `Error` class) without `class` means manually wiring the prototype, `name`, and `captureStackTrace` — more boilerplate than it's worth (believe me, I tried).
+  - **The exception**: if an object has internal state and functions that modify it over time, **but** does not need inheritance and you're not creating thousands of instances, an FF is perfectly fine.
+- **Tips:**
+  - **Tip 1:** When writing classes, make the constructor `protected` and expose factory methods instead. Factory methods can validate, cache, or return subtypes — a constructor can't. (`private` also works, but it makes the class non-extendable, since subclasses can't call `super()`.)
+  - Conventional class factory-methods:
+    - `create(...)` is the general-purpose builder.
+    - `of(...values)` builds from individual values.
+    - `from(other)` converts from another type. 
+  - **Tip 2:** Keep class definitions clean. Logic that doesn't need `this` belongs in top-level FDs below the class.
+  - **Tip 3:** If a class is large enough to have its own file, define an interface for it containing only the instance methods, and have the factor- methods return the interface type. Callers then depend on the interface rather than the concrete class, you can hide public members you don't want exposed, and mocks/alternate implementations slot in freely. Note: I prefix class-interfaces with `I`; the TypeScript team's own guidelines recommend against it, so treat that as a house convention rather than a rule.
 
 > You can see a more thorough list of design rules [here](Design-Rules.md). 
 
@@ -369,7 +380,7 @@ function someLargeFunction() {
 
 #### *Constants section* nuances
 - VFFs (see [Terminology](#terminology) above).
-- Although function-declarations are preferred for functions in most situations, use function-expressions for VFFs so they are more inline with other content in the **Constants** section.
+- Although FDs are preferred for functions in most situations, use function-expressions for VFFs so they are more inline with other content in the **Constants** section.
 ```ts
 // bottom of the *Constants* section
 
@@ -397,7 +408,7 @@ const Roles = SomeEnumLibrary({
   - Use function-expressions instead of declarations.
 
 #### Configured-function nuances
-- Because configure-functions are assigned to a variable, we can't hoist them like we do function-declarations. Usually this isn't a problem, but if a configured-function is needed in the same file where it is initialized AND in a region above the **FUNCTIONS** region, you can use lazy-loading in a function-declaration to get the hoisting you need. 
+- Because configure-functions are assigned to a variable, we can't hoist them like we do FDs. Usually this isn't a problem, but if a configured-function is needed in the same file where it is initialized AND in a region above the **FUNCTIONS** region, you can use lazy-loading in a FD to get the hoisting you need. 
 
 ##### Hoisting configured-functions example: 
 ```ts
@@ -595,7 +606,7 @@ function normalFunction() {
 <a id="comments"></a>
 ## 💬 Comments
 
-- Place `/** */` above all **function-declarations** always, `//` or no comment is okay for **function-expressions**.
+- Place `/** */` above all FDs always, `//` or no comment is okay for **function-expressions**.
 - I would also recommend `/** */` for utility-types as they can become pretty complex.
 - Place a `@testOnly` tag for items not meant to be used in production. 
 - Use `//` for inline explanations.
