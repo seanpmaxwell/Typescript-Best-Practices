@@ -228,8 +228,6 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
   - **Tip 2:** Keep class definitions clean. Logic that doesn't need `this` belongs in top-level FDs below the class.
   - **Tip 3:** If a class is large enough to have its own file, define an interface for it containing only the instance methods, and have the factor- methods return the interface type. Callers then depend on the interface rather than the concrete class, you can hide public members you don't want exposed, and mocks/alternate implementations slot in freely. Note: I prefix class-interfaces with `I`; the TypeScript team's own guidelines recommend against it, so treat that as a house convention rather than a rule.
 
-> You can see a more thorough list of design rules [here](Design-Rules.md). 
-
 <a id="enums"></a>
 #### `Enums`
 
@@ -746,7 +744,6 @@ Files under `_common`,`_local`,`_internal`,`_external` should never talk to pers
 - TypeScript supports OOP and is clearly not strictly stateless, so to avoid confusion, let's refer to TypeScript as a procedural programming language which supports OOP.
 - Projects don't have to strictly adhere to one paradigm or the other, use procedural where procedural makes the most sense and likewise for OOP.
 - OOP can be achieved either through **classes** or VFFs although I prefer the former.
-- You can see a more thorough list of design rules [here](Design-Rules.md) to help you decide what feature/paradigm to use and when.
 
 ---
 
