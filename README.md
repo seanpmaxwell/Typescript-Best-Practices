@@ -225,7 +225,7 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
     - `create(...)` build from `undefined`, partials, or complete objects you want to clone.
     - `of(...values)` builds from individual values.
     - `from(other)` converts from another type. 
-  - **Tip 2:** Keep class definitions clean. Logic that doesn't need `this` belongs in top-level FDs below the class.
+  - **Tip 2:** Keep class definitions clean. Logic that doesn't need `this` belongs in top-level FDs below the class: see [Keep classes clean](keep-classes-clean.ts);
   - **Tip 3:** If a class is large enough to have its own file, define an interface for it containing only the instance methods, and have the factory-methods return the interface type. Callers then depend on the interface rather than the concrete class, you can hide public members you don't want exposed, and mocks/alternate implementations slot in freely.
     - Note: I prefix class-interfaces with `I`; the TypeScript team's own guidelines recommend against it, so treat that as a house convention rather than a rule.
 
