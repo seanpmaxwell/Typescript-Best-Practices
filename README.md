@@ -108,8 +108,17 @@ const UserErrors = {
 - **function-expressions:** any function assigned to a variable `const foo = ...some function`
 - **factory-function:** a function whose primary purpose is to initialize some other function/object rather than perform actions.
   - **value-factory-functions:** a factory-function meant for returning mostly static-data (i.e. const GetDefaults => {...} using a function so we get a deep-clone every time).
-- **configured-functions:** function-expressions returned by a factory-function: `const parseUser = parseObject(UserSchema)`.
+  - NOTE: for the remainder of this tutorial we'll use the acronyms FF and VFF to refer to function-functions and value-factory-functions respectively. 
+- **configured-functions:** function-expressions returned by a FF: `const parseUser = parseObject(UserSchema)`.
 - **validator-functions:** accepts an unknown variable and returns a type-predicate
+- **method:** function declared inside of a class
+  - **static-method:** method which can be declared directly by the class
+  - **instance-method:** method which can only be called by the class's instance
+  - **factory-method:** static-method used to return a class instance (Tip: prefer these over constructors)
+    - Factory-method conventions:
+      - **of** return an instance using individual properties as parameters: i.e. `User.of('name', 'email')`
+      - **from** return an instance through transformation: i.e. `User.from("userObjectWhichHasBeenStringified")`
+      - **create** return an instance using a partial of the instance-object or defaults: i.e. `User.create({ name, email })`, `User.create({})`, `User.create()`.
 
 ---
 
@@ -188,24 +197,25 @@ const Errors = {
 <a id="classes"></a>
 #### `Classes`
 
-OOP can be achieved in TypeScript/JavaScript with classes or factory-functions. Object-literals cannot follow OOP because they lack encapsulation. 
+OOP can be achieved in TypeScript/JavaScript with classes or FFs. Object-literals cannot follow OOP because they lack encapsulation. 
 
 People coming from strict OOP environments (like Java) tend to overuse classes, but they do make sense in some situations. Here are some basic guidelines:
 
 - **DO use a class**
   - When you have an object with an internal state and methods which modify that internal state over time.
+    - While you could technically achieve this using FFs, this isn't going to scale well because the methods being returned will be re-instantiated every time the FF is called. 
 - **DO NOT use a class** 
   - Solely as a **namespace**
   - When you're **assembling and returning an object whose behavior is fully determined at instantiation** with no meaningful **lifecycle** or need for `this`.
-    - A **factory-function** would be more appropriate here.
+    - Using a FF would be more appropriate here.
   - **Handling IO-data** (even when you feel tempted to use OOP), because this often leads to:
     - Many unnecessary **constructor calls** to support dynamic behavior, or a large number of `public static` modifiers. 
     - IO-data should just be 'acted upon' not do things.
     - Use **module-objects** for handling IO-data.
 - **Tips:**    
-  - **Tip 1:** When writing classes, keep constructors private and prefer factory-functions `create`, `of`, `from` over constructors as they'll give you more flexibility.
-    - What's also helpful, define interfaces or every class, prepend the class name with `I`, place only the instance only methods on the interface, and have the factory-functions export those. That way, as far as type-safety goes, there's a clear distinction between instance-methods and static-methods.
-  - **Tip 2:** Keep your class definitions clean. That is, for logic not needing `this`, place it in a top-level function-declaration below the class definition.
+  - **Tip 1:** When writing classes, keep constructors private and prefer the factory-methods `create`, `of`, and `from` over constructors as they'll give you more flexibility.
+  - **Tip 2:** Keep your class definitions clean. That is, for logic not needing `this`, place it in a top-level function-declarations below the class definition.
+  - **Tip 3:** If a class is large enough to have it's own dedicated file, define an interface for it, prepend the class name with an `I`, place only the instance-methods on the interface, and have the factory-methods return the instance type. That way, as far as type-safety goes, there's a clear distinction between instance-methods and static-methods. For a bunch of smaller classes sharing a single file, this is probably overkill. 
 
 > You can see a more thorough list of design rules [here](Design-Rules.md). 
 
@@ -281,11 +291,11 @@ Due to how hoisting works, regions in a file should be in this order top-to-bott
      2a. Primitive-constants
      2b. Object-constants
      2c. Value-factory functions
-  3. `Types`  
-  4. `Run`
-  5. `Components`: (if applicable `.jsx` / `.tsx`)  
-  6. `Functions`
-  7. `Classes`: Classes generally should go in their own file but small locally used ones are okay. 
+  3. `Types`
+  4. `Classes`: Classes generally should go in their own file but small locally used ones are okay. 
+  5. `Init`
+  6. `Components`: (if applicable `.jsx` / `.tsx`)  
+  7. `Functions`
   8. `Export`: For declaration, module-objects, and linear files, group all your exports together at the bottom. For inventory-files you can export items on the line they are declared; this makes it easier to see what's public. 
 
 > Note: **Constants** should be primarily for static data but could also include functions/objects which primarily handle static-data. See **Constants nuances** below.
@@ -358,13 +368,13 @@ function someLargeFunction() {
 > If adding **region**/**section** separators with perfectly centered labels seems a little tedious (which it is), you can copy the [insert-separators script](insert-separators.js) from this repo into your project, which looks for `// r~~ "label text"` and `// s~~ "label text"` tags and adds the separators for you.
 
 #### *Constants section* nuances
-- Value-factory-functions (see [Terminology](#terminology) above) and configured-value-objects can also go at the bottom of the **Constants** section.
-- Although function-declarations are preferred for functions in most situations, use function-expressions for value-factory-functions so they are more inline with other content in the **Constants** section.
+- VFFs (see [Terminology](#terminology) above).
+- Although function-declarations are preferred for functions in most situations, use function-expressions for VFFs so they are more inline with other content in the **Constants** section.
 ```ts
 // bottom of the *Constants* section
 
-// Value-factory-function: we wrapped the defaults in a function so we get a current datetime each time
-const GetDefaults = (): IUser => ({
+// VFFs: we wrapped the defaults in a function so we get a current datetime each time
+const UserDefaults = (): IUser => ({
   id: 0,
   name: '',
   createdAt: new Date(),
@@ -379,8 +389,13 @@ const Roles = SomeEnumLibrary({
 ...
 ```
 
-#### *Configured-functions* nuances
-- Because areas of a file above the **Functions** section may depend on configured-functions (which are not hoisted), a common practice is to wrap them with function-declarations when hoisting is needed. This allows us to keep our files clean by keeping all functions together (other than value-factory-functions of course) in one section.
+#### *VFF and Configured-functions* nuances
+- Because configured-functions require executing logic in order to exist, they should go in the **INIT** region above the **FUNCTIONs** region.
+- VFF because they're purpose it to return values rather than run logic:
+  - These can go in the **CONSTANTS** region.
+  - Their name does not have to be in a verb form.
+  - Use PascalCase instead of CamelCase for the name.
+  - Use function-expressions instead of declarations. 
 
 Hoisting configured-functions example:
 ```ts
@@ -391,25 +406,27 @@ import { isValidString } from 'some-validation-library';
 //                                  Constants                                //
 // ========================================================================= //
 
-// Hoisted configured-functions
-const isEmail = initIsEmail();
-const isURL = initIsURL(),
+const UserDefaults = () => ({
+  id: uuid(),
+  email: '',
+  url: '',
+});
+
 
 // ========================================================================= //
-//                           Function Declarations                           //
+//                                     INIT                                  //
+// ========================================================================= //
+
+const isValidEmail = isValidString({ maxLength: 255, regex: /* ... */ });
+const isValidUrl = isValidString({ maxLength: 2048, regex: /* ... */ });
+
+// ========================================================================= //
+//                                   FUNCTIONS                               //
 // ========================================================================= //
 
 function normalizeEmail(email: string): string {
   if (!isEmail(email)) throw new Error()
   return email.trim().toLowerCase();
-}
-
-function initIsEmail() {
-  return isValidString({ maxLength: 255, regex: /* ... */ });
-}
-
-function initIsURL() {
-  return isValidString({ maxLength: 2048, regex: /* ... */ });
 }
 
 // ========================================================================= //
