@@ -217,16 +217,17 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
   - You can, but there are two trade-offs:
     - **Per-instance allocation:** if the FF returns an object-literal with methods defined inline, every instance gets its own copy of each method.
        - This is technically avoidable — put methods on a shared prototype and return `Object.create(proto)` — but then those methods can no longer see closure-private state. Classes give you shared methods *and* `private` fields at the same time.
-    - **Inheritance:** FFs can inherit via the prototype chain (`Object.create`, `Object.setPrototypeOf`), or sidestep inheritance entirely via composition. But extending items which you can't modify (like the built-in `Error` class) without `class` means manually wiring the prototype, `name`, and `captureStackTrace` — more boilerplate than it's worth (believe me, I tried).
-  - **The exception**: if an object has internal state and functions that modify it over time, **but** does not need inheritance and you're not creating thousands of instances, an FF is perfectly fine.
+    - **Inheritance:** FFs can inherit via the prototype chain (`Object.create`, `Object.setPrototypeOf`), or sidestep inheritance entirely via composition. But extending templates which you can't modify (like the built-in `Error` class) without the `class` keyword means manually wiring the prototype-chain, — more boilerplate than it's worth (believe me, I tried).
 - **Tips:**
-  - **Tip 1:** When writing classes, make the constructor `protected` and expose factory methods instead. Factory methods can validate, cache, or return subtypes — a constructor can't. (`private` also works, but it makes the class non-extendable, since subclasses can't call `super()`.)
+  - **Tip 1:** When writing classes, make the constructor `protected` and expose factory-methods instead. Factory-methods will provide more flexibility than constructors (i.e. return sub-types). 
+    - `private` for the constructor also works, but it makes the class non-extendable, since subclasses can't call `super()`.
   - Conventional class factory-methods:
-    - `create(...)` is the general-purpose builder.
+    - `create(...)` build from `undefined`, partials, or complete objects you want to clone.
     - `of(...values)` builds from individual values.
     - `from(other)` converts from another type. 
   - **Tip 2:** Keep class definitions clean. Logic that doesn't need `this` belongs in top-level FDs below the class.
-  - **Tip 3:** If a class is large enough to have its own file, define an interface for it containing only the instance methods, and have the factor- methods return the interface type. Callers then depend on the interface rather than the concrete class, you can hide public members you don't want exposed, and mocks/alternate implementations slot in freely. Note: I prefix class-interfaces with `I`; the TypeScript team's own guidelines recommend against it, so treat that as a house convention rather than a rule.
+  - **Tip 3:** If a class is large enough to have its own file, define an interface for it containing only the instance methods, and have the factory-methods return the interface type. Callers then depend on the interface rather than the concrete class, you can hide public members you don't want exposed, and mocks/alternate implementations slot in freely.
+    - Note: I prefix class-interfaces with `I`; the TypeScript team's own guidelines recommend against it, so treat that as a house convention rather than a rule.
 
 > If you want to visualize these points more, checkout this code snippet [OO with classes vs FFs](oo-classes-vs-FFs.ts).
 
