@@ -290,7 +290,7 @@ Due to how hoisting works, regions in a file should be in this order top-to-bott
   2. `Constants`
      2a. Primitive-constants
      2b. Object-constants
-     2c. Value-factory functions
+     2c. VFFs
   3. `Types`
   4. `Classes`: Classes generally should go in their own file but small locally used ones are okay. 
   5. `Init`
@@ -389,44 +389,86 @@ const Roles = SomeEnumLibrary({
 ...
 ```
 
-#### *VFF and Configured-functions* nuances
-- Because configured-functions require executing logic in order to exist, they should go in the **INIT** region above the **FUNCTIONs** region.
-- VFF because they're purpose it to return values rather than run logic:
+#### VFF nuances
+- Because the purpose of VFFs is to return values rather than run logic:
   - These can go in the **CONSTANTS** region.
   - Their name does not have to be in a verb form.
   - Use PascalCase instead of CamelCase for the name.
-  - Use function-expressions instead of declarations. 
+  - Use function-expressions instead of declarations.
 
-Hoisting configured-functions example:
+#### Configured-function nuances
+- Because configure-functions are assigned to a variable, we can't hoist them like we do function-declarations. Usually this isn't a problem, but if a configured-function is needed in the same file where it is initialized AND in a region above the **FUNCTIONS** region, you can use lazy-loading in a function-declaration to get the hoisting you need. 
+
+##### Hoisting configured-functions example: 
 ```ts
 // User.ts
-import { isValidString } from 'some-validation-library';
+import { v4 as uuid } from 'uuid';
+import { isValidString, isValidShape } from 'some-validation-library';
+
+// Reusable — belongs in `_common/types/utility-types.ts`
+type AnyFn = (...args: any[]) => any;
+type SetLazy<T extends AnyFn> = T & {
+  lazyFn?: T;
+};
 
 // ========================================================================= //
-//                                  Constants                                //
+//                                     TYPES                                 //
 // ========================================================================= //
 
-const UserDefaults = () => ({
-  id: uuid(),
-  email: '',
-  url: '',
-});
+interface IUser {
+  id: string;
+  address: IAddress; // required
+}
 
+interface IAddress {
+  street: string;
+  city: string;
+}
+
+type IsValidAddress = SetLazy<typeof isValidAddress>;
 
 // ========================================================================= //
-//                                     INIT                                  //
+//                                  CONSTANTS                                //
 // ========================================================================= //
 
-const isValidEmail = isValidString({ maxLength: 255, regex: /* ... */ });
-const isValidUrl = isValidString({ maxLength: 2048, regex: /* ... */ });
+// ---- Linter issue
+// If not lazily-loaded, `isValidAddress` here will not cause tuntime errors
+// since `UserDefaults` is called outside the module BUT it can trigger linter
+// errors since it's being referred to before being defined.
+const UserDefaults = (address: IAddress): IUser => {
+  if (!isValidAddress(address)) throw new Error('Invalid address');
+  return { id: uuid(), address: { ...address } };
+};
+
+// ---- Runtime issue
+// `GetUser` runs before the Functions region below exists.
+const GuestUser = UserDefaults({ street: 'unknown', city: 'unknown' });
 
 // ========================================================================= //
 //                                   FUNCTIONS                               //
 // ========================================================================= //
 
-function normalizeEmail(email: string): string {
-  if (!isEmail(email)) throw new Error()
-  return email.trim().toLowerCase();
+// What the non-lazy-loaded version looks like. 
+// const isValidAddress = isValidShape({
+//  street: isValidString({ minLength: 1, maxLength: 255 }),
+//  city: isValidString({ minLength: 1, maxLength: 255 }),
+// });
+
+/**
+ * Validate a user address object: (lazily-loaded).
+ */
+function isValidAddress(val: unknown): boolean {
+  const self: IsValidAddress = isValidAddress;
+  const fn = self.lazyFn ??= isValidShape({
+    street: isValidString({ minLength: 1, maxLength: 255 }),
+    city: isValidString({ minLength: 1, maxLength: 255 }),
+  });
+  return fn(val);
+}
+
+function normalizeId(id: string): string {
+  if (!uuid.isValid(id)) throw new Error('Id is not valid');
+  return id.trim().toLowerCase();
 }
 
 // ========================================================================= //
@@ -434,13 +476,14 @@ function normalizeEmail(email: string): string {
 // ========================================================================= //
 
 export default {
-  isEmail,
-  isUrl,
-  normalizeEmail,
+  UserDefaults,
+  GuestUser,
+  isValidAddress,
+  normalizeId,
 } as const;
 ```
 
-### Helper types
+### Shorthand-helper types
 - If you have long stretches of code and you both can and want to shorten it by assigning a long type name to a shorter name then that's okay. Just make sure the shorter name isn't used anywhere other than the code it's close to. If the type is declared directly in a file, I advise using acronyms to prevent collisions. 
 ```
 /**
@@ -452,12 +495,12 @@ function fetchSubscriptionsWhichAreSuspendedDueToFailedPayments(): Promise<sffps
 type sffps = SuspendedForFailedPaymentSubscription;
 ```
 
-#### Linear File Exceptions
+#### Linear-File Exceptions
 - For large linear-files, you don't have to follow strict section placement for items, but you should group large linear-files into **code-blocks** and place constants at the top of their respective block.
 
 #### Comments in functions:
 - Generally you should not put spaces in functions and separate chunks of logic with a single inline comment.
-- If you have a really large function that can't be broken up (i.e. React Component) then you can further separate functions with a space and `// -- "Info" -- //`
+- If you have a really large function that can't be broken up (i.e. React Component) then you can further separate functions into blocks.
 
 ```ts
 /**
@@ -517,12 +560,13 @@ function normalFunction() {
       - If its functions require a heavy amount of initialization (i.e. infrastructure-level files) and the module-object is used widely throughout your application, prefer `camelCase`: i.e `import db from '@src/infra/db.ts;`.
 - **All variables declared inside of functions except for type declarations**: `camelCase`
 - **Functions**:
-  - `camelCase`: most of the time
-  - `PascalCase`: for certain situations
-    - JSX Elements
-    - Constructor functions: `new User()`
-    - Value-factory-functions: `const GetDefaults = () => ...`
+  - Casing: 
+    - `camelCase`: most of the time
+    - `PascalCase`: for certain situations
+      - JSX Elements
+      - VFFs: `const Defaults = () => ...`
   - Prepend functions returning non IO-data with a `get` and IO-data with a `fetch`: i.e. `getDateAsString()`, `async fetchUserRecords()`.
+    - VFFs are an exception, you do not need to declare them in a verb-format.  
   - Prepend **validator-functions** with an `is`: `isValidUser(arg: unknown): arg is IUser`.
   - If you need to distinguish functions meant to throw an error from a counterpart function, append `OrThrow`: i.e. `findUserById(id: number): IUser | null` vs `findUserByIdOrThrow(id: number): IUser`.
   - If you want to avoid collisions with a built-in keyword (i.e. `new`/`delete`) append with an underscore (i.e. function new_(): IUser ...` in `User.model.ts`).
@@ -577,7 +621,7 @@ Here the terms **branch-directory** and **focused-directory** are important: see
 ### Shared categories
 - Let's consider **utils**, **types**, and **constants** the 3 main **shared-categories**. And a 4th category **ui** for those working with JSX elements.
   - **utils** runtime logic. Functions under `utils` should not fetch IO-data, talk to persistence layers, or import runtime logic from anywhere else other than third-party-libraries or other utility functions in the same file. This helps to prevent dependency loops.
-  - **constants**: organizing readonly values but can also include **value-factory-functions**.
+  - **constants**: organizing readonly values but can also include VFFs.
   - **types**: standalone compile-time items (type-aliases and interfaces, never runtime items) that don't need to be coupled with runtime logic in the shared area.
   - **ui:** Any file ending with a `.jsx/.tsx` extension.
 
@@ -687,10 +731,10 @@ Files under `_common`,`_local`,`_internal`,`_external` should never talk to pers
 ### Programming Paradigms
 - To be clear, **OOP (Object-Oriented-Programming)** is a set of design principles not a specific language feature.
   - The four design principles are: **Inheritance**, **Polymorphism**, **Abstraction**, and **Encapsulation**
-- The term **functional programming** has been used interchangeably between **procedural-programming** and **strict functional-programming** (stateless, i.e. Haskell).
+- The term **functional-programming** has been used interchangeably between **procedural-programming** and **strict functional-programming** (stateless, i.e. Haskell).
 - TypeScript supports OOP and is clearly not strictly stateless, so to avoid confusion, let's refer to TypeScript as a procedural programming language which supports OOP.
 - Projects don't have to strictly adhere to one paradigm or the other, use procedural where procedural makes the most sense and likewise for OOP.
-- OOP can be achieved either through **classes** or **factory-functions** although I prefer the former.
+- OOP can be achieved either through **classes** or VFFs although I prefer the former.
 - You can see a more thorough list of design rules [here](Design-Rules.md) to help you decide what feature/paradigm to use and when.
 
 ---
@@ -756,7 +800,7 @@ interface User { name: string; }
   - ...everything in between... (i.e. `name`)
   - `// @FK + "join type" (i.e. 1-1 or 1-many)`: foreign-key
   - `// @AC`: auditing columns which are not also foreign-keys (i.e. `createdAt`, `updatedAt`)
-  - `// @Tr`: transient entries appended to an object outside the database level
+  - `// @TE`: transient entries appended to an object outside the database level
     - Generally, try to use derived-types in place of entities with transient-keys.
 
 #### User model snippet
