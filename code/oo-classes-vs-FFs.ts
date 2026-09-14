@@ -33,7 +33,7 @@ function of(statusCode: number, message: string, options?: ErrorOptions): IHttpE
   return err;
 }
 
-// Builds a complete IHttpErr. Both OOP pillars live here:
+// Builds a complete IHttpErr. Two of the four OOP pillars live here:
 //
 //   INHERITANCE  — construct a real Error so `.stack` and `options.cause`
 //                  work, then re-parent it onto HttpErrProto so it picks up
@@ -43,9 +43,9 @@ function of(statusCode: number, message: string, options?: ErrorOptions): IHttpE
 function create(statusCode: number, message: string, options?: ErrorOptions): IHttpErr {
   let reported = false;
   const parent = new Error(message, options);
-  const __proto__ = Object.setPrototypeOf(parent, HttpErrProto);
+  const reparented = Object.setPrototypeOf(parent, HttpErrProto);
   const err: IHttpErr = Object.assign(
-    __proto__,
+    reparented,
     {
       statusCode,
       report(log: (msg: string) => void) {
@@ -64,8 +64,8 @@ function is(val: unknown): val is IHttpErr {
 }
 
 // Module-object. `of` and `is` are hoisted function declarations, so this
-// can sit above them without hitting the TDZ. `create` is an internal
-// helper and stays off the public surface.
+// export could even sit above them without hitting the TDZ. `create` is an
+// internal helper and stays off the public surface.
 export default { of, is } as const;
 
 // Usage

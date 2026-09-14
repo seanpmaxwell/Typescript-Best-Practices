@@ -63,7 +63,7 @@ class HttpErr extends Error {
 
   // Only the parts that genuinely need `this` stay in the class: guarding and
   // flipping the private flag, and reading the instance's own fields. All the
-  // formatting logic is delegated to the pure function declarations below.
+  // formatting logic is delegated to the top-level function declarations below.
   report(logger: Logger, options: ReportOptions = {}): void {
     if (this.#reported) return;
     this.#reported = true;
@@ -83,7 +83,8 @@ class HttpErr extends Error {
 // ========================================================================= //
 //                                 FUNCTIONS                                 //
 // ========================================================================= //
-// Pure helpers. No `this`, no class state, individually unit-testable.
+// Helpers. No `this`, no class state, individually unit-testable. All are pure
+// except `timestamp`, which reads the current time.
 
 function levelFor(statusCode: number): LogLevel {
   return statusCode >= 500 ? 'error' : 'warn';

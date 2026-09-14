@@ -11,7 +11,7 @@
 // Because this is a "readonly" string primitive, we use "UPPER_SNAKE_CASE".
 const INVALID_USER_ERROR = 'Not a valid user object';
 
-// For "namespace" object-literals (e.g. the lookup table below) use 
+// For "namespace" object-literals (e.g. the value-object below) use 
 // "PascalCase" for the variable name and "UPPER_SNAKE_CASE" for the keys. 
 const UserRoles = {
   NONE: 0,
@@ -51,8 +51,8 @@ interface IUser {
 // ========================================================================= //
 
 /**
- * `create` is a common factory-function name when creating from another object 
- * with known parameters.
+ * `create` is a common factory-function name when creating an instance from a
+ * partial of the instance-object (or from defaults if nothing is passed).
  */
 function create(partial?: Partial<IUser>): IUser {
   return { ...of(), ...partial };
@@ -72,14 +72,15 @@ function of(name?: string, role?: UserRoles, createdAt?: Date | ISOString): IUse
 }
 
 /**
- * `from` is a common factory-function name when converting from another
- * object.
+ * `from` is a common factory-function name when creating an instance by
+ * transforming some other value (e.g. a stringified user object).
  */
 function from(param: unknown): IUser {
-  if (!is(param)) {
+  const parsed = typeof param === 'string' ? JSON.parse(param) : param;
+  if (!is(parsed)) {
     throw new Error(INVALID_USER_ERROR);
   }
-  return create(param);
+  return create(parsed);
 }
 
 /**
