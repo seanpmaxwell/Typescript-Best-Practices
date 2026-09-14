@@ -83,7 +83,7 @@ So that things are clearer down the line, let's first clarify some terminology.
   - Note: while a plain-object could technically include symbols, most object-iterator functions (i.e. `Object.keys()`) ignore symbols and numbers are converted to strings when used as keys, so you'll sometimes hear the term plain-object and dictionary used interchangeably. 
 - **plain-data-object:** plain-objects which can only contain types that are easily serializable: i.e. `primitives`, `arrays`, `Dates`, and nested `plain-data-objects`.
   - Note: `Dates` when being serialized will be converted to ISOStrings.
-  - You can see a full implementation for the `PlainDataObject` type [here](./types-reference.ts#L5).
+  - You can see a full implementation for the `PlainDataObject` type [here](./code/types-reference.ts#L5).
 - **namespace-objects:** readonly object-literals used for code organization.
   - **value-object:** namespace-object for storing static values
     - **lookup-table:** value-object which stores static values and their label counterparts for displaying in a UI.
@@ -225,11 +225,11 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
     - `create(...)` build from `undefined`, partials, or complete objects you want to clone.
     - `of(...values)` builds from individual values.
     - `from(other)` converts from another type. 
-  - **Tip 2:** Keep class definitions clean. Logic that doesn't need `this` belongs in top-level FDs below the class: see [Keep classes clean](keep-classes-clean.ts).
+  - **Tip 2:** Keep class definitions clean. Logic that doesn't need `this` belongs in top-level FDs below the class: see [Keep classes clean](./code/keep-classes-clean.ts).
   - **Tip 3:** If a class is large enough to have its own file, define an interface for it containing only the instance methods, and have the factory-methods return the interface type. Callers then depend on the interface rather than the concrete class, you can hide public members you don't want exposed, and mocks/alternate implementations slot in freely.
     - Note: I prefix class-interfaces with `I`; the TypeScript team's own guidelines recommend against it, so treat that as a house convention rather than a rule.
 
-> If you want to visualize these points more, checkout this code snippet [OO with classes vs FFs](oo-classes-vs-FFs.ts).
+> If you want to visualize these points more, checkout this code snippet [OO with classes vs FFs](./code/oo-classes-vs-FFs.ts).
 
 <a id="enums"></a>
 #### `Enums`
@@ -271,7 +271,7 @@ File _categories_:
   - **module-object:** `export default` is a namespace-object which organizes the values/logic for a particular file.
   - **inventory:** exports multiple independent declarations, such as shared types or small utility functions.
   - **linear:** executes a series of commands, often for **startup-time** logic.
-  - You can see a full list of file-category examples [here](File-Category-Examples.md).
+  - You can see a full list of file-category examples [here](./docs/File-Category-Examples.md).
 
 #### Module-object files are great for organization
 I believe that for the backbone of all application logic, which is static after startup-time (both server and client-side, with the exception of JSX elements), module-object files are preferred.
@@ -377,7 +377,7 @@ function someLargeFunction() {
 }
 ```
 
-> If adding **region**/**section** separators with perfectly centered labels seems a little tedious (which it is), you can copy the [insert-separators script](insert-separators.js) from this repo into your project, which looks for `// r~~ "label text"` and `// s~~ "label text"` tags and adds the separators for you.
+> If adding **region**/**section** separators with perfectly centered labels seems a little tedious (which it is), the npm package `code-dividers` (which can be run through the command-line) can insert them for you.
 
 #### *Constants section* nuances
 - VFFs (see [Terminology](#terminology) above).
@@ -600,7 +600,7 @@ function normalFunction() {
   - Can be for object-keys or primitive variable names. DO NOT use for object names; use `View` for that.
 - `Payload`: An object formatted for movement through an API call.
 
-> The module-object file [User.model.ts](User.model.ts) has some good examples on standard naming conventions.
+> The module-object file [User.model.ts](./code/User.model.ts) has some good examples on standard naming conventions.
 
 <br/><b>***</b><br/>
 
