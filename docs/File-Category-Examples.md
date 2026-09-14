@@ -8,11 +8,11 @@
 // After we initialize the mailer, no further changes are needed
 const mailer = someThirdPartyMailerLib("your settings");
 
-function sendMail(options: MailerOptions): Promise<void> {
+async function sendMail(options: MailerOptions): Promise<void> {
    await mailer.send(options);
 }
 
-function sendSupportStaffEmail(options: MailerOptions): Promise<void> {
+async function sendSupportStaffEmail(options: MailerOptions): Promise<void> {
    await mailer.send({ ...options, to: process.env.SUPPORT_STAFF_EMAIL });
 }
 
@@ -34,7 +34,7 @@ export function SubmitButton() {
 }
 
 export function CancelButton() {
-  return <button color="red">Submit</button>;
+  return <button color="red">Cancel</button>;
 }
 
 export function CloseButton() {
@@ -71,7 +71,7 @@ export default app;
 
 export default {
     port: process.env.PORT,
-    host: process.env.Host,
+    host: process.env.HOST,
     databaseUsername: process.env.DB_USERNAME,
     ...etc,
 } as const;

@@ -1,20 +1,17 @@
 // ========================================================================= //
-//                                   Docs                                    //
+//                                   DOCS                                    //
 // ========================================================================= //
-
-/**
- * This module-object script is meant to handle User IO data items and demo
- * proper naming conventions.
- */
+// This module-object file is meant to handle User IO data items and demo
+// proper naming conventions.
 
 // ========================================================================= //
-//                                 Constants                                 //
+//                                 CONSTANTS                                 //
 // ========================================================================= //
 
 // Because this is a "readonly" string primitive, we use "UPPER_SNAKE_CASE".
 const INVALID_USER_ERROR = 'Not a valid user object';
 
-// For "namespace" object-literals (i.e. "like the lookup table below") use 
+// For "namespace" object-literals (e.g. the lookup table below) use 
 // "PascalCase" for the variable name and "UPPER_SNAKE_CASE" for the keys. 
 const UserRoles = {
   NONE: 0,
@@ -23,7 +20,7 @@ const UserRoles = {
 } as const;
 
 // ========================================================================= //
-//                                   Types                                   //
+//                                   TYPES                                   //
 // ========================================================================= //
 
 // "PascalCase" standard for type-aliases
@@ -40,7 +37,7 @@ type ValueOf<T extends object> = T[keyof T];
  * @entity users
  *
  * Note: prepending with `I` to distinguish the data-item from the "User" 
- * module-object script. `@entity` let's us know it's a database table.
+ * module-object. `@entity` lets us know it's a database table.
  */
 interface IUser {
   id: number; // @PK
@@ -50,11 +47,11 @@ interface IUser {
 }
 
 // ========================================================================= //
-//                                 Functions                                 //
+//                                 FUNCTIONS                                 //
 // ========================================================================= //
 
 /**
- * `create` is a common factory function name creating from another object 
+ * `create` is a common factory-function name when creating from another object 
  * with known parameters.
  */
 function create(partial?: Partial<IUser>): IUser {
@@ -67,7 +64,7 @@ function create(partial?: Partial<IUser>): IUser {
  */
 function of(name?: string, role?: UserRoles, createdAt?: Date | ISOString): IUser {
   return {
-    id: uuid(),
+    id: 0, // @PK is assigned by the database on insert
     name: name ?? '--',
     role: role ?? UserRoles.NONE,
     createdAt: createdAt ? new Date(createdAt) : new Date(),
@@ -75,7 +72,7 @@ function of(name?: string, role?: UserRoles, createdAt?: Date | ISOString): IUse
 }
 
 /**
- * `from` is a common factory function name when coverting from another
+ * `from` is a common factory-function name when converting from another
  * object.
  */
 function from(param: unknown): IUser {
@@ -95,20 +92,20 @@ function is(arg: unknown): arg is IUser {
     arg !== null &&
     'id' in arg && typeof arg.id === 'number' && 
     'name' in arg && typeof arg.name === 'string' && 
-    'role' in arg && isValueOf(arg, UserRoles) &&
-    'created' in arg && isValidDateOrISOString(arg)
+    'role' in arg && isValueOf(arg.role, UserRoles) &&
+    'createdAt' in arg && isValidDateOrISOString(arg.createdAt)
   );
 }
 
 /**
  * Because these next two validator functions aren't specific to users they 
- * should probably go some kind of "src/utils/validators.ts" inventory-script
+ * should probably go in some kind of "src/utils/validators.ts" inventory-file
  * but I'm putting them here for demo purposes.
  */
 
 /**
- * Follow convetions for generic-variable declaration which is typically 
- * just a single letter (i.e. "T").
+ * Follow conventions for generic-variable declaration which is typically 
+ * just a single letter (e.g. "T").
  */
 function isValueOf<T extends object>(
   value: unknown,
@@ -140,11 +137,11 @@ function isValidDateOrISOString(
 }
 
 // ========================================================================= //
-//                                  Export                                   //
+//                                  EXPORT                                   //
 // ========================================================================= //
 
-// We will import the User module-object script as "User" in other files
-// (i.e. import User from '@src/domains/users/User.model.ts' and "User.new()"")
+// We will import the User module-object as "User" in other files
+// (e.g. import User from '@src/domains/users/User.model.ts' and "User.create()")
 export default {
   create,
   of,
