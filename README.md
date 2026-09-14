@@ -224,6 +224,7 @@ People coming from strict OOP environments (like Java) tend to overuse classes, 
 - **Tips:**
   - **Tip 1:** When writing classes, make the constructor `protected` and expose factory-methods instead. Factory-methods will provide more flexibility than constructors (e.g. return sub-types). 
     - `private` for the constructor also works, but it makes the class non-extendable, since subclasses can't call `super()`.
+    - Note: this goes against common JavaScript convention, where calling `new` on a public constructor is the norm and factory-methods are usually reserved for specific needs (e.g. async setup or returning sub-types). Treat it as a house convention rather than a rule.
   - Conventional class factory-methods:
     - `create(...)` builds from `undefined`, partials, or complete objects you want to clone.
     - `of(...values)` builds from individual values.
@@ -284,6 +285,8 @@ Reasons:
 - Less likely to accidentally export helper functions.
 - Less likely to have naming conflicts for exported functions.
 - Classes should not be used as namespaces: see the [Classes](#classes) section.
+
+> Note: this goes against a common convention. Many style guides (e.g. Google's TypeScript style guide) prefer named exports over default exports, because named exports work better with editor auto-imports and renaming, and bundlers generally can't tree-shake unused functions off an exported object. If that matters for your project, you can keep the same `User.create()` style with named exports and `import * as User from './User'`. Otherwise, treat module-objects as a house convention rather than a rule.
 
 <br/><b>***</b><br/>
 
@@ -575,6 +578,7 @@ function normalFunction() {
     - Ultimately, name module-object files the same way the object is named in the code. Here are some tips for naming module-objects:
       - Prefer `PascalCase` by default: e.g. `import DateUtils from '@src/utils/DateUtils';`.
       - If its functions require a heavy amount of initialization (e.g. infrastructure-level files) and the module-object is used widely throughout your application, prefer `camelCase`: e.g. `import db from '@src/infra/db';`.
+    - Note: using `PascalCase` for things that aren't classes, types, or components (value-objects, module-objects, and VFFs: see **Functions** below) goes against common JavaScript convention, where `PascalCase` usually signals a class you call with `new` or, in React, a component (e.g. `const UserDefaults = () => ...` could be mistaken for one). I use it because these items act as values or namespaces rather than regular logic, so treat it as a house convention rather than a rule.
 - **All variables declared inside of functions except for type declarations**: `camelCase`
 - **Functions**:
   - Casing: 
