@@ -141,7 +141,7 @@ function isValidDateOrISOString(
 // ========================================================================= //
 
 // We will import the User module-object as "User" in other files
-// (e.g. import User from '@src/domains/users/User.model.ts' and "User.create()")
+// (e.g. import User from '@src/domains/users/User.model' and "User.create()")
 export default {
   create,
   of,

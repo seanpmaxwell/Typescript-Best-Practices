@@ -323,7 +323,7 @@ Separate regions with:
 **Regions** can be divided further into **sections**:
 
 ```ts
-// ============================ Setup middleware =========================== //
+// ============================ Setup Middleware =========================== //
 // Note: if you want to add some comments for a Section or Region separator
 // place them here, directly below the separator.
 
@@ -334,7 +334,7 @@ app.use(middleware2);
 
 do stuff....
 
-// ========================== Configure Front-End ========================== //
+// ========================== Configure Front-end ========================== //
 const FRONT_END_DIRECTORY_PATH = __dir + '/client/html';
 
 app.views(FRONT_END_DIRECTORY_PATH + '/views');
@@ -377,7 +377,7 @@ function someLargeFunction() {
 }
 ```
 
-> If adding **region**/**section** separators with perfectly centered labels seems a little tedious (which it is), the npm package `code-dividers` (which can be run through the command-line) can insert them for you.
+> If adding **region**/**section** separators with perfectly centered labels seems a little tedious (which it is), write `// @reg Label` or `// @sec Label` on its own line and run [code-divider](https://github.com/seanpmaxwell/code-divider) (`npx code-divider`) to replace the markers with centered dividers. Region labels are uppercased and section labels are capitalized for you.
 
 #### *Constants section* nuances
 - VFFs (see [Terminology](#terminology) above).
@@ -424,7 +424,7 @@ type SetLazy<T extends AnyFn> = T & {
 };
 
 // ========================================================================= //
-//                                     TYPES                                 //
+//                                   TYPES                                   //
 // ========================================================================= //
 
 interface IUser {
@@ -440,7 +440,7 @@ interface IAddress {
 type IsValidAddress = SetLazy<typeof isValidAddress>;
 
 // ========================================================================= //
-//                                  CONSTANTS                                //
+//                                 CONSTANTS                                 //
 // ========================================================================= //
 
 // ---- Linter issue
@@ -457,7 +457,7 @@ const UserDefaults = (address: IAddress): IUser => {
 const GuestUser = UserDefaults({ street: 'unknown', city: 'unknown' });
 
 // ========================================================================= //
-//                                   FUNCTIONS                               //
+//                                 FUNCTIONS                                 //
 // ========================================================================= //
 
 // What the non-lazy-loaded version looks like. 
@@ -561,15 +561,15 @@ function normalFunction() {
     - Reserve the filename `index.ts` for **barrel-files**. Barrel-files are for creating a single entry point for a folder.
     - Use the filename `main.ts` for a file meant to be the starting point of an application (in contrast to a library).
     - Think of `index.ts` as the entry point for libraries and `main.ts` the starting point for applications.
-  - **file suffixes:** If you follow these conventions but a file's intention is still not clear through the name, consider appending a suffix (e.g. `User.model.ts` for `import User from '@src/models/User.model.ts'`).
+  - **file suffixes:** If you follow these conventions but a file's intention is still not clear through the name, consider appending a suffix (e.g. `User.model.ts` for `import User from '@src/models/User.model'`).
 - **Readonly**:
   - **Primitives/Arrays:** `UPPER_SNAKE_CASE`
   - **Objects**:
     - For value-objects, use `PascalCase` for the object name and any nested objects and `UPPER_SNAKE_CASE` for the keys holding readonly values.
     - If an object is readonly but not a namespace-object (the whole object is being passed as a value) and you need specific key names, UPPER_SNAKE_CASE is preferred for the object name.
     - Ultimately, name module-object files the same way the object is named in the code. Here are some tips for naming module-objects:
-      - Prefer `PascalCase` by default: e.g. `import DateUtils from '@src/utils/DateUtils.ts';`.
-      - If its functions require a heavy amount of initialization (e.g. infrastructure-level files) and the module-object is used widely throughout your application, prefer `camelCase`: e.g. `import db from '@src/infra/db.ts';`.
+      - Prefer `PascalCase` by default: e.g. `import DateUtils from '@src/utils/DateUtils';`.
+      - If its functions require a heavy amount of initialization (e.g. infrastructure-level files) and the module-object is used widely throughout your application, prefer `camelCase`: e.g. `import db from '@src/infra/db';`.
 - **All variables declared inside of functions except for type declarations**: `camelCase`
 - **Functions**:
   - Casing: 
@@ -771,7 +771,7 @@ Because TypeScript lets us type the return value and parameters, traditional `JS
 
 ##### Misc
 - `@private`: functions never used outside of their file.
-  - Below `@private` you can also add `@see nameOfTheFunctionUsingIt`  
+  - You can also link to the function using it: `@private {@link nameOfTheFunctionUsingIt}`.  
 - `@testOnly`: for testing only and never in production (any item not just functions).
 - `@cronJob`: functions only for cron-jobs and not user-initiated.
 - `@dummyData`: functions only used by dummy-data files.

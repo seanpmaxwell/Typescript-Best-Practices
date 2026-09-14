@@ -1,5 +1,5 @@
 // ========================================================================= //
-//                     1. Factory-function version (HttpErr.ff.ts)          //
+//                1. FACTORY-FUNCTION VERSION (HttpErr.ff.ts)                //
 // ========================================================================= //
 
 interface IHttpErr extends Error {
@@ -69,7 +69,7 @@ function is(val: unknown): val is IHttpErr {
 export default { of, is } as const;
 
 // Usage
-import HttpErr from './HttpErr.ff.ts';
+import HttpErr from './HttpErr.ff';
 const ffErr = HttpErr.of(404, 'User not found');
 ffErr.report(console.error);                  // logs once
 ffErr.report(console.error);                  // no-op — flag is private
@@ -82,7 +82,7 @@ console.log((ffErr as any).reported);         // undefined — not on the object
 
 
 // ========================================================================= //
-//                        2. Class version (HttpErr.class.ts)               //
+//                    2. CLASS VERSION (HttpErr.class.ts)                    //
 // ========================================================================= //
 
 class HttpErr extends Error {
