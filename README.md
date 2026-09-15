@@ -860,6 +860,8 @@ try {
 }
 ```
 
+React components are an exception: separating props, hooks, derived values, event handlers, and the returned UI with blank lines makes each phase easier to scan. See [Organizing component code](https://github.com/seanpmaxwell/React-Ts-Best-Practices#function-components-organization).
+
 ---
 
 <a id="naming-conventions"></a>
@@ -1101,7 +1103,7 @@ src/
 │   │   ├── ui/
 │   │   │   └── buttons.tsx
 │   │   └── styles/
-│   │       └── box-styles.ts
+│   │       └── BoxStyles.ts
 │   ├── pages/
 │   │   ├── Home/
 │   │   │   ├── Home.tsx
@@ -1499,8 +1501,8 @@ Architecture should make responsibilities easy to find and dependencies easy to 
 | Layer | Responsibility |
 | --- | --- |
 | **Repository** | Reads and writes persisted data. Use the `Repo` suffix. |
-| **Service** | Handles business logic on the server, or API calls on the client. |
-| **Operations** | Handles client-side business logic. Use the `Ops` suffix. |
+| **Service** | Handles business logic and coordinates workflows, on the server or the client. Use the `Service` suffix. |
+| **API client** | Sends HTTP requests from the client and handles their responses. Use the `Api` suffix. |
 | **Cron jobs** | Run scheduled server-side work. |
 | **Controller** | Handles incoming client requests and delegates application work. |
 | **Middleware** | Performs framework-level request processing, such as validation or formatting. |
@@ -1591,7 +1593,7 @@ src/
 ├── _assets/
 ├── _common/
 ├── cronjobs/
-├── domain/
+├── domains/
 │   ├── users/
 │   │   ├── _local/
 │   │   │   ├── constants/
@@ -1627,8 +1629,8 @@ tsconfig.json
 
 In this layout:
 
-- User-related layers stay together under `domain/users/`.
-- Post-related layers stay together under `domain/posts/`.
+- User-related layers stay together under `domains/users/`.
+- Post-related layers stay together under `domains/posts/`.
 - Shared infrastructure lives under `infra/`.
 - `PostToPDF.ts` contains the non-I/O business logic for preparing a post as a PDF.
 
