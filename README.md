@@ -507,17 +507,11 @@ function someLargeFunction() {
 }
 ```
 
-Don't center dividers by hand. Write `// @reg Label` or `// @sec Label` and run [code-divider](https://github.com/seanpmaxwell/code-divider):
-
-```bash
-npx code-divider
-```
-
-It replaces markers with centered dividers, uppercasing region labels and capitalizing section labels.
+If you think adding comment dividers is tedious (which it is) then take a look at [code-divider](https://github.com/seanpmaxwell/code-divider).
 
 ### What belongs in Constants?
 
-Fixed data, plus helpers whose purpose is to provide data: value factory functions and configured constant objects.
+Fixed data, or functions whose purpose is to return a value rather than perform logic (e.g. value factory functions and configured constant objects).
 
 ```ts
 // Return a fresh object and date on each call.
@@ -542,114 +536,6 @@ VFFs break the usual function conventions because they provide values:
 - Use **PascalCase**.
 - Use a function expression, not a declaration.
 - A noun name is fine; no verb needed.
-
-### Configured functions and initialization order
-
-A configured function is assigned to a variable and cannot be used before that assignment runs:
-
-```ts
-const isValidAddress = isValidShape({
-  // ...
-});
-```
-
-`const` is hoisted but inaccessible until initialized—the **temporal dead zone**.
-
-Usually, just initialize it earlier. If the file layout requires an earlier call, a hoisted declaration can create and cache the configured function on first use:
-
-```ts
-// User.ts
-import { v4 as uuid, validate } from 'uuid';
-import { isValidString, isValidShape } from 'some-validation-library';
-
-// ========================================================================= //
-//                                 CONSTANTS                                 //
-// ========================================================================= //
-
-const UserDefaults = (address: IAddress): IUser => {
-  if (!isValidAddress(address)) {
-    throw new Error('Invalid address');
-  }
-
-  return {
-    id: uuid(),
-    address: { ...address },
-  };
-};
-
-// This runs while the module is loading, before the Functions region.
-// A configured function assigned later with `const` would not be ready yet.
-const GuestUser = UserDefaults({
-  street: 'unknown',
-  city: 'unknown',
-});
-
-// ========================================================================= //
-//                                   TYPES                                   //
-// ========================================================================= //
-
-// Reusable helpers can live in `_common/types/utility-types.ts`.
-type AnyFn = (...args: any[]) => any;
-
-type SetLazy<T extends AnyFn> = T & {
-  lazyFn?: T;
-};
-
-interface IUser {
-  id: string;
-  address: IAddress;
-}
-
-interface IAddress {
-  street: string;
-  city: string;
-}
-
-type IsValidAddress = SetLazy<typeof isValidAddress>;
-
-// ========================================================================= //
-//                                 FUNCTIONS                                 //
-// ========================================================================= //
-
-/**
- * Validate an address, creating the configured validator on first use.
- */
-function isValidAddress(value: unknown): value is IAddress {
-  const self: IsValidAddress = isValidAddress;
-  const fn = self.lazyFn ??= isValidShape({
-    street: isValidString({ minLength: 1, maxLength: 255 }),
-    city: isValidString({ minLength: 1, maxLength: 255 }),
-  });
-
-  return fn(value);
-}
-
-/**
- * Normalize and validate a UUID.
- */
-function normalizeId(id: string): string {
-  const normalizedId = id.trim().toLowerCase();
-
-  if (!validate(normalizedId)) {
-    throw new Error('Id is not valid');
-  }
-
-  return normalizedId;
-}
-
-// ========================================================================= //
-//                                  EXPORT                                   //
-// ========================================================================= //
-
-export default {
-  UserDefaults,
-  GuestUser,
-  isValidAddress,
-  normalizeId,
-} as const;
-```
-
-The wrapper is hoisted; the validator is built on first call and reused. Your lint rules may need to allow use-before-define for function declarations.
 
 ### Short local type aliases
 
