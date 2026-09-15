@@ -55,11 +55,11 @@ Some of these are standard JavaScript terms; others are specific to this guide.
 | **Focused directory** | A folder dedicated to one feature or responsibility. Often, but not always, a leaf. |
 
 ```text
-package-name/           ← Root
-└── src/                ← Branch directory
-    └── components/     ← Branch directory
-        └── Login/      ← Focused directory
-            └── _local/ ← Leaf directory
+package-name/           <- Root
+└── src/                <- Branch directory
+    └── components/     <- Branch directory
+        └── Login/      <- Focused directory
+            └── _local/ <- Leaf directory
 ```
 
 ### Application lifecycle
@@ -666,6 +666,15 @@ async function fetchPaymentSuspendedSubscriptions(): Promise<
     .where({ /* Query conditions. */ })
     .returning('*');
 }
+
+// ---- OR
+
+async function fetchPaymentSuspendedSubscriptions(): Promise<SFFPS> {
+  return database('subscriptions')
+    .where({ /* Query conditions. */ })
+    .returning('*');
+}
+type SFFPS = SuspendedForFailedPaymentSubscription;
 ```
 
 A short local alias helps when a complex type repeats. Keep it near its uses and self-explanatory. The goal is readability, not fewer characters.
@@ -818,12 +827,10 @@ Avoid shortening words in `UPPER_SNAKE_CASE` names without good reason.
 
 | Suffix | Meaning |
 | --- | --- |
-| **`View`** | Data shaped for UI display, e.g. `UserInfoView`. |
+| **`View`** | Data shaped for UI display, e.g. `UserView`. |
 | **`DTO`** | Data transfer object moving data between parts of an app or across boundaries. Not necessarily an API request. |
 | **`Label`** | A display-formatted string, e.g. `createdAtLabel`. For properties or values, not whole objects. |
 | **`Payload`** | An object shaped for an API call. |
-
-`IUser['createdAt']` might be an ISO string; `UserView['createdAtLabel']` might be `MM/DD/YYYY`.
 
 See [User.model.ts](./code/User.model.ts).
 
@@ -838,12 +845,9 @@ Explain purpose, intent, and what readers cannot infer from the code.
 - `/** ... */` above every function declaration.
 - `//` or nothing for function expressions.
 - `/** ... */` for utility types, especially non-obvious ones.
-- `@testOnly` on test-only items.
 - `//` for inline explanations.
 - Capitalize and punctuate.
 - Separate major regions clearly.
-
-A good comment explains **why**, not what each line does.
 
 ---
 
@@ -853,13 +857,15 @@ A good comment explains **why**, not what each line does.
 
 Group by origin: third-party, application modules, nearby local files. Split long lists across lines. Prettier handles wrapping; use an import-sorting plugin or ESLint rule to enforce order.
 
+<br/>
+
 ---
 
 <a id="organizing-shared-code"></a>
 
 ## 🤝 Organizing shared code
 
-Without a clear home, "just put it in helpers" becomes "where did we put that helper?"
+Without a clear home, helper/shared logic quickly becomes a disorganized mess.
 
 This builds on **branch directory** and **focused directory** from [Terminology](#terminology). Examples use React-style folders, but apply to client and server alike.
 
@@ -867,18 +873,18 @@ This builds on **branch directory** and **focused directory** from [Terminology]
 
 | Category | Contents |
 | --- | --- |
-| **`utils`** | Generic runtime helpers. |
+| **`utils`** | Application agnostic logic. |
 | **`constants`** | Readonly values and VFFs. |
 | **`types`** | Standalone aliases and interfaces, no runtime code. |
 | **`ui`** | Shared `.jsx`/`.tsx` files. |
 
-Utilities may depend on third-party libraries and lower-level utilities, not on services, controllers, or feature workflows. Keep dependencies one-way; utilities need not share a file to call one another. Application-specific data access belongs in repositories or infrastructure adapters.
+Utilities may depend on third-party libraries and lower-level utilities but should generally be application agnostic.
 
 Keep types beside closely related runtime logic; use shared `types` only for types that stand alone.
 
 ### Branch directories: `_common/`
 
-Create `_common/` when code is shared across a branch directory. Avoid `misc/` or `helpers/`—they become catch-alls. Category subfolders are fine, but filenames should still describe contents:
+Create `_common/` when code is shared across a branch directory. Avoid `misc/` or `helpers/` they become catch-alls. Category subfolders are fine, but filenames should still describe contents:
 
 ```text
 src/_common/types/utility-types.ts
@@ -894,7 +900,7 @@ src/
 │   └── types/
 │       └── utility-types.ts
 ├── components/
-│   ├── _common/                  ← Shared across components.
+│   ├── _common/                  <- Shared across components.
 │   │   ├── ui/
 │   │   │   └── buttons.tsx
 │   │   └── styles/
@@ -920,7 +926,7 @@ tsconfig.json
 
 ### Focused directories: `_local/`, `_external/`, `_internal/`
 
-A focused directory already names the feature, so its helper folders can use local vocabulary:
+A focused directory already names the feature, so we can be less strict with how we name its supporting files:
 
 | Folder | Purpose |
 | --- | --- |
@@ -931,11 +937,11 @@ A focused directory already names the feature, so its helper folders can use loc
 Broad names like `utils.ts` or `ui.tsx` are fine inside `_local/` but not in the focused directory's root:
 
 ```text
-Login/_local/ui.tsx  ← Good: clearly a local helper.
-Login/ui.tsx         ← Avoid: its role is less clear.
+Login/_local/ui.tsx  <- Good: clearly a local helper.
+Login/ui.tsx         <- Avoid: its role is less clear.
 ```
 
-`_local/` is flexible—one outside consumer does not force a move. `_internal/` is for feature-private code, including a large helper extracted from one file. These names communicate intent; they do not enforce access.
+The names `local`/`internal`/`external` communicate intent; they do not enforce access. You could still import an internal item some where else if you really need to: e.g. unit-testing.
 
 ```text
 _common/
@@ -969,14 +975,6 @@ Login/
 - `Login/_local/ui.tsx`: UI shared by `Login` and its dialogs.
 - `AuthDialog.tsx`: common base for the two auth dialogs.
 
-### Add categories when they help
-
-Create specific categories with a clear, recurring purpose, e.g. `classes/` for custom errors or `entities/` for database types. Specific beats forcing everything into `utils/`.
-
-### Responsibilities, not folder names, control data access
-
-`_internal/` says who may use the contents, not which layer they belong to. Persistence stays in repositories and infrastructure adapters regardless of folder. An internal repository may hit the database; an internal service coordinates through repositories; a generic helper never contains application data access.
-
 ---
 
 <a id="philosophy"></a>
@@ -999,11 +997,11 @@ Boundaries vary. In backend projects, "integration test" often means calling a r
 
 #### Conventions
 
-**Cover important behavior, not every input combination.** Test meaningful behavior including boundaries and failure paths—whether triggered by users, jobs, other services, or internal operations. Integration tests check cooperation; E2E tests protect critical workflows.
+**Cover important behavior, not every input combination.** Test meaningful behavior triggered by users not ever theoretical edge case.
 
-**Developers write their own unit tests**, even during rapid development. Writing tests doubles as proofreading: it exposes confusing interfaces and missing cases. Ideally they write integration tests too; a dedicated tester adds a valuable second perspective.
+**Developers write their own unit/integration tests**, even during rapid development. Writing tests not only catches bugs but doubles as proofreading.
 
-**Add E2E tests where they pay off most.** They are expensive to write and maintain (e.g. Cypress). Early on, focus on unit and integration tests; add E2E coverage as the app stabilizes, starting with the flows that would hurt most if broken.
+**e2e tests can come later and/or be done by a dedicated tester** They are expensive to write and maintain (e.g. Cypress).
 
 ---
 
@@ -1017,9 +1015,9 @@ TypeScript supports several styles; a project need not commit to one.
 - **Object-oriented:** Behavior organized around objects, emphasizing encapsulation, abstraction, inheritance, polymorphism.
 - **Functional:** Composed functions, immutable data, controlled side effects. Pure FP applies these strictly.
 
-Using functions instead of classes does not make code functional.
-
-This guide favors procedural organization: **plain data, clear functions, explicit layers**, with OOP where stateful objects simplify the design. For OOP I generally prefer classes over factories. Pick what makes the problem easier to understand.
+Notes:
+- Using functions instead of classes does not make code functional.
+- This guide favors procedural with classes handling OOP specific features.
 
 ---
 
@@ -1027,7 +1025,7 @@ This guide favors procedural organization: **plain data, clear functions, explic
 
 ### Documenting code
 
-Good model documentation saves trips to the database manager to answer "what does this field reference?" Keep relationships close to the code.
+Good model documentation saves trips to the database manager to answer "what does this field reference?"
 
 #### Model terminology
 
@@ -1045,7 +1043,7 @@ I avoid *record* in type names to prevent confusion with `Record<>`. Join tables
 
 #### Useful comment tags
 
-TypeScript already expresses parameter and return types; use `@param`/`@returns` only for what types cannot express—constraints, units, side effects, meaning.
+TypeScript already has parameter and return types; use tags only for what types cannot express.
 
 Standard tags: `@private`, `@param`, `@returns`, `@see`.
 
@@ -1062,8 +1060,6 @@ Custom tags in this guide:
 | `@joins` | A table connected via a join table. |
 | `@route` | A handler's HTTP method and path. |
 
-Custom tags may need registering with your doc tooling. They describe intent, not enforce behavior. `@startupTime` is especially useful in request-driven apps.
-
 #### Linking private helpers to callers
 
 Keep the link in the description, `@private` on its own line:
@@ -1077,8 +1073,6 @@ Keep the link in the description, `@private` on its own line:
  * @private
  */
 ```
-
-A tag does not restrict access—control the public API with exports.
 
 #### Documenting database relationships
 
@@ -1110,7 +1104,7 @@ Join table:
  */
 ```
 
-Property order within entity types:
+Tags and entity types:
 
 1. **Primary keys:** `// @PK`.
 2. **Ordinary data fields.**
@@ -1123,11 +1117,9 @@ userId: number; // @FK 1-1
 createdAt: Date; // @AC
 ```
 
-These describe the schema; they do not enforce it. A true 1-1 needs both an FK and a uniqueness constraint on the referencing column. Prefer a derived type over adding transient fields to an entity.
-
 #### Example: user entities
 
-Here `user_avatars.userId` is both an FK and unique, allowing at most one avatar per user.
+Here `user_avatars.userId` is both a FK and unique, allowing at most one avatar per user.
 
 ```ts
 interface Entity {
@@ -1148,7 +1140,7 @@ interface User extends Entity {
  * @auxiliaryOf users
  */
 interface UserAvatar extends Entity {
-  fileName: string | null;
+  filename: string | null;
   userId: number; // @FK 1-1; unique in the database.
 }
 
@@ -1276,9 +1268,9 @@ tsconfig.json
 
 #### Domain-based architecture
 
-For larger apps I prefer grouping by domain. Related layers stay together, which makes it easier to add features without a giant `services/` folder, define team ownership, keep changes localized, and limit cross-feature dependencies.
+For larger apps I prefer grouping by domain. Related layers stay together, which makes it easier to make updates as a feature grows.
 
-Trade-offs: business-oriented names are less immediately obvious than `repos/` and `services/`, and domain folders do not by themselves prevent circular dependencies or merge conflicts.
+Trade-offs: business-oriented names are less immediately obvious than `repos/` and `services/`.
 
 ```text
 config/
@@ -1320,20 +1312,8 @@ package.json
 tsconfig.json
 ```
 
-User layers live under `domains/users/`, post layers under `domains/posts/`, shared infrastructure under `infra/`. `PostToPDF.ts` holds non-I/O logic for rendering a post as a PDF.
+User layers live under `domains/users/`, post layers under `domains/posts/`, shared infrastructure under `infra/`. `PostToPDF.ts` holds logic for rendering a post as a PDF.
 
-##### Keeping domain folders tidy
-
-Main layer files sit in the domain root:
-
-```text
-UserRepo.ts
-UserService.ts
-UserController.ts
-```
-
-Supporting files go in `_local/`, `_internal/`, or `_external/` per [Organizing shared code](#organizing-shared-code). A layer file may also live there when its audience calls for it—an internal service in `_internal/` keeps its architectural role.
-
-The payoff: a growing feature already has a home. In a layer-based layout, adding a second user service means creating `UserServices/` and moving files; in a domain layout, the files already belong together.
+In a layer-based layout, adding a second user service means creating `UserServices/` and moving files; in a domain layout, the files already belong together.
 
 These examples use a backend server. For the client side, see [React + TypeScript Best Practices](https://github.com/seanpmaxwell/React-Ts-Best-Practices).
