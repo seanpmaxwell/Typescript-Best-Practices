@@ -130,18 +130,6 @@ Symbol keys are allowed but ignored by `Object.keys()` and similar methods; nume
 
 A **plain data object** holds data, not behavior. In this guide it may contain primitives (excluding `bigint` and `symbol`), arrays of supported values, `Date` objects, and nested plain data objects.
 
-This describes a container, not a serialization guarantee. With JSON:
-
-| Value or structure | What happens |
-| --- | --- |
-| A valid `Date` | Becomes an ISO string; parsing does not restore the `Date`. |
-| `NaN`, `Infinity`, `-Infinity` | Becomes `null`. |
-| Object property holding `undefined` or a symbol | Omitted. |
-| Array entry holding `undefined` or a symbol | Becomes `null`. |
-| Top-level `undefined` | `JSON.stringify()` returns `undefined`, not a string. |
-| A `bigint` | Throws. |
-| A circular reference | Throws. |
-
 A recursive type cannot rule out circular references. See the [PlainDataObject type implementation](./code/types-reference.ts#L4).
 
 #### Namespace objects
