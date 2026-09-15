@@ -73,15 +73,15 @@ package-name/           <- Root
 
 ### Object terminology
 
-#### Object shape and mutability
+#### `Object mutability`
 
 | Term | Meaning |
 | --- | --- |
-| **Fixed-shape** | Keys stay the same; values may change. |
+| **Fixed** | Keys stay the same; values may change. |
 | **Dynamic** | Keys can be added or removed; values may change. |
 | **Readonly** | Properties cannot be reassigned through the declaring type. |
 
-These describe usage, not distinct kinds of JavaScript objects. TypeScript's checks do not constrain objects at runtime, and `readonly` is shallow:
+Note: `readonly` is shallow:
 
 ```ts
 const user: { readonly address: { city: string } } = {
@@ -91,14 +91,12 @@ const user: { readonly address: { city: string } } = {
 user.address.city = 'Rome'; // Allowed.
 ```
 
-`readonly` and `as const` are compile-time only (`as const` also preserves literal types). For runtime protection use `Object.freeze()`, which is also shallow.
-
-#### Classes and object literals
+#### `Classes and object literals`
 
 - **Class:** A template for objects with shared behavior and, often, internal state.
 - **Object literal:** The `{ ... }` syntax for creating an object directly.
 
-#### Plain objects
+#### `Plain objects`
 
 A **plain object** has `Object.prototype` as its direct prototype, or no prototype (`Object.create(null)`):
 
@@ -110,9 +108,7 @@ const third = Object.create(null);
 
 `{}` inherits methods like `hasOwnProperty`; null-prototype objects do not.
 
-`Record<PropertyKey, unknown>` is a common general-purpose object type, but it does **not** guarantee a plain-object prototype.
-
-#### Dictionaries
+#### `Dictionaries`
 
 A **dictionary** is a plain object used as a collection of string-keyed values:
 
@@ -122,11 +118,11 @@ type Dict = Record<string, unknown>;
 
 Symbol keys are allowed but ignored by `Object.keys()` and similar methods; numeric keys become strings. *Dictionary* and *plain object* are often used interchangeably.
 
-#### Plain data objects
+#### `Plain data objects`
 
-A **plain data object** holds only primitives and non-function objects.
+A **plain data object** holds only primitives and non-function objects. They should never modify data elsewhere.
 
-#### Namespace objects
+#### `Namespace objects`
 
 A **namespace object** groups related values or functions under one name; its public properties are intended to stay readonly.
 
@@ -286,9 +282,7 @@ Avoid a class:
 
 - **As a namespace.** Use an object literal.
 - **To assemble a configured object with no lifecycle or need for `this`.** Use a factory function.
-- **To wrap I/O data** from databases, files, or APIs.
-
-For I/O data, this guide favors **plain data plus functions**: simple data, with module objects grouping the stateless functions that act on it. This avoids wrapping data that mainly needs validation, transformation, or transfer in layers of class instances. Domain-driven design favors richer objects; both work—choose deliberately.
+- **To wrap I/O data** If we try to wrap IO-data with classes, this could cause unexpected behavior when data is serialized. 
 
 ##### `Why not factory functions for everything?`
 
@@ -297,17 +291,11 @@ Classes make two things convenient:
 - **Shared methods:** Instance methods live on the prototype. A factory defining methods per returned object creates new function objects each call.
 - **Inheritance:** `class ... extends ...` is simpler than wiring up a prototype chain.
 
-Factories can share methods via a prototype, but then per-instance private state needs a different design.
-
 ##### `Class conventions I use`
 
 **Prefer factory methods for control over construction.** My usual approach is a `protected` constructor with public `create`, `of`, and `from` methods. Factories provide named creation paths, can return subtypes, and handle setup that does not fit a constructor. A `private` constructor also works but blocks subclassing since subclasses cannot call `super()`. This is a house convention—public constructors and `new` are standard.
 
 **Keep logic that does not need `this` outside the class**, in top-level function declarations below it. See [Keep classes clean](./code/keep-classes-clean.ts).
-
-**Expose a focused interface for larger classes.** If a class has its own file, consider an interface for the members callers need, and return it from factory methods. Callers then depend on the contract, not the implementation, which simplifies mocks and alternatives. This narrows the type only; it does not hide properties at runtime.
-
-I sometimes prefix these interfaces with `I`. Many style guides avoid that; treat it as a preference.
 
 See [OO with classes vs. factory functions](./code/oo-classes-vs-FFs.ts).
 
@@ -320,8 +308,7 @@ Prefer a **constant object paired with a same-named type** over a TypeScript enu
 Enums need more than type removal:
 
 - Regular enums emit runtime JavaScript.
-- `const enum` values are inlined by the compiler.
-- Type-stripping tools such as Node's type-stripping mode support neither.
+- Type-stripping tools such as Node's type-stripping mode don't support them.
 - `erasableSyntaxOnly` rejects enum syntax.
 
 ```ts
@@ -347,7 +334,7 @@ Type aliases and interfaces both describe object shapes. The handbook's starting
 - **Interfaces** for object contracts you expect to extend.
 - **Type aliases** for unions, tuples, mapped types, and other type expressions.
 
-Interfaces can be easier for the compiler than large intersections, though it depends on the types involved. Both vanish from output, so runtime performance is unaffected.
+Interfaces can be easier for the compiler than large intersections, though it depends on the types involved.
 
 ---
 
@@ -388,7 +375,7 @@ For application logic whose structure is fixed after startup, I prefer module-ob
 
 No class is needed for this.
 
-Many style guides prefer named exports, which work better with editor tooling and tree-shaking. If that matters, keep the same call style with a namespace import:
+Many style guides prefer named exports, which work better for tree-shaking. If that matters, keep the same call style with a namespace import:
 
 ```ts
 import * as User from './User';
@@ -404,11 +391,11 @@ Module objects are a house convention.
 
 ## 🗂️ File organization
 
-A predictable layout lets readers guess where something lives before searching.
+A consistent layout makes it easier mentally break apart complex logic and keep more content within one file.
 
 ### The hierarchy
 
-Largest to smallest: **folders → files → regions → sections → blocks** (at file level or inside a function).
+Largest to smallest: **folders -> files -> regions -> sections -> blocks** (at file level or inside a function).
 
 ### Top-down file layout
 
@@ -1108,7 +1095,7 @@ Services coordinate persistence through repositories or adapters rather than emb
 **One service entry point per domain.** Controllers call the domain's primary service, never repositories or infrastructure directly:
 
 ```text
-Controller → Service → Repository or infrastructure adapter → Persistence
+Controller -> Service -> Repository or infrastructure adapter -> Persistence
 ```
 
 #### Layer-based architecture
