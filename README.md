@@ -1527,25 +1527,6 @@ For example:
 Controller → Service → Repository or infrastructure adapter → Persistence
 ```
 
-**Use auxiliary services to split up larger workflows.**
-
-Name them `...Service.aux.ts`.
-
-Auxiliary services may contain business logic and access repositories or infrastructure, but controllers should not call them directly.
-
-For example:
-
-- `UserService.ts` is the controller-facing service.
-- `UserAssetService.aux.ts` handles avatar work that involves database records and binary storage.
-
-**Use non-I/O auxiliary services for business logic that does not access external systems.**
-
-I call these *static auxiliary services* and name them `...Service.saux.ts`, or use a clear descriptive name ending in `.saux.ts`.
-
-These files are useful when calculations, transformations, or other non-I/O business rules become large enough to extract.
-
-Keep application-specific business logic out of generic `utils/` folders. Utilities should remain broadly reusable; business rules should stay with their domain.
-
 #### Layer-based architecture
 
 For a small application or a solo project, grouping by layer provides a straightforward map:
@@ -1572,7 +1553,7 @@ src/
 ├── services/
 │   ├── UserServices/
 │   │   ├── UserService.ts
-│   │   └── UserAssetService.aux.ts
+│   │   └── UserAssets.ts
 │   └── PostService.ts
 ├── main.ts
 └── server.ts
@@ -1583,7 +1564,7 @@ package.json
 tsconfig.json
 ```
 
-Here, `UserAssetService.aux.ts` might be added later to handle uploading avatars to remote storage.
+Here, `UserAssets.ts` might be added later to handle uploading avatars to remote storage.
 
 Why `UserRepo.ts` rather than `user.repo.ts`? These are module-object files, so their filenames match the objects used in code. See [Naming conventions](#naming-conventions).
 
@@ -1619,11 +1600,11 @@ src/
 │   │   │       └── schemas.ts
 │   │   ├── UserRepo.ts
 │   │   ├── UserService.ts
-│   │   ├── UserAssetService.aux.ts
+│   │   ├── UserAssets.ts
 │   │   └── UserController.ts
 │   └── posts/
 │       ├── _internal/
-│       │   └── PostToPDF.saux.ts
+│       │   └── PostToPDF.ts
 │       ├── PostRepo.ts
 │       ├── PostService.ts
 │       └── PostController.ts
@@ -1649,7 +1630,7 @@ In this layout:
 - User-related layers stay together under `domain/users/`.
 - Post-related layers stay together under `domain/posts/`.
 - Shared infrastructure lives under `infra/`.
-- `PostToPDF.saux.ts` contains the non-I/O business logic for preparing a post as a PDF.
+- `PostToPDF.ts` contains the non-I/O business logic for preparing a post as a PDF.
 
 ##### Keeping domain folders tidy
 
