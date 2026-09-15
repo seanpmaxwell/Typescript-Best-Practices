@@ -128,9 +128,7 @@ Symbol keys are allowed but ignored by `Object.keys()` and similar methods; nume
 
 #### Plain data objects
 
-A **plain data object** holds data, not behavior. In this guide it may contain primitives (excluding `bigint` and `symbol`), arrays of supported values, `Date` objects, and nested plain data objects.
-
-A recursive type cannot rule out circular references. See the [PlainDataObject type implementation](./code/types-reference.ts#L4).
+A **plain data object** holds only primitives and non-function objects.
 
 #### Namespace objects
 
