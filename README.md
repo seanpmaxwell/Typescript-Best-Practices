@@ -139,9 +139,7 @@ A **namespace object** groups related values or functions under one name; its pu
 - **Constant object:** A namespace object of fixed values.
   - **Lookup table:** A constant object pairing values with labels, often for UI display.
   - **Configured constant object:** A constant object returned by a function, such as an enum-replacement helper.
-- **Module object:** A namespace object exported as a file's default export.
-
-A *module* is a file; a *module object* represents that file's public API. See [File types and categories](#file-types).
+- **Module object:** A namespace object representing a module's public API. See [File types and categories](#file-types).
 
 ### Function terminology
 
