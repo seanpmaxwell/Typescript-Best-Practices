@@ -931,7 +931,32 @@ Keep the link in the description, `@private` on its own line:
 /**
  * Prepare the values needed by the parent operation.
  *
- * Used by {@link parentFunction}.
+ * Used by: {@link parentFunction}.
+ *
+ * @private
+ */
+```
+
+If a function is used by multiple other functions, moved each link to it's own line. Although if a private function is used by dozens (or more) of other functions this may not be practical
+
+```ts
+/**
+ * Prepare the values needed by the parent operation.
+ *
+ * Used by: 
+ *   {@link parentFunction1}
+ *   {@link parentFunction2}
+ *   {@link parentFunction3}  
+ *
+ * @private
+ */
+
+ ---- OR
+
+ /**
+ * Prepare the values needed by the parent operation.
+ *
+ * Used by: {many}
  *
  * @private
  */
@@ -962,8 +987,8 @@ Join table:
 ```ts
 /**
  * @entity charts_users
- * @joins users
- * @joins charts
+ *   @joins users
+ *   @joins charts
  */
 ```
 
@@ -1000,7 +1025,7 @@ interface User extends Entity {
 
 /**
  * @entity user_avatars
- * @auxiliaryOf users
+ *   @auxiliaryOf users
  */
 interface UserAvatar extends Entity {
   filename: string | null;
@@ -1045,7 +1070,6 @@ async function fetchPostsByUserId(
   const posts = await PostService.fetchPostsByUserId(
     Number(req.params.userId),
   );
-
   res.json(posts);
 }
 
