@@ -69,10 +69,6 @@ package-name/           <- Root
   - **Startup time:** Application initialization.
   - **Request time:** Responding to input, such as an API request or user action.
 
-**Type-checking** verifies TypeScript's type rules; **transpilation** converts the code to JavaScript. `tsc` does both, but some tools only strip types—so running TypeScript successfully does not mean it type-checked.
-
-"Transpiled, not compiled" is a distinction without much difference: transpiling is compiling from one source language to another.
-
 <a id="terminology-objects"></a>
 
 ### Object terminology
