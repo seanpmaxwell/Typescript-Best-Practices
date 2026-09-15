@@ -283,12 +283,12 @@ Both classes and factory functions support OO designs: factories keep private st
 
 An object literal has no instance-private storage. State kept in non-exported module variables belongs to the module and is shared by all importers.
 
-##### When a class fits
+##### `When a class fits`
 
 - The object has internal state its methods update over time.
 - You need to extend a class you do not control, such as `Error`.
 
-##### When to use something simpler
+##### `When to use something simpler`
 
 Avoid a class:
 
@@ -298,7 +298,7 @@ Avoid a class:
 
 For I/O data, this guide favors **plain data plus functions**: simple data, with module objects grouping the stateless functions that act on it. This avoids wrapping data that mainly needs validation, transformation, or transfer in layers of class instances. Domain-driven design favors richer objects; both work—choose deliberately.
 
-##### Why not factories for everything?
+##### `Why not factory functions for everything?`
 
 Classes make two things convenient:
 
@@ -307,7 +307,7 @@ Classes make two things convenient:
 
 Factories can share methods via a prototype, but then per-instance private state needs a different design.
 
-##### Class conventions I use
+##### `Class conventions I use`
 
 **Prefer factory methods for control over construction.** My usual approach is a `protected` constructor with public `create`, `of`, and `from` methods. Factories provide named creation paths, can return subtypes, and handle setup that does not fit a constructor. A `private` constructor also works but blocks subclassing since subclasses cannot call `super()`. This is a house convention—public constructors and `new` are standard.
 
