@@ -129,7 +129,7 @@ A **namespace object** groups related values or functions under one name; its pu
 - **Constant object:** A namespace object of fixed values.
   - **Lookup table:** A constant object pairing values with labels, often for UI display.
   - **Configured constant object:** A constant object returned by a function, such as an enum-replacement helper.
-- **Module object:** A namespace object representing a module's public API. See [File types and categories](#file-types).
+- **Module-object:** A namespace object representing a module's public API. See [File types and categories](#file-types).
 
 ### Function terminology
 
@@ -141,8 +141,8 @@ A **namespace object** groups related values or functions under one name; its pu
 | **Function expression** | A function created where an expression is expected (assignment, callback, return value). Arrow functions are always expressions. |
 | **Object method** | A function defined as a method on an object, including object literals. |
 | **Factory function** | A function whose main job is to create and return an object or function. Abbreviated **FF**. |
-| **Value factory function** | A factory that primarily provides data, often a fresh object per call. Abbreviated **VFF**. |
-| **Configured function** | A function returned by a factory after supplying configuration, e.g. `const parseUser = parseObject(UserSchema)`. |
+| **Value factory function** | A FF that returns a plain value or plain data object, with no attached behavior/methods. Abbreviated **VFF**. |
+| **Configured function** | A function returned by a FF after supplying configuration, e.g. `const parseUser = parseObject(UserSchema)`. |
 | **Validator function** | Checks an unknown value and narrows it with a type predicate. |
 
 Object-literal method:
@@ -490,10 +490,10 @@ If you think adding comment dividers is tedious (which it is) then take a look a
 
 ### What belongs in Constants?
 
-Fixed data, or functions whose purpose is to return a value rather than perform logic (e.g. value factory functions and configured constant objects).
+Readonly values, namespace-objects, and VFFs.
 
 ```ts
-// Return a fresh object and date on each call.
+// Return a new object and current "createdAt" date on each call.
 const UserDefaults = (): IUser => ({
   id: 0,
   name: '',
@@ -584,8 +584,6 @@ try {
 }
 ```
 
-React components are an exception: blank lines between props, hooks, derived values, handlers, and UI aid scanning. See [Organizing component code](https://github.com/seanpmaxwell/React-Ts-Best-Practices#function-components-organization).
-
 ---
 
 <a id="naming-conventions"></a>
@@ -621,7 +619,7 @@ import User from '@src/models/User.model';
 
 For namespace-style constant objects: `PascalCase` for the object and nested objects; `UPPER_SNAKE_CASE` for keys holding fixed values. If the whole object is passed around as a value rather than used as a namespace, use `UPPER_SNAKE_CASE` for its name and whatever property names consumers require.
 
-### Module objects
+### Module-objects
 
 `PascalCase` by default:
 
