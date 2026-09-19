@@ -692,6 +692,7 @@ Avoid shortening words in `UPPER_SNAKE_CASE` names without good reason.
 | --- | --- |
 | **`View`** | Data shaped for UI display, e.g. `UserView`. |
 | **`DTO`** | Data transfer object moving data between parts of an app or across boundaries. Not necessarily an API request. |
+| **`Ctx`** | Objects which exist only in memory and are useful for communication between functions when using individual params would be impractical |
 | **`Label`** | A display-formatted string, e.g. `createdAtLabel`. For properties or values, not whole objects. |
 | **`Payload`** | An object shaped for an API call. |
 
