@@ -29,7 +29,7 @@ This guide mixes language fundamentals with conventions from my own projects. So
   - [Documenting code](#documenting-code)
   - [Architecture](#architecture)
 
----
+<p align="center">· · ·</p>
 
 <a id="terminology"></a>
 
@@ -198,7 +198,7 @@ function foo(arg: { id: number }) {
 }
 ```
 
----
+<p align="center">· · ·</p>
 
 <a id="core-language-features"></a>
 
@@ -336,7 +336,7 @@ Type aliases and interfaces both describe object shapes. The handbook's starting
 
 Interfaces can be easier for the compiler than large intersections, though it depends on the types involved.
 
----
+<p align="center">· · ·</p>
 
 <a id="file-types"></a>
 
@@ -385,7 +385,7 @@ User.create();
 
 Module objects are a house convention.
 
----
+<p align="center">· · ·</p>
 
 <a id="file-organization"></a>
 
@@ -584,7 +584,7 @@ try {
 }
 ```
 
----
+<p align="center">· · ·</p>
 
 <a id="naming-conventions"></a>
 
@@ -698,7 +698,7 @@ Avoid shortening words in `UPPER_SNAKE_CASE` names without good reason.
 
 See [User.model.ts](./code/User.model.ts).
 
----
+<p align="center">· · ·</p>
 
 <a id="comments"></a>
 
@@ -713,7 +713,7 @@ Explain purpose, intent, and what readers cannot infer from the code.
 - Capitalize and punctuate.
 - Separate major regions clearly.
 
----
+<p align="center">· · ·</p>
 
 <a id="imports"></a>
 
@@ -723,7 +723,7 @@ Group by origin: third-party, application modules, nearby local files. Split lon
 
 <br/>
 
----
+<p align="center">· · ·</p>
 
 <a id="organizing-shared-code"></a>
 
@@ -839,7 +839,7 @@ Login/
 - `Login/_local/ui.tsx`: UI shared by `Login` and its dialogs.
 - `AuthDialog.tsx`: common base for the two auth dialogs.
 
----
+<p align="center">· · ·</p>
 
 <a id="philosophy"></a>
 
@@ -867,7 +867,7 @@ Boundaries vary. In backend projects, "integration test" often means calling a r
 
 **e2e tests can come later and/or be done by a dedicated tester** They are expensive to write and maintain (e.g. Cypress).
 
----
+<p align="center">· · ·</p>
 
 <a id="programming-paradigms"></a>
 
@@ -883,7 +883,7 @@ Notes:
 - Using functions instead of classes does not make code functional.
 - This guide favors procedural with classes handling OOP specific features.
 
----
+<p align="center">· · ·</p>
 
 <a id="documenting-code"></a>
 
@@ -1084,7 +1084,7 @@ app.get(
 
 `validateUserIdParam` rejects invalid params before the handler runs (e.g. requiring a positive safe integer). `Number()` converts; it does not validate. Make the validation boundary explicit.
 
----
+<p align="center">· · ·</p>
 
 <a id="architecture"></a>
 
