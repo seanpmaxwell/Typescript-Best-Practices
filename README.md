@@ -407,7 +407,7 @@ After imports:
 | 2 | **Constants** | Primitive constants, object constants, then value factory functions. |
 | 3 | **Types** | Interfaces, aliases, other local types. |
 | 4 | **Classes** | Small local classes. Larger ones get their own file. |
-| 5 | **Exec** | Initialization and setup. |
+| 5 | **Exec** | For code the executes when the file loads, also for top level variables mutated by the functions below them. |
 | 6 | **Components** | JSX components, when applicable. |
 | 7 | **Functions** | Function declarations and supporting logic. |
 | 8 | **Export** | The file's public API. |
